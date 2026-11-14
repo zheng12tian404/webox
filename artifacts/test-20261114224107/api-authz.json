@@ -1,0 +1,101 @@
+{
+  "runId": "20261114224107",
+  "base": "http://127.0.0.1:8084",
+  "finishedAt": "2026-11-14T14:43:59.117Z",
+  "pass": 13,
+  "fail": 0,
+  "skipped": 0,
+  "results": [
+    {
+      "tc": "TC-047",
+      "name": "员工 GET /admin/dishes → 403",
+      "ok": true,
+      "detail": "status=403 body={\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"data\":null,\"requestId\":\"fe2a4767-81b4-4789-a0ad-6e464e631b61\"}",
+      "at": "2026-11-14T14:43:58.576Z"
+    },
+    {
+      "tc": "TC-047",
+      "name": "错误码 FORBIDDEN",
+      "ok": true,
+      "detail": "{\"code\":\"FORBIDDEN\",\"message\":\"Access denied\",\"data\":null,\"requestId\":\"fe2a4767-81b4-4789-a0ad-6e464e631b61\"}",
+      "at": "2026-11-14T14:43:58.577Z"
+    },
+    {
+      "tc": "TC-047",
+      "name": "员工 GET /admin/orders → 403",
+      "ok": true,
+      "detail": "status=403",
+      "at": "2026-11-14T14:43:58.580Z"
+    },
+    {
+      "tc": "TC-047",
+      "name": "员工 GET /admin/daily-menu → 403",
+      "ok": true,
+      "detail": "status=403",
+      "at": "2026-11-14T14:43:58.583Z"
+    },
+    {
+      "tc": "TC-047",
+      "name": "管理员同请求 200",
+      "ok": true,
+      "detail": "status=200",
+      "at": "2026-11-14T14:43:58.605Z"
+    },
+    {
+      "tc": "TC-047",
+      "name": "未登录 GET /menu → 401",
+      "ok": true,
+      "detail": "status=401",
+      "at": "2026-11-14T14:43:58.607Z"
+    },
+    {
+      "tc": "TC-047",
+      "name": "未登录 GET /orders → 401",
+      "ok": true,
+      "detail": "status=401",
+      "at": "2026-11-14T14:43:58.609Z"
+    },
+    {
+      "tc": "TC-074",
+      "name": "篡改 JWT → 401 AUTH_TOKEN_INVALID",
+      "ok": true,
+      "detail": "status=401 body={\"code\":\"AUTH_TOKEN_INVALID\",\"message\":\"Invalid token\",\"data\":null,\"requestId\":\"88373c29-0409-4db9-aaa7-66376452a6bf\"}",
+      "at": "2026-11-14T14:43:58.613Z"
+    },
+    {
+      "tc": "TC-051",
+      "name": "A 下单成功（前置）",
+      "ok": true,
+      "detail": "status=201",
+      "at": "2026-11-14T14:43:59.085Z"
+    },
+    {
+      "tc": "TC-051",
+      "name": "B 读 A 订单 → 404/403",
+      "ok": true,
+      "detail": "status=404 body={\"code\":\"ORDER_NOT_FOUND\",\"message\":\"Order not found\",\"data\":null,\"requestId\":\"955ce568-1a9e-4114-a0aa-057dce4d7dcc\"}",
+      "at": "2026-11-14T14:43:59.097Z"
+    },
+    {
+      "tc": "TC-051",
+      "name": "B 取消 A 订单 → 404/403",
+      "ok": true,
+      "detail": "status=404",
+      "at": "2026-11-14T14:43:59.105Z"
+    },
+    {
+      "tc": "TC-051",
+      "name": "A 订单数据未被修改",
+      "ok": true,
+      "detail": "status=Pending",
+      "at": "2026-11-14T14:43:59.113Z"
+    },
+    {
+      "tc": "TC-051",
+      "name": "B 订单列表不含 A 的单",
+      "ok": true,
+      "detail": "ids=[]",
+      "at": "2026-11-14T14:43:59.117Z"
+    }
+  ]
+}

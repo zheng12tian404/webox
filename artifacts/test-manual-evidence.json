@@ -1,0 +1,102 @@
+{
+  "login_employee": 200,
+  "login_admin": 200,
+  "AC004_refresh": {
+    "refresh_status": 200,
+    "new_token": true,
+    "me_status": null
+  },
+  "dish": {
+    "id": 11,
+    "name": "Beef Noodle Soup",
+    "priceCents": 2800,
+    "groups": []
+  },
+  "chosen_option_ids": [],
+  "option_delta": 0,
+  "preview_addon": {
+    "status": 200,
+    "totalCents": 5600,
+    "expected": 5600,
+    "items": [
+      {
+        "dishName": "Beef Noodle Soup",
+        "options": [],
+        "qty": 2,
+        "unitPriceCents": 2800,
+        "subtotalCents": 5600
+      }
+    ]
+  },
+  "cutoff_test_profile": [
+    {
+      "clock": "2026-11-14T09:59:59+08:00",
+      "status": 200,
+      "effectiveDate": "2026-11-14",
+      "effectiveMeal": "Lunch",
+      "autoSwitched": false,
+      "cutoffAt": "2026-11-14T10:00+08:00"
+    },
+    {
+      "clock": "2026-11-14T10:00:00+08:00",
+      "status": 200,
+      "effectiveDate": "2026-11-14",
+      "effectiveMeal": "Dinner",
+      "autoSwitched": false,
+      "cutoffAt": "2026-11-14T15:00+08:00"
+    },
+    {
+      "clock": "2026-11-14T10:00:01+08:00",
+      "status": 200,
+      "effectiveDate": "2026-11-14",
+      "effectiveMeal": "Dinner",
+      "autoSwitched": false,
+      "cutoffAt": "2026-11-14T15:00+08:00"
+    },
+    {
+      "clock": "2026-11-14T14:59:59+08:00",
+      "status": 200,
+      "effectiveDate": "2026-11-14",
+      "effectiveMeal": "Dinner",
+      "autoSwitched": false,
+      "cutoffAt": "2026-11-14T15:00+08:00"
+    },
+    {
+      "clock": "2026-11-14T15:00:00+08:00",
+      "status": 200,
+      "effectiveDate": "2026-11-15",
+      "effectiveMeal": "Lunch",
+      "autoSwitched": false,
+      "cutoffAt": "2026-11-15T10:00+08:00"
+    },
+    {
+      "clock": "2026-11-14T15:00:01+08:00",
+      "status": 200,
+      "effectiveDate": "2026-11-15",
+      "effectiveMeal": "Lunch",
+      "autoSwitched": false,
+      "cutoffAt": "2026-11-15T10:00+08:00"
+    },
+    {
+      "clock": "2026-11-14T16:00:00+08:00",
+      "status": 200,
+      "effectiveDate": "2026-11-15",
+      "effectiveMeal": "Lunch",
+      "autoSwitched": false,
+      "cutoffAt": "2026-11-15T10:00+08:00"
+    }
+  ],
+  "prod_clock_noauth": {
+    "status": 400,
+    "code": "VALIDATION_TEST_CLOCK_FORBIDDEN"
+  },
+  "prod_clock_auth": {
+    "status": 400,
+    "code": "VALIDATION_TEST_CLOCK_FORBIDDEN",
+    "message": "X-Test-Clock is only allowed in test profile"
+  },
+  "prod_preview": {
+    "status": 200,
+    "code": "OK"
+  }
+}

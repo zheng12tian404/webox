@@ -1,0 +1,8 @@
+[PASS] TC-034 7 次响应均成功状态 :: statuses=201,201,201,201,201,201,201
+[PASS] TC-034 所有响应 orderId 相同 :: ids=["18"]
+[PASS] TC-034 DB 仅 1 单 :: count=1
+[PASS] TC-034 同键异体 409 IDEMPOTENCY_CONFLICT :: status=409 body={"code":"IDEMPOTENCY_CONFLICT","message":"Idempotency-Key was used with a different request body","data":null,"requestId":"82c5728c-abb0-4742-9242-f7020d67856e"}
+[PASS] TC-034 缺键 400 IDEMPOTENCY_KEY_REQUIRED :: status=400
+[PASS] TC-034 库存只扣 1 次（1 条 RESERVE） :: [["RESERVE","1"]]
+
+== conc-idem.json: PASS=6 FAIL=0 SKIP=0 ==

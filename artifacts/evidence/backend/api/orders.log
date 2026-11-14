@@ -1,0 +1,9 @@
+[PASS] TC-029 preview 200 :: status=200 body={"code":"OK","message":"OK","data":{"items":[{"dishName":"Beef Noodle Soup","options":[],"qty":2,"unitPriceCents":2800,"subtotalCents":5600}],"totalCents":5600,"itemCount":2,"effectiveDate":"2026-11-15","effectiveMeal":"Lunch","cutoffAt":"2026-11-15T10:00+08:00","autoSwitched":true,"budgetExceeded":
+[PASS] TC-029 preview 含 effectiveDate/effectiveMeal/cutoffAt :: {"d":"2026-11-15","m":"Lunch","c":"2026-11-15T10:00+08:00"}
+[PASS] TC-029 preview totalCents 为整数 :: totalCents=5600
+[PASS] TC-029 preview itemCount=2 :: itemCount=2
+[FAIL] TC-029 地址 201 字符 → 400 VALIDATION_ADDRESS_LENGTH :: status=200
+[PASS] TC-030 下单 201 :: status=201 body={"message":"Order placed","data":{"orderId":19,"orderNo":"WB20261115-0019","status":"Pending","deliveryDate":"2026-11-15","mealType":"Lunch","address":"Office 1F, Test Street","totalCents":5600,"itemCount":2,"autoSwitched":false,"estimatedDelivery":"Lunch on 2026-11-15"},"code":"OK","requestId":"d98c8a08-ce66-47fb-9cbd-5ca09cffb9b0"}
+[PASS] TC-030 orderNo 匹配 ^WB\d{8}-\d{4,}$ :: orderNo=WB20261115-0019
+[PASS] TC-030 status=Pending :: status=Pending
+[PASS] TC-030 totalCents 为整数且等于 preview :: create=5600 preview=5600

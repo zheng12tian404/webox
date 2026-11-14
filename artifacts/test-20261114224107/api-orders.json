@@ -1,0 +1,199 @@
+{
+  "runId": "20261114224107",
+  "base": "http://127.0.0.1:8084",
+  "finishedAt": "2026-11-14T14:44:09.110Z",
+  "pass": 24,
+  "fail": 3,
+  "skipped": 0,
+  "results": [
+    {
+      "tc": "TC-029",
+      "name": "preview 200",
+      "ok": true,
+      "detail": "status=200 body={\"code\":\"OK\",\"message\":\"OK\",\"data\":{\"items\":[{\"dishName\":\"Beef Noodle Soup\",\"options\":[],\"qty\":2,\"unitPriceCents\":2800,\"subtotalCents\":5600}],\"totalCents\":5600,\"itemCount\":2,\"effectiveDate\":\"2026-11-15\",\"effectiveMeal\":\"Lunch\",\"cutoffAt\":\"2026-11-15T10:00+08:00\",\"autoSwitched\":true,\"budgetExceeded\":",
+      "at": "2026-11-14T14:44:08.460Z"
+    },
+    {
+      "tc": "TC-029",
+      "name": "preview 含 effectiveDate/effectiveMeal/cutoffAt",
+      "ok": true,
+      "detail": "{\"d\":\"2026-11-15\",\"m\":\"Lunch\",\"c\":\"2026-11-15T10:00+08:00\"}",
+      "at": "2026-11-14T14:44:08.461Z"
+    },
+    {
+      "tc": "TC-029",
+      "name": "preview totalCents 为整数",
+      "ok": true,
+      "detail": "totalCents=5600",
+      "at": "2026-11-14T14:44:08.461Z"
+    },
+    {
+      "tc": "TC-029",
+      "name": "preview itemCount=2",
+      "ok": true,
+      "detail": "itemCount=2",
+      "at": "2026-11-14T14:44:08.461Z"
+    },
+    {
+      "tc": "TC-029",
+      "name": "地址 201 字符 → 400 VALIDATION_ADDRESS_LENGTH",
+      "ok": false,
+      "detail": "status=200",
+      "at": "2026-11-14T14:44:08.468Z"
+    },
+    {
+      "tc": "TC-030",
+      "name": "下单 201",
+      "ok": true,
+      "detail": "status=201 body={\"code\":\"OK\",\"data\":{\"orderId\":70,\"orderNo\":\"WB20261115-0070\",\"status\":\"Pending\",\"deliveryDate\":\"2026-11-15\",\"mealType\":\"Lunch\",\"address\":\"Office 1F, Test Street\",\"totalCents\":5600,\"itemCount\":2,\"autoSwitched\":false,\"estimatedDelivery\":\"Lunch on 2026-11-15\"},\"message\":\"Order placed\",\"requestId\":\"3e20dfee-9c97-4993-9017-726d88afb92a\"}",
+      "at": "2026-11-14T14:44:08.504Z"
+    },
+    {
+      "tc": "TC-030",
+      "name": "orderNo 匹配 ^WB\\d{8}-\\d{4,}$",
+      "ok": true,
+      "detail": "orderNo=WB20261115-0070",
+      "at": "2026-11-14T14:44:08.504Z"
+    },
+    {
+      "tc": "TC-030",
+      "name": "status=Pending",
+      "ok": true,
+      "detail": "status=Pending",
+      "at": "2026-11-14T14:44:08.504Z"
+    },
+    {
+      "tc": "TC-030",
+      "name": "totalCents 为整数且等于 preview",
+      "ok": true,
+      "detail": "create=5600 preview=5600",
+      "at": "2026-11-14T14:44:08.504Z"
+    },
+    {
+      "tc": "TC-030",
+      "name": "详情含 items 快照与 snapshot_json",
+      "ok": false,
+      "detail": "items=1 snapshot=false",
+      "at": "2026-11-14T14:44:08.516Z"
+    },
+    {
+      "tc": "TC-030",
+      "name": "ledger 恰 1 条 RESERVE",
+      "ok": true,
+      "detail": "[[\"RESERVE\",\"1\"]]",
+      "at": "2026-11-14T14:44:08.555Z"
+    },
+    {
+      "tc": "TC-031",
+      "name": "篡改价下单成功但按 DB 重算",
+      "ok": true,
+      "detail": "status=201 total=2800",
+      "at": "2026-11-14T14:44:08.739Z"
+    },
+    {
+      "tc": "TC-031",
+      "name": "total=DB 单价×1",
+      "ok": true,
+      "detail": "total=2800 db=2800",
+      "at": "2026-11-14T14:44:08.739Z"
+    },
+    {
+      "tc": "TC-044",
+      "name": "第二单 409 ORDER_DUPLICATE",
+      "ok": true,
+      "detail": "status=409 body={\"code\":\"ORDER_DUPLICATE\",\"message\":\"An active order already exists for this meal\",\"data\":{\"existingOrderId\":70,\"existingOrderNo\":\"WB20261115-0070\"},\"requestId\":\"55137d3d-8d75-4683-afbe-c00559b0be71\"}",
+      "at": "2026-11-14T14:44:08.759Z"
+    },
+    {
+      "tc": "TC-044",
+      "name": "返回 existingOrderId",
+      "ok": true,
+      "detail": "existingOrderId=70",
+      "at": "2026-11-14T14:44:08.759Z"
+    },
+    {
+      "tc": "TC-036",
+      "name": "首次取消 200 且 Cancelled",
+      "ok": true,
+      "detail": "status=200 body={\"code\":\"OK\",\"message\":\"OK\",\"data\":{\"orderId\":70,\"status\":\"Cancelled\",\"cancelledAt\":\"2026-11-14T22:44:08.764+08:00\"},\"requestId\":\"94dfe78a-e3a9-425b-bc0e-c5e9022e9d38\"}",
+      "at": "2026-11-14T14:44:08.773Z"
+    },
+    {
+      "tc": "TC-036",
+      "name": "二次取消 409 ORDER_STATE_INVALID",
+      "ok": true,
+      "detail": "status=409",
+      "at": "2026-11-14T14:44:08.778Z"
+    },
+    {
+      "tc": "TC-036",
+      "name": "取消只回补一次（1 条 RELEASE）",
+      "ok": true,
+      "detail": "[[\"RELEASE\",\"1\"]]",
+      "at": "2026-11-14T14:44:08.810Z"
+    },
+    {
+      "tc": "TC-046",
+      "name": "取消后同日同餐次可再下单 201",
+      "ok": true,
+      "detail": "status=201 body={\"code\":\"OK\",\"data\":{\"orderId\":72,\"orderNo\":\"WB20261115-0072\",\"status\":\"Pending\",\"deliveryDate\":\"2026-11-15\",\"mealType\":\"Lunch\",\"address\":\"Office 1F, Test Street\",\"totalCents\":2800,\"itemCount\":1,\"autoSwitched\":false,\"estimatedDelivery\":\"Lunch on 2026",
+      "at": "2026-11-14T14:44:08.830Z"
+    },
+    {
+      "tc": "TC-045",
+      "name": "同日跨餐次 201",
+      "ok": true,
+      "detail": "status=201（409 仅当该餐次已截单/无菜单）",
+      "at": "2026-11-14T14:44:08.851Z"
+    },
+    {
+      "tc": "TC-045",
+      "name": "次日同餐次 201",
+      "ok": false,
+      "detail": "status=409 body={\"code\":\"ORDER_DUPLICATE\",\"message\":\"An active order already exists for this meal\",\"data\":{\"existingOrderId\":72,\"existingOrderNo\":\"WB20261115-0072\"},\"requestId\":\"0f2484ce-0b28-47c8-8f66-7052b79de265\"}",
+      "at": "2026-11-14T14:44:08.866Z"
+    },
+    {
+      "tc": "TC-033",
+      "name": "同键两次同一 orderId",
+      "ok": true,
+      "detail": "id1=74 id2=74 status=201/201",
+      "at": "2026-11-14T14:44:09.057Z"
+    },
+    {
+      "tc": "TC-033",
+      "name": "DB 仅 1 单",
+      "ok": true,
+      "detail": "count=1",
+      "at": "2026-11-14T14:44:09.089Z"
+    },
+    {
+      "tc": "TC-035",
+      "name": "缺幂等键 400 IDEMPOTENCY_KEY_REQUIRED",
+      "ok": true,
+      "detail": "status=400",
+      "at": "2026-11-14T14:44:09.095Z"
+    },
+    {
+      "tc": "TC-035",
+      "name": "7 字符键 400",
+      "ok": true,
+      "detail": "status=400",
+      "at": "2026-11-14T14:44:09.098Z"
+    },
+    {
+      "tc": "TC-035",
+      "name": "65 字符键 400",
+      "ok": true,
+      "detail": "status=400",
+      "at": "2026-11-14T14:44:09.102Z"
+    },
+    {
+      "tc": "TC-035",
+      "name": "同键异体 409 IDEMPOTENCY_CONFLICT",
+      "ok": true,
+      "detail": "status=409",
+      "at": "2026-11-14T14:44:09.110Z"
+    }
+  ]
+}

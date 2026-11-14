@@ -1,0 +1,19 @@
+[PASS] TC-070 400 包络 {code,message,data,requestId} 且头体一致 :: status=400 body={"code":"VALIDATION_SEARCH_LENGTH","message":"Search must be at most 50 characters","data":null,"requestId":"c3c7a499-caa0-41ac-8282-6664666772a2"}
+[PASS] TC-070 400 无堆栈/SQL 泄漏 :: {"code":"VALIDATION_SEARCH_LENGTH","message":"Search must be at most 50 characters","data":null,"requestId":"c3c7a499-ca
+[PASS] TC-070 401 包络 {code,message,data,requestId} 且头体一致 :: status=401 body={"code":"AUTH_UNAUTHORIZED","message":"Authentication required","data":null,"requestId":"284a3cad-9a49-4a94-a93f-4afc36273a06"}
+[PASS] TC-070 401 无堆栈/SQL 泄漏 :: {"code":"AUTH_UNAUTHORIZED","message":"Authentication required","data":null,"requestId":"284a3cad-9a49-4a94-a93f-4afc362
+[PASS] TC-070 404 包络 {code,message,data,requestId} 且头体一致 :: status=404 body={"code":"DISH_NOT_FOUND","message":"Dish not found on today's menu","data":null,"requestId":"c5dcb60e-adda-4bec-9b39-1689fd6661fb"}
+[PASS] TC-070 404 无堆栈/SQL 泄漏 :: {"code":"DISH_NOT_FOUND","message":"Dish not found on today's menu","data":null,"requestId":"c5dcb60e-adda-4bec-9b39-168
+[PASS] TC-070 409 包络 {code,message,data,requestId} 且头体一致 :: status=409 body={"code":"AUTH_EMAIL_EXISTS","message":"Email already registered","data":null,"requestId":"439f597e-c587-4f4e-bd03-182a314337f1"}
+[PASS] TC-070 409 无堆栈/SQL 泄漏 :: {"code":"AUTH_EMAIL_EXISTS","message":"Email already registered","data":null,"requestId":"439f597e-c587-4f4e-bd03-182a31
+[FAIL] TC-071 邮箱 200 字符通过 :: status=400
+[FAIL] TC-071 邮箱 201 字符 400 VALIDATION_EMAIL_LENGTH :: status=400
+[PASS] TC-071 密码 64 通过 :: status=201
+[PASS] TC-071 密码 65 → 400 :: status=400
+[PASS] TC-071 地址 200 通过 :: status=201
+[PASS] TC-071 地址 201 → 400 VALIDATION_ADDRESS_LENGTH :: status=400
+[PASS] TC-071 原因 200 通过 :: status=200
+[PASS] TC-071 原因 201 → 400 VALIDATION_REASON_REQUIRED :: status=400
+[FAIL] TC-072 下单超限出现 429 :: codes=201,409,409,409,409,409,409
+
+== api-validation.json: PASS=14 FAIL=3 SKIP=0 ==

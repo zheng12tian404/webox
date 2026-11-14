@@ -1,0 +1,51 @@
+++ /opt/gem/bin/agent-browser --session s5e screenshot artifacts/s5e-product/a2-modal-peanuts.png
+[32m✓[0m Screenshot saved to [32martifacts/s5e-product/a2-modal-peanuts.png[0m
+++ /opt/gem/bin/agent-browser --session s5e eval 'document.querySelector("[data-testid=allergen-add-anyway]").click(); "confirmed"'
+"confirmed"
+++ /opt/gem/bin/agent-browser --session s5e wait 900
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e eval 'localStorage.getItem("webox.cart.v1")'
+"{\"state\":{\"lines\":[{\"lineId\":\"1|#L1-uiwm8m\",\"dishId\":1,\"name\":\"Kung Pao Chicken\",\"imageUrl\":\"/images/image_01.jpg\",\"basePriceCents\":2200,\"options\":[],\"unitPriceCents\":2200,\"qty\":1,\"addedAt\":1794669481162}]},\"version\":1}"
+++ /opt/gem/bin/agent-browser --session s5e eval 'document.querySelector("[data-testid=logout]").click(); "logout-clicked"'
+"logout-clicked"
+++ /opt/gem/bin/agent-browser --session s5e wait 1300
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e get url
+http://127.0.0.1:5175/login
+++ /opt/gem/bin/agent-browser --session s5e eval 'JSON.stringify({prefs:localStorage.getItem("webox.prefs.v1"),cart:localStorage.getItem("webox.cart.v1"),auth:localStorage.getItem("webox.auth.v1")})'
+"{\"prefs\":null,\"cart\":null,\"auth\":null}"
+++ /opt/gem/bin/agent-browser --session s5e screenshot artifacts/s5e-product/a3-after-logout.png
+[32m✓[0m Screenshot saved to [32martifacts/s5e-product/a3-after-logout.png[0m
+++ /opt/gem/bin/agent-browser --session s5e wait '[data-testid=login-email]'
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e fill '[data-testid=login-email]' s5e_prod_b_2318@test.com
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e fill '[data-testid=login-password]' Test12345
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e click '[data-testid=login-submit]'
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e wait 1600
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e eval 'document.querySelector("[data-testid=current-user]")?.textContent'
+"s5e_prod_b_2318@test.com"
+++ /opt/gem/bin/agent-browser --session s5e eval 'localStorage.getItem("webox.prefs.v1")'
+"{\"state\":{\"prefs\":{\"allergens\":[],\"preferredCategories\":[],\"spicePreference\":\"None\",\"tastePreference\":\"Medium\",\"budgetMinCents\":null,\"budgetMaxCents\":null,\"recommendEnabled\":false},\"ownerUserId\":122},\"version\":1}"
+++ /opt/gem/bin/agent-browser --session s5e eval 'localStorage.getItem("webox.cart.v1")'
+null
+++ /opt/gem/bin/agent-browser --session s5e open http://127.0.0.1:5175/menu
+[32m✓[0m [1mWeBox — Employee Meal Ordering[0m
+  [2mhttp://127.0.0.1:5175/menu[0m
+++ /opt/gem/bin/agent-browser --session s5e wait '[data-testid=add-to-cart-1]'
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e eval 'document.querySelector("[data-testid=add-to-cart-1]").click(); "jsclicked"'
+"jsclicked"
+++ /opt/gem/bin/agent-browser --session s5e wait 1500
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e get count '[data-testid=allergen-modal]'
+0
+++ /opt/gem/bin/agent-browser --session s5e eval 'document.querySelector("[data-testid=allergen-modal]")?.innerText || null'
+null
+++ /opt/gem/bin/agent-browser --session s5e eval 'localStorage.getItem("webox.cart.v1")'
+"{\"state\":{\"lines\":[{\"lineId\":\"1|#L1-iyejl3\",\"dishId\":1,\"name\":\"Kung Pao Chicken\",\"imageUrl\":\"/images/image_01.jpg\",\"basePriceCents\":2200,\"options\":[],\"unitPriceCents\":2200,\"qty\":1,\"addedAt\":1794669488327}]},\"version\":1}"
+++ /opt/gem/bin/agent-browser --session s5e screenshot artifacts/s5e-product/b1-no-modal.png
+[32m✓[0m Screenshot saved to [32martifacts/s5e-product/b1-no-modal.png[0m

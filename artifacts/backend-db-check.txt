@@ -1,0 +1,56 @@
+===== DEMO DB (req_6343a752e110) =====
+database_name	checked_at
+req_6343a752e110	2026-11-14 22:35:25.362
+table_count
+17
+dishes
+20
+option_groups
+16
+options
+41
+users
+6
+id	email	role	hash_prefix
+1	admin@webox.com	ADMIN	$2b$
+2	employee@webox.com	EMPLOYEE	$2b$
+3	smoke1794665898@webox.com	EMPLOYEE	$2a$
+4	smoke1794665935@webox.com	EMPLOYEE	$2a$
+5	smoke1794666006@webox.com	EMPLOYEE	$2a$
+6	smoke1794666044@webox.com	EMPLOYEE	$2a$
+serve_date	dishes	total	reserved	sold	available
+2026-11-14	20	723	0	0	723
+2026-11-15	20	790	0	0	790
+2026-11-16	20	800	0	0	800
+orders
+5
+status	cnt
+Cancelled	5
+ledger_rows
+12
+entry_type	cnt	qty
+RESERVE	6	8
+RELEASE	6	8
+audit_rows
+4
+negative_stock_rows
+0
+over_reserved_rows
+0
+Table	Non_unique	Key_name	Seq_in_index	Column_name	Collation	Cardinality	Sub_part	Packed	Null	Index_type	Comment	Index_comment	Visible	Expression
+orders	0	uk_orders_active	1	active_key	A	1	NULL	NULL	YES	BTREE			YES	NULL
+orders	0	uk_orders_idem	1	user_id	A	2	NULL	NULL		BTREE			YES	NULL
+orders	0	uk_orders_idem	2	idempotency_key	A	5	NULL	NULL	YES	BTREE			YES	NULL
+Table	Non_unique	Key_name	Seq_in_index	Column_name	Collation	Cardinality	Sub_part	Packed	Null	Index_type	Comment	Index_comment	Visible	Expression
+inventory_ledger	0	uk_ledger_business_key	1	business_key	A	11	NULL	NULL		BTREE			YES	NULL
+status	cnt
+COMPLETED	11
+
+===== Reconcile drift (demo, tomorrow) =====
+(empty = drift 0)
+
+===== TEST DB isolation (req_6343a752e110_test) =====
+database_name
+req_6343a752e110_test
+table_count
+17

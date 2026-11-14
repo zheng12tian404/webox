@@ -1,0 +1,29 @@
+++ /opt/gem/bin/agent-browser --session s5e eval '(()=>{const b=[...document.querySelectorAll("button")].find(x=>x.textContent.trim()==="Sign out"); if(b){b.click(); return "clicked"} return "not-found"})()'
+"clicked"
+++ /opt/gem/bin/agent-browser --session s5e wait 1500
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e get url
+http://127.0.0.1:5175/login
+++ /opt/gem/bin/agent-browser --session s5e wait '[data-testid=login-email]'
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e fill '[data-testid=login-email]' s5e_verify_232156@test.com
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e fill '[data-testid=login-password]' Test12345
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e click '[data-testid=login-submit]'
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e wait 1700
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e get url
+http://127.0.0.1:5175/menu
+++ /opt/gem/bin/agent-browser --session s5e open http://127.0.0.1:5175/admin
+[32m✓[0m [1mWeBox — Employee Meal Ordering[0m
+  [2mhttp://127.0.0.1:5175/admin[0m
+++ /opt/gem/bin/agent-browser --session s5e wait 1400
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e get url
+http://127.0.0.1:5175/403
+++ /opt/gem/bin/agent-browser --session s5e eval 'document.body.innerText.slice(0,200)'
+"⛔\nAccess denied\n\nYou do not have permission to view this page.\n\nBack to menu"
+++ /opt/gem/bin/agent-browser --session s5e screenshot artifacts/prd-verify/ui-employee-forbidden.png
+[32m✓[0m Screenshot saved to [32martifacts/prd-verify/ui-employee-forbidden.png[0m

@@ -1,0 +1,32 @@
+++ /opt/gem/bin/agent-browser --session s5e open http://127.0.0.1:5175/dishes/4
+[32m✓[0m [1mWeBox — Employee Meal Ordering[0m
+  [2mhttp://127.0.0.1:5175/dishes/4[0m
+++ /opt/gem/bin/agent-browser --session s5e wait '[data-testid=dish-detail]'
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e eval 'document.querySelector("[data-testid=dish-price]").textContent'
+"¥26.50"
+++ /opt/gem/bin/agent-browser --session s5e eval 'document.querySelector("[data-testid^=option-group-] input[type=radio]")?.click(); "radio-clicked"'
+"radio-clicked"
+++ /opt/gem/bin/agent-browser --session s5e wait 400
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e eval 'document.querySelector("[data-testid=dish-price]").textContent'
+"¥26.50"
+++ /opt/gem/bin/agent-browser --session s5e eval '(document.querySelector("[data-testid=detail-add-to-cart]").disabled ? "disabled" : "enabled")'
+"enabled"
+++ /opt/gem/bin/agent-browser --session s5e screenshot artifacts/prd-verify/ui-dish-detail.png
+[32m✓[0m Screenshot saved to [32martifacts/prd-verify/ui-dish-detail.png[0m
+++ /opt/gem/bin/agent-browser --session s5e eval 'document.querySelector("[data-testid=detail-add-to-cart]").click(); "added"'
+"added"
+++ /opt/gem/bin/agent-browser --session s5e wait 900
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e eval 'localStorage.getItem("webox.cart.v1")'
+"{\"state\":{\"lines\":[{\"lineId\":\"2|#L1-lxwa8a\",\"dishId\":2,\"name\":\"Caesar Salad\",\"imageUrl\":\"/images/image_02.jpg\",\"basePriceCents\":2850,\"options\":[],\"unitPriceCents\":2850,\"qty\":1,\"addedAt\":1794669757661},{\"lineId\":\"4|4#L1-t1yek8\",\"dishId\":4,\"name\":\"Tomato Pasta\",\"imageUrl\":\"/images/image_04.jpg\",\"basePriceCents\":2650,\"options\":[{\"optionId\":4,\"name\":\"Spaghetti\",\"priceDeltaCents\":0}],\"unitPriceCents\":2650,\"qty\":1,\"addedAt\":1794669786668}]},\"version\":1}"
+++ /opt/gem/bin/agent-browser --session s5e open http://127.0.0.1:5175/cart
+[32m✓[0m [1mWeBox — Employee Meal Ordering[0m
+  [2mhttp://127.0.0.1:5175/cart[0m
+++ /opt/gem/bin/agent-browser --session s5e wait 800
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e screenshot artifacts/prd-verify/ui-cart.png
+[32m✓[0m Screenshot saved to [32martifacts/prd-verify/ui-cart.png[0m
+++ /opt/gem/bin/agent-browser --session s5e eval 'document.body.innerText.slice(0,700)'
+"WB\nWeBox\nMenu\nMy Orders\nPreferences\nCart\n2\ns5e_verify_232156@test.com\nSign out\nYour Cart\n\nMax 5 items per order · stock is reserved when you place the order.\n\nClear cart\nCaesar Salad\n¥28.50\nStandard\n−\n1\n+\nRemove\nTomato Pasta\n¥26.50\nSpaghetti\n−\n1\n+\nRemove\nSubtotal\nItems\n2\nSubtotal\n¥55.00\nTotal\n¥55.00\nProceed to checkout\n\nPrices and stock are confirmed on the checkout page."

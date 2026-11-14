@@ -1,0 +1,148 @@
+== Baseline ==
+dish20 price=1880 status=ON_SHELF
+stock 2026-11-16/20 total=46
+audit_count=27 max_id=33
+
+== 1. confirm=false -> 400 (3 endpoints) ==
+-- PUT /admin/dishes/20
+{"code":"VALIDATION_CONFIRM_REQUIRED","message":"confirm=true is required for this operation","data":null,"requestId":"96c6c41c-731c-4b26-a93f-b2fefc5e5e02"}
+HTTP 400
+-- PATCH /admin/dishes/20/status
+{"code":"VALIDATION_CONFIRM_REQUIRED","message":"confirm=true is required for this operation","data":null,"requestId":"8a5997d6-7d08-4ef3-890c-2da01750497e"}
+HTTP 400
+-- PUT /admin/daily-menu/2026-11-16/20/stock
+{"code":"VALIDATION_CONFIRM_REQUIRED","message":"confirm=true is required for this operation","data":null,"requestId":"76adf614-5413-4a62-b85f-63158697d0e2"}
+HTTP 400
+-- PUT /admin/ai-rules
+{"code":"VALIDATION_CONFIRM_REQUIRED","message":"confirm=true is required for this operation","data":null,"requestId":"3b301b68-8adc-44af-9fe3-5bb70e5c0818"}
+HTTP 400
+-- DB after confirm=false:
+dish20 price=1880 status=ON_SHELF
+stock total=46
+audit_count=27 max_id=33
+ai_active_versions=1
+
+== 2. confirm=true -> 200 + audit before/after ==
+-- PUT /admin/dishes/20 price 1880->1999
+{"code":"OK","message":"OK","data":{"dishId":20,"name":"Kung Pao Chicken","description":"Spicy chicken with peanuts","priceCents":1999,"category":"Chinese","protein":"Chicken","allergens":["Peanuts"],"spiceLevel":"Hot","imageUrl":"/images/image_03.jpg","status":"ON_SHELF"},"requestId":"97589949-f635-4bfe-9aee-de6cc1fefaa1"}
+HTTP 200
+34|DISH_UPDATE|20|{"id": 20, "name": "Kung Pao Chicken", "status": "ON_SHELF", "protein": "Chicken", "category": "Chinese", "allergens": "|{"id": 20, "name": "Kung Pao Chicken", "status": "ON_SHELF", "protein": "Chicken", "category": "Chinese", "allergens": "|S5c rereview dish update
+-- restore price 1880
+HTTP 200
+-- PATCH status OFF_SHELF
+{"code":"OK","message":"OK","data":{"dishId":20,"status":"OFF_SHELF"},"requestId":"f7a69682-b5c5-4074-b147-88896cbe7627"}
+HTTP 200
+36|DISH_STATUS|20|"ON_SHELF"->"OFF_SHELF"|S5c rereview status
+restore ON_SHELF HTTP 200
+
+== 3. SSE + Redis on stock update (<=1s) ==
+{"code":"OK","message":"OK","data":{"dishId":20,"serveDate":"2026-11-16","totalQty":48,"available":48},"requestId":"2b58e12f-ac89-4bda-b6ff-18c63707f1b0"}
+HTTP 200
+-- SSE received:
+retry:3000
+event:snapshot
+data:[{"dishId":1,"available":40},{"dishId":2,"available":40},{"dishId":3,"available":40},{"dishId":4,"available":40},{"dishId":5,"available":40},{"dishId":6,"available":40},{"dishId":7,"available":40},{"dishId":8,"available":40},{"dishId":9,"available":40},{"dishId":10,"available":40},{"dishId":11,"available":40},{"dishId":12,"available":40},{"dishId":13,"available":40},{"dishId":14,"available":40},{"dishId":15,"available":40},{"dishId":16,"available":40},{"dishId":17,"available":40},{"dishId":18,"available":40},{"dishId":19,"available":40},{"dishId":20,"available":46}]
+
+retry:3000
+event:stock
+data:{"dishId":20,"available":48}
+
+retry:3000
+event:stock
+data:{"dishId":20,"available":45}
+
+-- redis:
+45
+-- db:
+available=45 total=45
+-- elapsed(ms) since update request to check: 1524
+39|STOCK_UPDATE|20:2026-11-16|G4 closure SSE probe
+-- restore stock 46
+HTTP 200
+
+== 4. Rate limit: 6 POST /orders same user ==
+attempt 1 -> 400 | {"code":"VALIDATION_OPTION_REQUIRED","message":"Group 'Base' requires a selection","data":null,"requestId":"95c353f1-7e1b-4c63-9790-a2d8746f0086"} HTTP 400
+attempt 2 -> 400 | {"code":"VALIDATION_OPTION_REQUIRED","message":"Group 'Base' requires a selection","data":null,"requestId":"2cc37c73-96e3-4630-99ce-8b889b291d3f"} HTTP 400
+attempt 3 -> 400 | {"code":"VALIDATION_OPTION_REQUIRED","message":"Group 'Base' requires a selection","data":null,"requestId":"d05a86bc-a8ee-498c-bec3-8855389ddd24"} HTTP 400
+attempt 4 -> 400 | {"code":"VALIDATION_OPTION_REQUIRED","message":"Group 'Base' requires a selection","data":null,"requestId":"67721598-54dc-425c-af1e-bcd04cc1bcb6"} HTTP 400
+attempt 5 -> 400 | {"code":"VALIDATION_OPTION_REQUIRED","message":"Group 'Base' requires a selection","data":null,"requestId":"c2095d19-cb1a-400d-a333-8b2c7733efcf"} HTTP 400
+attempt 6 -> 429 | {"code":"RATE_LIMITED","message":"Too many requests","data":null,"requestId":"1e16a6f6-a6d9-4d96-908c-560ebdc3058c"} HTTP 429
+-- other user (admin id=1) first order attempt:
+{"code":"VALIDATION_OPTION_REQUIRED","message":"Group 'Base' requires a selection","data":null,"requestId":"052b291c-2e76-45f0-9c08-6c9b5aba241d"} HTTP 400
+
+== 5. AI rules normal update (confirm=true) ==
+{"code":"OK","message":"OK","data":{"configKey":"recommend_weights","version":4,"config":{"taste":1,"protein":1,"budgetFit":2,"spiceMatch":2,"preferredCategory":3},"updatedAt":"2026-11-14T22:58:40.024+08:00"},"requestId":"6abab05a-f977-40b5-a56a-11195334fbd2"}
+HTTP 200
+ai_rule version=4 active=1
+41|AI_RULE_UPDATE|recommend_weights:v4|{"version": 4, "rollbackToVersion": null}|S5c rereview ai rules
+
+== 6. employee -> /admin (403 regression) ==
+HTTP 403
+== done ==
+stock update HTTP 200
+SSE matched 'available:49' after 1794668338229-1794668338201 = 28 ms
+data:[{"dishId":1,"available":40},{"dishId":2,"available":40},{"dishId":3,"available":40},{"dishId":4,"available":40},{"dishId":5,"available":40},{"dishId":6,"available":40},{"dishId":7,"available":40},{"dishId":8,"available":40},{"dishId":9,"available":40},{"dishId":10,"available":40},{"dishId":11,"available":40},{"dishId":12,"available":40},{"dishId":13,"available":40},{"dishId":14,"available":40},{"dishId":15,"available":40},{"dishId":16,"available":40},{"dishId":17,"available":40},{"dishId":18,"available":40},{"dishId":19,"available":40},{"dishId":20,"available":46}]
+
+retry:3000
+event:stock
+data:{"dishId":20,"available":49}
+
+redis=49
+db total=49 available=49
+audit 43|20:2026-11-16|{"sold_qty": 0, "total_qty": 46, "reserved_qty": 0}->{"totalQty": 49, "available": 49}|S5c DEF-004 clean probe
+restore 46 HTTP 200
+redis after restore=46
+db total=46
+=== DEF-003 backup/restore live re-verify Sat Nov 14 10:59:07 PM CST 2026 ===
+[backup] db=req_6343a752e110 host=127.0.0.1 port=3306 -> /tmp/s5c-backup.sql.gz
+mysqldump: [Warning] Using a password on the command line interface can be insecure.
+[backup] bytes=24148 sha256=08b6f21be6b612c3e83e02298a5a9650bb46c37bb84602439623ec2fd80a90be
+mysql: [Warning] Using a password on the command line interface can be insecure.
+[restore] /tmp/s5c-backup.sql.gz -> req_6343a752e110_s5c_restore
+mysql: [Warning] Using a password on the command line interface can be insecure.
+mysql: [Warning] Using a password on the command line interface can be insecure.
+[restore] done; tables=17
+--- core table counts (source vs restored) ---
+users source=116 restored=116 MATCH
+dishes source=20 restored=20 MATCH
+daily_menu source=61 restored=61 MATCH
+dish_daily_stock source=61 restored=61 MATCH
+orders source=11 restored=11 MATCH
+order_items source=13 restored=13 MATCH
+inventory_ledger source=23 restored=23 MATCH
+audit_log source=40 restored=40 MATCH
+temp restore db dropped
+=== mvn test Sat Nov 14 10:59:11 PM CST 2026 ===
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.5)
+
+2026-11-14T22:59:14.389+08:00 INFO  [] [] com.webox.WeBoxApiIT - Starting WeBoxApiIT using Java 17.0.21.0.3 with PID 1413722 (started by gem in /home/gem/code/req-squad/workspace/6343a752-e110-407c-8dfb-a5873425d917/backend)
+2026-11-14T22:59:14.390+08:00 INFO  [] [] com.webox.WeBoxApiIT - The following 1 profile is active: "test"
+2026-11-14T22:59:15.221+08:00 WARN  [] [] com.webox.security.JwtService - JWT_SECRET not set; using an ephemeral random key (tokens invalid after restart)
+2026-11-14T22:59:15.278+08:00 WARN  [] [] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: 689bd2cd-dda4-436b-b6ab-73a4ca3d12ca
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-11-14T22:59:15.282+08:00 INFO  [] [] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-11-14T22:59:15.588+08:00 INFO  [] [] o.s.b.t.m.w.SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-11-14T22:59:15.588+08:00 INFO  [] [] o.s.t.w.s.TestDispatcherServlet - Initializing Servlet ''
+2026-11-14T22:59:15.589+08:00 INFO  [] [] o.s.t.w.s.TestDispatcherServlet - Completed initialization in 1 ms
+2026-11-14T22:59:15.602+08:00 INFO  [] [] com.webox.WeBoxApiIT - Started WeBoxApiIT in 1.463 seconds (process running for 2.205)
+2026-11-14T22:59:15.607+08:00 INFO  [] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-11-14T22:59:15.694+08:00 INFO  [] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@46894dc5
+2026-11-14T22:59:15.696+08:00 INFO  [] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-11-14T22:59:15.709+08:00 INFO  [] [] com.webox.config.DbBootstrap - Database schema present; skipping bootstrap
+OpenJDK 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+mvn test exit=0
+=== surefire ===
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 5.299 s -- in com.webox.WeBoxApiIT
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.160 s -- in com.webox.UtilTest
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.007 s -- in com.webox.S5bFixTest
+=== mvn package ===
+package exit=0
+-rw-r--r-- 1 gem gem 29970878 2026-11-14 22:51:39.243185372 +0800 target/webox-backend.jar

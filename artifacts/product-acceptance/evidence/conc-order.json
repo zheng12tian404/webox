@@ -1,0 +1,17 @@
+{
+  "runId": "pa50b",
+  "base": "http://127.0.0.1:8083",
+  "finishedAt": "2026-11-14T14:40:14.582Z",
+  "pass": 0,
+  "fail": 1,
+  "skipped": 0,
+  "results": [
+    {
+      "tc": "TC-058",
+      "name": "管理员登录",
+      "ok": false,
+      "detail": "admin 登录失败",
+      "at": "2026-11-14T14:40:14.581Z"
+    }
+  ]
+}

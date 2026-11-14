@@ -1,0 +1,62 @@
+# AC-030/031/032 product re-verification 2026-11-14 22:58:31 CST
+## Baseline
+20	Kung Pao Chicken	1880	ON_SHELF
+audit_count_before=21
+
+## 1) PUT /admin/dishes/20 confirm=false (expect 400, no change)
+{"code":"VALIDATION_CONFIRM_REQUIRED","message":"confirm=true is required for this operation","data":null,"requestId":"6f9f1019-46c9-4d9d-b64b-247e3cd38bf1"}
+HTTP 400
+20	Kung Pao Chicken	1880	ON_SHELF
+audit_count_after=21
+
+## 2) PUT confirm=true price 1880->1900 (expect 200 + audit)
+{"code":"OK","message":"OK","data":{"dishId":20,"name":"Kung Pao Chicken","description":"Spicy chicken with peanuts","priceCents":1900,"category":"Chinese","protein":"Chicken","allergens":["Peanuts"],"spiceLevel":"Hot","imageUrl":"/images/image_03.jpg","status":"ON_SHELF"},"requestId":"2bc3a5ed-977d-492f-abc6-c898fda97cb4"}
+HTTP 200
+20	Kung Pao Chicken	1900
+DISH_UPDATE	DISH	20	1880	1900	s5c price 1880->1900	127.0.0.1
+
+## 3) restore price 1880 (expect 200)
+HTTP 200
+1880
+
+## 4) PATCH status OFF_SHELF confirm=false (expect 400, no change)
+{"code":"VALIDATION_CONFIRM_REQUIRED","message":"confirm=true is required for this operation","data":null,"requestId":"a9709da0-c89f-4c9b-8a17-447feb8b4dcb"}
+HTTP 400
+ON_SHELF
+## 4b) PATCH status OFF_SHELF confirm=true (expect 200, DB OFF_SHELF)
+{"code":"OK","message":"OK","data":{"dishId":20,"status":"OFF_SHELF"},"requestId":"027f3ab2-8bb7-4060-99fe-043e2e0ea437"}
+HTTP 200
+OFF_SHELF
+menu(dish 20 count for employee after off-shelf):
+items= 19 dish20= 0 dish1= 1
+DISH_STATUS	20	"ON_SHELF"	"OFF_SHELF"	s5c off-shelf verify
+## 4c) restore ON_SHELF confirm=true (expect 200, menu visible)
+HTTP 200
+ON_SHELF
+items= 20 dish20= 1
+
+## 5) PUT daily-menu 2026-11-17 confirm=false (expect 400)
+{"code":"VALIDATION_CONFIRM_REQUIRED","message":"confirm=true is required for this operation","data":null,"requestId":"fe9436bd-6bb2-4819-8f95-a30a821262bc"}
+HTTP 400
+## 5b) PUT daily-menu confirm=true (expect 200)
+{"code":"OK","message":"OK","data":{"serveDate":"2026-11-17","items":[{"dishId":1,"dishName":"Kung Pao Chicken","totalQty":30,"reservedQty":0,"soldQty":0,"available":30,"lowStock":false,"inventoryMode":"DB_ATOMIC","published":true}]},"requestId":"1d8b60d3-4d31-4444-a903-3b4ce9ee57cf"}
+HTTP 200
+1	2026-11-17	PUBLISHED	30
+DAILY_MENU_UPDATE	DAILY_MENU	2026-11-17	s5c daily-menu verify	1
+
+## 6) PUT stock 2026-11-17 dish1 confirm=false (expect 400)
+{"code":"VALIDATION_CONFIRM_REQUIRED","message":"confirm=true is required for this operation","data":null,"requestId":"7733de95-1d00-4ea0-9421-3c0b2a84c59c"}
+HTTP 400
+30
+## 6b) PUT stock confirm=true (expect 200, DB 35)
+{"code":"OK","message":"OK","data":{"dishId":1,"serveDate":"2026-11-17","totalQty":35,"available":35},"requestId":"36d36c6c-5f36-41f2-87af-e036a41fca2a"}
+HTTP 200
+35	0	0
+STOCK_UPDATE	STOCK	1:2026-11-17	30	35	s5c stock verify
+
+## 7) employee -> /admin (expect 403)
+HTTP 403
+## 8) missing reason with confirm=true (expect 400 VALIDATION_REASON_REQUIRED)
+{"code":"VALIDATION_REASON_REQUIRED","message":"A reason of 1-200 characters is required","data":null,"requestId":"3d24d861-a385-4d56-962e-864417caa3ed"}
+HTTP 400
+1880

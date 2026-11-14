@@ -1,0 +1,69 @@
+# Stage 5e Git 提交与推送重试证据
+# 时间：2026-11-14 23:2x CST（CST，本机）
+# 仓库：/home/gem/code/req-squad/workspace/6343a752-e110-407c-8dfb-a5873425d917
+# 分支：main
+
+## git remote -v
+origin	https://github.com/zheng12tian404/webox.git (fetch)
+origin	https://github.com/zheng12tian404/webox.git (push)
+
+## 提交记录（git log --oneline）
+caf7143 fix(stage5d): close S5C-D-001 cross-account prefs/cart leak
+83a531f fix(stage5b/5c): close P0/P1 fixes and sync final delivery docs
+be8056e feat: WeBox employee meal ordering platform (Tier1/2/3) + delivery docs and AI conversation export
+
+## 本次提交内容
+- 代码（Stage 5d 修复 S5C-D-001）：
+  - frontend/src/store/authStore.ts
+  - frontend/src/store/prefsStore.ts
+  - frontend/src/store/cartStore.ts
+- 文档（Stage 5e 终版）：
+  - README.md、RUNBOOK.md
+  - doc/05-testing.md（新增 §5.7 Stage 5e 终版）
+  - doc/07-delivery.md（终版状态、AC 汇总、NOT TESTED、推送结果）
+  - docs/defect-log.md（S5C-D-001 CLOSED）
+  - docs/product-acceptance-v3.md、docs/test-report-v3.md
+- 证据：artifacts/s5d-*、s5e-*、s5e-product/*、s5e-doc-check.txt
+
+## 提交前安全检查
+- git ls-files 中 node_modules/target/dist/.env 数量 = 0
+- 文档密钥/凭据扫描命中 = 0（.env.example 仅占位符；演示账号为种子默认值）
+- 未提交任何真实 Token、密码、PII
+
+## git push 重试
+命令：
+  GIT_TERMINAL_PROMPT=0 GIT_ASKPASS=/bin/true git push -u origin main
+结果：
+  PUSH_EXIT=128
+  remote: No anonymous write access.
+  fatal: Authentication failed for 'https://github.com/zheng12tian404/webox.git/'
+
+补充探测：
+  git ls-remote origin  -> exit 0（可读，仓库当前无 refs）
+  说明：网络可达、读取匿名可成功；失败点为写入认证（无 GitHub 写权限凭据）。
+
+## 结论
+- 推送状态：**未推送（FAILED）**
+- 原因：环境无 GitHub 写权限凭据（与 Stage 5c 相同；未索取、未记录任何凭据）
+- 本地提交完整保留：caf7143（代码+终版文档）、ae9587c（推送结果记录）
+
+## bundle 恢复包
+命令：git bundle create artifacts/webox-repo.bundle --all
+路径：artifacts/webox-repo.bundle
+大小：54,643,221 bytes（约 52.1 MiB）
+sha256：324ff077d95a7b57d3b7e0394acd5f725d47a58b804c6d3caa9da117cc8adba5
+包含提交：至 ae9587c（随后仅新增 bundle 与 doc-check 的收尾提交，不含业务变更）
+恢复：git clone artifacts/webox-repo.bundle webox
+校验：git clone 后 git log --oneline 应包含 be8056e / 83a531f / caf7143 / ae9587c
+
+## 最终 HEAD
+- 收尾提交：ebb8f5f（bundle + doc-check）、575ea6b（并行节点最终截图，无业务变更）
+- 说明：bundle 在 ae9587c 生成（含全部业务与文档提交）；ebb8f5f/575ea6b 仅新增 bundle/doc-check 与截图，不含业务变更。
+- 工作区状态：git status 干净（0 未提交变更）。
+- 最新 HEAD：575ea6bce1976dd72c356dd3acc5eeb91772c06f
+
+## 文档检查（详见 artifacts/s5e-doc-check.txt）
+- doc/ 数量：10（00–08 + README）
+- 根 README：项目说明、技术栈、目录、从零启动、账号、种子、飞书 wiki 全文 + 链接均 OK
+- 本地 Markdown 链接：0 缺失
+- 密钥/凭据扫描：0 命中

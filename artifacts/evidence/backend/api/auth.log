@@ -1,0 +1,19 @@
+[PASS] TC-001 注册 201 :: status=201 body={"code":"OK","message":"OK","data":{"id":47,"email":"u001_api1794666509_u7reqi@test.com","role":"EMPLOYEE"},"requestId":"a60a2c60-0343-4972-9aad-13609611fac6"}
+[PASS] TC-001 role=EMPLOYEE :: role=EMPLOYEE
+[PASS] TC-001 响应不含密码 :: 响应 JSON 不含 password 字段
+[PASS] TC-001 BCrypt 前缀 $2 :: hashPrefix=$2a$
+[PASS] TC-002 重复注册 409 AUTH_EMAIL_EXISTS :: status=409 body={"code":"AUTH_EMAIL_EXISTS","message":"Email already registered","data":null,"requestId":"506049db-c01f-4ba6-ac72-22dde8751acb"}
+[PASS] TC-002 大小写变体 409 :: status=409 body={"code":"AUTH_EMAIL_EXISTS","message":"Email already registered","data":null,"requestId":"ac7ae740-5ac3-46bc-ac1f-a7bf5bcba1cc"}
+[FAIL] TC-003 非法邮箱 → 400 VALIDATION_EMAIL_FORMAT :: status=0 body=
+[FAIL] TC-003 7 位密码 → 400 VALIDATION_PASSWORD_POLICY :: status=0 body=
+[PASS] TC-003 纯字母密码 → 400 VALIDATION_PASSWORD_POLICY :: status=400 body={"code":"VALIDATION_PASSWORD_POLICY","message":"Password must be 8-64 characters and contain both letters and digits","data":null,"requestId":"23f906a9-4fc8-445b-90ba-9631cf06c5d0"}
+[FAIL] TC-003 邮箱 201 字符 → 400 VALIDATION_EMAIL_LENGTH :: status=0 body=
+[PASS] TC-003 8 位含字母数字通过 201 :: status=201
+[FAIL] TC-084 注册 role=ADMIN 被拒绝或强制 EMPLOYEE :: status=0 role=null
+[PASS] TC-004 员工登录 200 且返回 JWT :: status=200 token=yes
+[PASS] TC-004 管理员登录 role=ADMIN :: status=200 role=ADMIN
+[FAIL] TC-004 /auth/me 200（刷新保持会话） :: status=0 body=
+[PASS] TC-005 连续错误密码前 10 次 401 :: codes=401,401,401,401,401,401,401,401,401,401,429
+[PASS] TC-005 第 11 次 429 RATE_LIMITED :: codes=401,401,401,401,401,401,401,401,401,401,429
+
+== api-auth.json: PASS=12 FAIL=5 SKIP=0 ==

@@ -1,0 +1,32 @@
+++ /opt/gem/bin/agent-browser --session s5e open http://127.0.0.1:5175/login
+[32m✓[0m [1mWeBox — Employee Meal Ordering[0m
+  [2mhttp://127.0.0.1:5175/login[0m
+++ /opt/gem/bin/agent-browser --session s5e wait '[data-testid=login-email]'
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e fill '[data-testid=login-email]' s5e_prod_a_2318@test.com
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e fill '[data-testid=login-password]' Test12345
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e click '[data-testid=login-submit]'
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e wait 1600
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e open http://127.0.0.1:5175/menu
+[32m✓[0m [1mWeBox — Employee Meal Ordering[0m
+  [2mhttp://127.0.0.1:5175/menu[0m
+++ /opt/gem/bin/agent-browser --session s5e wait '[data-testid=add-to-cart-1]'
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e eval '(()=>{const b=document.querySelector("[data-testid=add-to-cart-1]");return JSON.stringify({disabled:b.disabled,text:b.textContent,rect:b.getBoundingClientRect()})})()'
+"{\"disabled\":false,\"text\":\"Add to cart\",\"rect\":{\"x\":1203.875,\"y\":1467.015625,\"width\":92.625,\"height\":34,\"top\":1467.015625,\"right\":1296.5,\"bottom\":1501.015625,\"left\":1203.875}}"
+++ /opt/gem/bin/agent-browser --session s5e eval 'document.querySelector("[data-testid=add-to-cart-1]").click(); "jsclicked"'
+"jsclicked"
+++ /opt/gem/bin/agent-browser --session s5e wait 1500
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e get count '[data-testid=allergen-modal]'
+1
+++ /opt/gem/bin/agent-browser --session s5e eval 'document.querySelector("[data-testid=allergen-modal]")?.innerText || null'
+"This dish contains an allergen you flagged: Peanuts. Add anyway?"
+++ /opt/gem/bin/agent-browser --session s5e eval 'localStorage.getItem("webox.cart.v1")'
+null
+++ /opt/gem/bin/agent-browser --session s5e get url
+http://127.0.0.1:5175/menu

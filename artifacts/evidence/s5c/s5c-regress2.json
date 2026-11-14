@@ -1,0 +1,143 @@
+{
+  "runId": "s5cfx1794668417",
+  "base": "http://127.0.0.1:8084",
+  "finishedAt": "2026-11-14T15:00:22.592Z",
+  "pass": 14,
+  "fail": 5,
+  "skipped": 0,
+  "results": [
+    {
+      "tc": "S5C-R2",
+      "name": "偏好保存（null 预算/Medium/合法枚举）→ 200",
+      "ok": true,
+      "detail": "allergen=Peanuts cat=Chinese status=200 body={\"code\":\"OK\",\"message\":\"OK\",\"data\":{\"allergens\":[\"Peanuts\"],\"preferredCategories\":[\"Chinese\"],\"spicePreference\":\"Medium\",\"tastePreference\":\"Medium\",\"budgetMinCents\":null,\"budgetMaxCents\":null,\"recomme",
+      "at": "2026-11-14T15:00:17.681Z"
+    },
+    {
+      "tc": "S5C-R2",
+      "name": "偏好回读一致",
+      "ok": true,
+      "detail": "readback={\"code\":\"OK\",\"message\":\"OK\",\"data\":{\"allergens\":[\"Peanuts\"],\"preferredCategories\":[\"Chinese\"],\"spicePreference\":\"Medium\",\"tastePreference\":\"Medium\",\"budgetMinCents\":null,\"budgetMaxCents\":null,\"recommendEnabled\":false},\"requestId\":\"8c91dd78-5089-425d-8431-e94a4",
+      "at": "2026-11-14T15:00:17.684Z"
+    },
+    {
+      "tc": "S5C-R2",
+      "name": "非法枚举 Peanut → 400 VALIDATION_CATEGORY（枚举校验生效）",
+      "ok": true,
+      "detail": "status=400",
+      "at": "2026-11-14T15:00:17.689Z"
+    },
+    {
+      "tc": "S5C-R2",
+      "name": "同键 5 次（限流内）均 200/201",
+      "ok": false,
+      "detail": "statuses=409,409,409,409,409",
+      "at": "2026-11-14T15:00:18.080Z"
+    },
+    {
+      "tc": "S5C-R2",
+      "name": "同键仅 1 个 orderId",
+      "ok": false,
+      "detail": "ids=[]",
+      "at": "2026-11-14T15:00:18.081Z"
+    },
+    {
+      "tc": "S5C-R2",
+      "name": "DB 同键仅 1 单",
+      "ok": false,
+      "detail": "count=0",
+      "at": "2026-11-14T15:00:18.111Z"
+    },
+    {
+      "tc": "S5C-R2",
+      "name": "同键仅 1 条 RESERVE",
+      "ok": false,
+      "detail": "[]",
+      "at": "2026-11-14T15:00:18.133Z"
+    },
+    {
+      "tc": "S5C-R2",
+      "name": "异体前置首单 201",
+      "ok": false,
+      "detail": "status=409",
+      "at": "2026-11-14T15:00:18.298Z"
+    },
+    {
+      "tc": "S5C-R2",
+      "name": "同键异体 → 409 IDEMPOTENCY_CONFLICT",
+      "ok": true,
+      "detail": "status=409 body={\"code\":\"IDEMPOTENCY_CONFLICT\",\"message\":\"Idempotency-Key was used with a different request body\",\"data\":null,\"requestId\":\"cf303f17-32dd-422b-b900-61bd80d5f10e\"}",
+      "at": "2026-11-14T15:00:18.303Z"
+    },
+    {
+      "tc": "S5C-R2",
+      "name": "第 3 次同键请求（异体后）仍走限流/幂等，不新建单",
+      "ok": true,
+      "detail": "status=409 code=STOCK_INSUFFICIENT",
+      "at": "2026-11-14T15:00:18.308Z"
+    },
+    {
+      "tc": "S5C-R2",
+      "name": "预览单价=菜价+选项加价（分）",
+      "ok": true,
+      "detail": "unit=2800 expected=2800",
+      "at": "2026-11-14T15:00:18.469Z"
+    },
+    {
+      "tc": "S5C-R2",
+      "name": "预览小计/总额=单价×3（分）",
+      "ok": true,
+      "detail": "subtotal=8400 total=8400",
+      "at": "2026-11-14T15:00:18.469Z"
+    },
+    {
+      "tc": "S5C-R2",
+      "name": "菜单价展示 ¥ 两位小数",
+      "ok": true,
+      "detail": "priceDisplay=¥28.00 priceCents=2800",
+      "at": "2026-11-14T15:00:18.469Z"
+    },
+    {
+      "tc": "S5C-R2",
+      "name": "50 用户就绪",
+      "ok": true,
+      "detail": "ready=50/50",
+      "at": "2026-11-14T15:00:22.348Z"
+    },
+    {
+      "tc": "S5C-R2",
+      "name": "并发前置库存=10",
+      "ok": true,
+      "detail": "status=200",
+      "at": "2026-11-14T15:00:22.388Z"
+    },
+    {
+      "tc": "S5C-R2",
+      "name": "50 并发抢 10：成功 10 / 409×40",
+      "ok": true,
+      "detail": "201=10 409_STOCK=40 other=0 elapsed=112ms",
+      "at": "2026-11-14T15:00:22.522Z"
+    },
+    {
+      "tc": "S5C-R2",
+      "name": "available=0 / reserved 增量=10 / 无负库存",
+      "ok": true,
+      "detail": "row=[\"20\",\"20\",\"0\",\"0\"] baselineReserved=10",
+      "at": "2026-11-14T15:00:22.562Z"
+    },
+    {
+      "tc": "S5C-R2",
+      "name": "ledger RESERVE 增量=10（对账）",
+      "ok": true,
+      "detail": "before=10 after=20 rows=[[\"RESERVE\",\"20\",\"20\"]]",
+      "at": "2026-11-14T15:00:22.588Z"
+    },
+    {
+      "tc": "S5C-R2",
+      "name": "库存对账 drift 为空",
+      "ok": true,
+      "detail": "status=200 drift=[]",
+      "at": "2026-11-14T15:00:22.592Z"
+    }
+  ]
+}

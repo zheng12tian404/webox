@@ -1,0 +1,42 @@
+23:03:24 CDP connected: E0C433A00E55A477D5CB9586C5084686
+23:03:27 login -> url=/menu cards=20 nav=session-ok
+23:03:27 ## AC-021 card add: click add-to-cart-1 (Kung Pao, Peanuts)
+23:03:29 allergen modal present=True
+23:03:29 modal text=This dish contains an allergen you flagged: Peanuts. Add anyway?
+23:03:29 cart lines with modal open=0
+23:03:29 screenshot -> /home/gem/code/req-squad/workspace/6343a752-e110-407c-8dfb-a5873425d917/artifacts/s5c-product/b2-allergen-modal.png
+23:03:29 ## AC-021 Cancel -> must not add
+23:03:29 modal after cancel=False
+23:03:29 cart lines after cancel=0
+23:03:29 ## AC-021 Add anyway -> cart +1
+23:03:31 cart content={"state":{"lines":[{"lineId":"1|#L1-khz78d","dishId":1,"name":"Kung Pao Chicken","imageUrl":"/images/image_01.jpg","basePriceCents":2200,"options":[],"unitPriceCents":2200,"qty":1,"addedAt":1794668610982}]},"version":1}
+23:03:31 screenshot -> /home/gem/code/req-squad/workspace/6343a752-e110-407c-8dfb-a5873425d917/artifacts/s5c-product/b3-cart-after-allergen.png
+23:03:31 ## AC-022 For You toggle
+23:03:34 for-you badges=0 cards=20
+23:03:34 first cards=['Beef Noodle Soup', 'Caesar Salad', 'California Roll', 'Chicken Quinoa Bowl', 'Chicken Teriyaki Bento', 'Classic Beef Burger']
+23:03:34 screenshot -> /home/gem/code/req-squad/workspace/6343a752-e110-407c-8dfb-a5873425d917/artifacts/s5c-product/b4-for-you.png
+23:03:34 ## AC-014/015/053 same-tick double click on Place Order
+23:03:35 cart page lines=1
+23:03:37 checkout url=/checkout
+23:03:37 address filled=True
+23:03:38 double click result=double-clicked
+23:03:41 POST /orders count=1 responses=[201]
+23:03:41 url after submit=/order-success/16
+23:03:41 success page=True
+23:03:41 order no=WB20261115-0016
+23:03:41 cart after success={"state":{"lines":[]},"version":1}
+23:03:41 screenshot -> /home/gem/code/req-squad/workspace/6343a752-e110-407c-8dfb-a5873425d917/artifacts/s5c-product/b5-double-submit-success.png
+23:03:41 ## AC-026/053 duplicate order recovery entry
+23:03:45 cart lines for duplicate attempt=1
+Traceback (most recent call last):
+  File "/home/gem/code/req-squad/workspace/6343a752-e110-407c-8dfb-a5873425d917/artifacts/s5c-product/s5c_cdp.py", line 272, in <module>
+    asyncio.run(main())
+  File "/usr/lib/python3.10/asyncio/runners.py", line 44, in run
+    return loop.run_until_complete(main)
+  File "/usr/lib/python3.10/asyncio/base_events.py", line 649, in run_until_complete
+    return future.result()
+  File "/home/gem/code/req-squad/workspace/6343a752-e110-407c-8dfb-a5873425d917/artifacts/s5c-product/s5c_cdp.py", line 233, in main
+    await c.eval("document.querySelector('[data-testid=checkout-submit]').click(); 'submit'")
+  File "/home/gem/code/req-squad/workspace/6343a752-e110-407c-8dfb-a5873425d917/artifacts/s5c-product/s5c_cdp.py", line 81, in eval
+    raise RuntimeError("eval failed: {}".format(res["exceptionDetails"]))
+RuntimeError: eval failed: {'exceptionId': 1, 'text': 'Uncaught', 'lineNumber': 0, 'columnNumber': 55, 'scriptId': '101', 'stackTrace': {'callFrames': [{'functionName': '', 'scriptId': '101', 'url': '', 'lineNumber': 0, 'columnNumber': 55}]}, 'exception': {'type': 'object', 'subtype': 'error', 'className': 'TypeError', 'description': "TypeError: Cannot read properties of null (reading 'click')\n    at <anonymous>:1:56", 'objectId': '3779973804882390522.6.2'}}

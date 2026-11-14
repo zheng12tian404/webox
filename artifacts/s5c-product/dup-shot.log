@@ -1,0 +1,5 @@
+path: /checkout
+banner: True
+existing link: /orders/16
+cart line: {"state":{"lines":[{"lineId":"2|#L1-x8qu4t","dishId":2,"name":"Caesar Salad","imageUrl":"/images/image_02.jpg","basePriceCents":2850,"options":[],"unitPriceCents":2850,"qty":2,"addedAt":1794668622964}]},"version":1}
+screenshot -> b6-duplicate-recovery.png

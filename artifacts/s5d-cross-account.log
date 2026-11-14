@@ -1,0 +1,40 @@
+23:14:32 login s5c_pa_225849@test.com -> path=/menu user=s5c_pa_225849@test.com
+23:14:35 A Peanuts pressed before=true
+23:14:37 A prefs API=null
+23:14:37 A prefs store={"state":{"prefs":{"allergens":["Peanuts"],"preferredCategories":["Chinese","Japanese"],"spicePreference":"Mild","tastePreference":"Rich","budgetMinCents":1000,"budgetMaxCents":1500,"recommendEnabled":true},"ownerUserId":116},"version":1}
+23:14:37 screenshot -> s5d-a-login.png
+23:14:40 A-before-logout menu card present=True path=/menu
+23:14:43 A-before-logout allergen modal present=True
+23:14:43 A-before-logout cart store=None
+23:14:43 A modal before logout=True (expected True, cart 0 until confirm)
+23:14:44 A cart after confirm={"state":{"lines":[{"lineId":"1|#L1-8s26i2","dishId":1,"name":"Kung Pao Chicken","imageUrl":"/images/image_01.jpg","basePriceCents":2200,"options":[],"unitPriceCents":2200,"qty":1,"addedAt":1794669283443}]},"version":1}
+23:14:46 after logout path=/login
+23:14:46 storage after logout={"auth":null,"prefs":null,"cart":null}
+23:14:46 prefs store after logout=null
+23:14:46 cart store after logout=null
+23:14:51 login s5c_clean_230749@test.com -> path=/menu user=s5c_clean_230749@test.com
+23:14:51 B prefs API(before)=null
+23:14:52 B prefs API(after)=null
+23:14:52 B prefs store after login={"state":{"prefs":{"allergens":[],"preferredCategories":[],"spicePreference":"None","tastePreference":"Medium","budgetMinCents":null,"budgetMaxCents":null,"recommendEnabled":false},"ownerUserId":120},"version":1}
+23:14:55 B menu card present=True path=/menu
+23:14:58 B allergen modal present=False
+23:14:58 B cart store={"state":{"lines":[{"lineId":"1|#L1-bcrwf8","dishId":1,"name":"Kung Pao Chicken","imageUrl":"/images/image_01.jpg","basePriceCents":2200,"options":[],"unitPriceCents":2200,"qty":1,"addedAt":1794669295512}]},"version":1}
+23:14:58 RESULT B modal present=False (expected False)
+23:14:58 screenshot -> s5d-b-no-modal.png
+23:15:01 after logout path=/login
+23:15:01 storage after logout={"auth":null,"prefs":null,"cart":null}
+23:15:01 prefs store after logout=null
+23:15:01 cart store after logout=null
+23:15:05 login s5c_pa_225849@test.com -> path=/menu user=s5c_pa_225849@test.com
+23:15:05 A prefs store after re-login={"state":{"prefs":{"allergens":["Peanuts"],"preferredCategories":["Chinese","Japanese"],"spicePreference":"Mild","tastePreference":"Rich","budgetMinCents":1000,"budgetMaxCents":1500,"recommendEnabled":true},"ownerUserId":116},"version":1}
+23:15:08 A menu card present=True path=/menu
+23:15:11 A allergen modal present=True
+23:15:11 A cart store=None
+23:15:11 RESULT A modal present=True (expected True)
+23:15:11 A modal text=This dish contains an allergen you flagged: Peanuts. Add anyway?
+23:15:11 screenshot -> s5d-a-modal.png
+23:15:14 after logout path=/login
+23:15:14 storage after logout={"auth":null,"prefs":null,"cart":null}
+23:15:14 prefs store after logout=null
+23:15:14 cart store after logout=null
+23:15:14 FINAL storage={"auth":null,"prefs":null,"cart":null}

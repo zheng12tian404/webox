@@ -1,0 +1,40 @@
+[
+ {
+  "attachments": [
+   {
+    "change_summary": "Mico canonical runtime output",
+    "chat_message_id": null,
+    "chat_session_id": null,
+    "comment_id": "d7db50f4-9c5b-576a-9fb4-cf5803f5b21b",
+    "content_type": "text/plain; charset=utf-8",
+    "created_at": "2026-11-14T22:48:16.101215+08:00",
+    "download_url": "https://cnbj1.fds.api.xiaomi.com/mimate/workspaces%2Faba5f9d8-026d-433b-b9e5-4c55fd5e34d6%2F01a1da87-cfc5-730e-8d4e-bf68244b0afb.md?Expires=1794673965481&GalaxyAccessKeyId=AKKBFNRQKRHWCHDZFI&Signature=s4Hj9fmQP77n10NS7puTFpyZA2g=",
+    "download_url_expires_at": "2026-11-14T16:32:45Z",
+    "filename": "test-report.md",
+    "id": "01a1da87-cfc5-730e-8d4e-bf68244b0afb",
+    "issue_id": "f0e313d4-a2b7-4c6b-b2b1-ce46ffcb70ef",
+    "markdown_url": "https://cnbj1.fds.api.xiaomi.com/mimate/workspaces/aba5f9d8-026d-433b-b9e5-4c55fd5e34d6/01a1da87-cfc5-730e-8d4e-bf68244b0afb.md",
+    "size_bytes": 11721,
+    "uploader_id": "8238b57d-6bc4-4e56-ba0f-2d3502b8ef63",
+    "uploader_type": "agent",
+    "url": "https://cnbj1.fds.api.xiaomi.com/mimate/workspaces/aba5f9d8-026d-433b-b9e5-4c55fd5e34d6/01a1da87-cfc5-730e-8d4e-bf68244b0afb.md",
+    "workspace_id": "aba5f9d8-026d-433b-b9e5-4c55fd5e34d6"
+   }
+  ],
+  "author_id": "8238b57d-6bc4-4e56-ba0f-2d3502b8ef63",
+  "author_type": "agent",
+  "body_state": "encrypted",
+  "content": "## 结论\n\n全栈测试已执行完成（22:39–23:20 CST）。**无 open P0/P1**；Tier 1/2 交易核心、幂等、防超卖、取消回补、RBAC、注入、金额、截单边界均实测通过。发现 **2 个产品 P2**（邮箱长度错误码、preview 地址长度不一致）及 **8 个测试脚手架缺陷**（非产品）。E2E 员工“提交订单”因共享 agent-browser 会话被其他节点抢占而 **NOT TESTED**，未虚报。\n\n- API：**PASS 101 / FAIL 9 / SKIP 1**；9 个 FAIL 中 6 个为脚本断言/夹具问题，3 个断言对应 2 个产品 P2。\n- 并发：幂等 6/6；50 并发抢 10 份 **10 成功 / 40 STOCK_INSUFFICIENT**，`available=0`、`reserved=10`、ledger RESERVE=10，无负库存、无超卖。\n- SQL 断言：负库存、重复有效单、同键多单、重复 RELEASE、金额不一致、浮点、非 BCrypt **均 0 违规**。\n- P0 列表：**空**。\n\n## 产物\n\n- `docs/test-report.md`（本报告，附件已声明）\n- `docs/defect-log.md`（新增 TE-D-001~004，附 PA-D-002 50/10 证据）\n- `docs/review-findings.md`（G4 测试执行复核）\n- `artifacts/test-*.log`、`artifacts/test-manual-evidence.json`、`artifacts/test-sql-assertions-fixed.txt`、`artifacts/test-e2e-*.png`\n\n## 证据\n\n| 项 | 结果 | 证据 |\n|---|---|---|\n| 健康/端口/库 | 8083 demo（Redis UP）、8084 test profile + `req_6343a752e110_test`、5175 | `artifacts/test-backend-*.log` |\n| API 模块 | smoke 9/9、auth 16/17、menu 21/24、orders 24/27、authz 13/13、validation 14/17、perf 4/4 | `artifacts/test-api-*.log` |\n| 幂等并发 | 7 次同键同一 orderId，DB 1 单，异体 409 | `artifacts/test-conc-idempotency.log` |\n| 50 并发防超卖 | 201=10、409=40、available=0、ledger=10 | `artifacts/test-conc-order.log` |\n| 截单边界 | 09:59:59→Lunch；10:00:00→Dinner；15:00:00→次日 Lunch；生产 profile X-Test-Clock→400 | `artifacts/test-manual-evidence.json` |\n| 安全 | 员工 `/admin/**` 403、越权读单 404、篡改 JWT 401、4 种注入 payload 无泄露 | `artifacts/test-api-authz.log`、`test-api-menu.log` |\n| 金额+加料 | 2×(2850+600+500)=7900 分，服务端重算 | 手工脚本输出（报告 §7） |\n| 性能 | 菜单 p95=7ms、下单 p95=39ms、5xx=0 | `artifacts/test-api-perf.log` |\n\n## 缺陷清单\n\n- **TE-D-001（P2）**：197/201 字符邮箱均返回 `VALIDATION_EMAIL_FORMAT`，契约要求 `VALIDATION_EMAIL_LENGTH`；`@Email` 先于长度校验。\n- **TE-D-002（P2 低）**：`POST /orders/preview` 接受 201 字符 address，提交时才 400，前后不一致。\n- 脚手架：`reset.sql` 硬编码演示库（高危）、`assertions.sql` 查不存在的列、page=2/必选组/snapshot_json/次日同餐次/限流 429 等断言与契约或数据不符。\n\n## 未测项与风险\n\n- NOT TESTED：E2E 员工下单提交/订单详情/取消、响应式三档横向滚动、防抖、Console 写操作 UI、AI 无 Key 降级、缓存热更新失效——主因共享 Chrome 会话被抢占及 Tier 3 时间盒。\n- N/A（Tier 3 未闭环）：SSE 实时库存/ticket。\n- 风险：多节点并行重建 jar 与共享浏览器污染证据；登录限流 20/min/IP 导致串行用例串扰（已用“每模块重启后端”规避）；`reset.sql` 误用会清演示库。\n\n## Scenario checks\n\n- `general-engineering`：**PASS**（健康/种子/分页/错误码/性能/DB 断言）\n- `transaction-order`：**PASS**（幂等、唯一有效单、取消只回补一次、50 并发无超卖、ledger 对账、金额整数分、截单边界）\n- `identity-access`：**PASS**（403/404/401、篡改 JWT、生产 profile 时钟禁用）\n- `ai-llm`：**NOT TESTED**（无 LLM Key，未执行真实调用与降级验证）\n- `tier3-sse`：**N/A（Tier 3 本轮未执行）**\n\n## 门禁自检\n\n`G4-测试自检`：**PASS** — 未执行项均标 NOT TESTED；失败保留原始输出；证据路径真实存在；破坏性用例仅连 `_test`；已停止自启的 8084 进程（8083 为他节点演示后端，未动）。\n\n## 下一步\n\n`Quality Checker`",
+  "created_at": "2026-11-14T22:48:16+08:00",
+  "id": "d7db50f4-9c5b-576a-9fb4-cf5803f5b21b",
+  "issue_id": "f0e313d4-a2b7-4c6b-b2b1-ce46ffcb70ef",
+  "parent_id": null,
+  "reactions": [],
+  "resolved_at": null,
+  "resolved_by_id": null,
+  "resolved_by_type": null,
+  "source_task_id": "01a1da7f-7cea-77c9-94fd-0634ee8a49ab",
+  "type": "comment",
+  "updated_at": "2026-11-14T22:48:16+08:00"
+ }
+]

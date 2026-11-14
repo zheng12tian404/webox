@@ -1,0 +1,18 @@
+# Architecture DDL check evidence 2026-11-14 21:57:03 CST
+## MySQL version
+8.0.46-0ubuntu0.22.04.5
+## schema.sql applied to scratch db req_6343a752e110_ddlcheck: no errors
+tables=17
+dishes=20
+option_groups=16
+options=41
+menu_today=20
+stock_today=20
+stock_future=40
+NULL
+## duplicate active order -> expect 1062
+ERROR 1062 (23000) at line 1: Duplicate entry '2:2026-11-14:Lunch' for key 'orders.uk_orders_active'
+## stock over-allocation -> expect 3819
+ERROR 3819 (HY000) at line 1: Check constraint 'ck_stock_nonneg' is violated.
+## cleanup scratch database
+dropped

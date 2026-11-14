@@ -1,0 +1,92 @@
+++ /opt/gem/bin/agent-browser --session s5e cookies clear
+[32m✓[0m Cookies cleared
+++ /opt/gem/bin/agent-browser --session s5e eval 'localStorage.clear(); sessionStorage.clear(); "cleared"'
+"cleared"
+++ /opt/gem/bin/agent-browser --session s5e open http://127.0.0.1:5175/login
+[32m✓[0m [1mWeBox — Employee Meal Ordering[0m
+  [2mhttp://127.0.0.1:5175/login[0m
+++ /opt/gem/bin/agent-browser --session s5e wait '[data-testid=login-email]'
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e fill '[data-testid=login-email]' s5e_verify_232156@test.com
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e fill '[data-testid=login-password]' Test12345
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e click '[data-testid=login-submit]'
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e wait 1800
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e eval 'document.querySelector("[data-testid=current-user]")?.textContent'
+"s5e_verify_232156@test.com"
+++ /opt/gem/bin/agent-browser --session s5e screenshot artifacts/prd-verify/ui-menu.png
+[32m✓[0m Screenshot saved to [32martifacts/prd-verify/ui-menu.png[0m
+++ /opt/gem/bin/agent-browser --session s5e eval 'document.querySelector("[data-testid=add-to-cart-2]").click(); "clicked"'
+"clicked"
+++ /opt/gem/bin/agent-browser --session s5e wait 1500
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e get count '[data-testid=allergen-modal]'
+1
+++ /opt/gem/bin/agent-browser --session s5e eval 'document.querySelector("[data-testid=allergen-modal]")?.innerText || null'
+"This dish contains an allergen you flagged: Egg. Add anyway?"
+++ /opt/gem/bin/agent-browser --session s5e screenshot artifacts/prd-verify/ui-allergen-modal.png
+[32m✓[0m Screenshot saved to [32martifacts/prd-verify/ui-allergen-modal.png[0m
+++ /opt/gem/bin/agent-browser --session s5e eval 'document.querySelector("[data-testid=allergen-add-anyway]")?.click(); "confirmed"'
+"confirmed"
+++ /opt/gem/bin/agent-browser --session s5e wait 700
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e open http://127.0.0.1:5175/dishes/4
+[32m✓[0m [1mWeBox — Employee Meal Ordering[0m
+  [2mhttp://127.0.0.1:5175/dishes/4[0m
+++ /opt/gem/bin/agent-browser --session s5e wait '[data-testid=dish-detail]'
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e screenshot artifacts/prd-verify/ui-dish-detail.png
+[32m✓[0m Screenshot saved to [32martifacts/prd-verify/ui-dish-detail.png[0m
+++ /opt/gem/bin/agent-browser --session s5e eval '(()=>{const o=document.querySelector("[data-testid^=option-]"); if(o){o.click(); return o.getAttribute("data-testid")} return "none"})()'
+"option-group-2"
+++ /opt/gem/bin/agent-browser --session s5e eval 'document.querySelector("[data-testid=detail-add-to-cart]").click(); "added"'
+"added"
+++ /opt/gem/bin/agent-browser --session s5e wait 1000
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e eval 'localStorage.getItem("webox.cart.v1")'
+"{\"state\":{\"lines\":[{\"lineId\":\"2|#L1-lxwa8a\",\"dishId\":2,\"name\":\"Caesar Salad\",\"imageUrl\":\"/images/image_02.jpg\",\"basePriceCents\":2850,\"options\":[],\"unitPriceCents\":2850,\"qty\":1,\"addedAt\":1794669757661}]},\"version\":1}"
+++ /opt/gem/bin/agent-browser --session s5e open http://127.0.0.1:5175/cart
+[32m✓[0m [1mWeBox — Employee Meal Ordering[0m
+  [2mhttp://127.0.0.1:5175/cart[0m
+++ /opt/gem/bin/agent-browser --session s5e wait 800
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e screenshot artifacts/prd-verify/ui-cart.png
+[32m✓[0m Screenshot saved to [32martifacts/prd-verify/ui-cart.png[0m
+++ /opt/gem/bin/agent-browser --session s5e open http://127.0.0.1:5175/checkout
+[32m✓[0m [1mWeBox — Employee Meal Ordering[0m
+  [2mhttp://127.0.0.1:5175/checkout[0m
+++ /opt/gem/bin/agent-browser --session s5e wait 1200
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e screenshot artifacts/prd-verify/ui-checkout.png
+[32m✓[0m Screenshot saved to [32martifacts/prd-verify/ui-checkout.png[0m
+++ /opt/gem/bin/agent-browser --session s5e eval 'document.body.innerText.slice(0,900)'
+"WB\nWeBox\nMenu\nMy Orders\nPreferences\nCart\n1\ns5e_verify_232156@test.com\nSign out\nCheckout\n\nPrices and stock are confirmed by the server when you place the order.\n\nOrder items\nCaesar Salad × 1\n¥28.50\nDelivery\nDelivery date\n2026-11-14\n2026-11-15\n2026-11-16\nMeal\nLunch\nDinner\nDelivery address\nBuilding A, 12F\nNew address\n15/200\nSummary\nLunch has closed. Your order will be placed for Lunch on 2026-11-15 (cutoff 10:00).\nItems\n1\nSubtotal\n¥28.50\nCut-off time\n10:00\nTotal\n¥28.50\nPlace Order\n\nLunch · 2026-11-15"
+++ /opt/gem/bin/agent-browser --session s5e open http://127.0.0.1:5175/orders
+[32m✓[0m [1mWeBox — Employee Meal Ordering[0m
+  [2mhttp://127.0.0.1:5175/orders[0m
+++ /opt/gem/bin/agent-browser --session s5e wait 900
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e screenshot artifacts/prd-verify/ui-orders.png
+[32m✓[0m Screenshot saved to [32martifacts/prd-verify/ui-orders.png[0m
+++ /opt/gem/bin/agent-browser --session s5e open http://127.0.0.1:5175/preferences
+[32m✓[0m [1mWeBox — Employee Meal Ordering[0m
+  [2mhttp://127.0.0.1:5175/preferences[0m
+++ /opt/gem/bin/agent-browser --session s5e wait 900
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e screenshot artifacts/prd-verify/ui-preferences.png
+[32m✓[0m Screenshot saved to [32martifacts/prd-verify/ui-preferences.png[0m
+++ /opt/gem/bin/agent-browser --session s5e set viewport 375 812
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e open http://127.0.0.1:5175/menu
+[32m✓[0m [1mWeBox — Employee Meal Ordering[0m
+  [2mhttp://127.0.0.1:5175/menu[0m
+++ /opt/gem/bin/agent-browser --session s5e wait 900
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e screenshot artifacts/prd-verify/ui-menu-mobile-375.png
+[32m✓[0m Screenshot saved to [32martifacts/prd-verify/ui-menu-mobile-375.png[0m
+++ /opt/gem/bin/agent-browser --session s5e set viewport 1280 800
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e errors

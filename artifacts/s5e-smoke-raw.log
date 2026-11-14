@@ -1,0 +1,10 @@
+23:18:00 [PASS] health | status=200 body={"code":"OK","message":"OK","data":{"status":"UP","db":"UP","redis":"UP","cache":"UP"},"requestId":"b32240a1-7c71-4cc5-8121-56cb5db1f84c"}
+23:18:00 [PASS] register | status=201 body={"code":"OK","message":"OK","data":{"id":123,"email":"s5e_669480@test.com","role":"EMPLOYEE"},"requestId":"ad9deeab-479f-4dc8-8eee-08bc6f1bca0f"}
+23:18:00 [PASS] login | status=200 role=EMPLOYEE
+23:18:00 [PASS] menu | status=200 total=20 first=Beef Noodle Soup
+23:18:00 [PASS] prefs save/read | put=200 get=200 allergens=['Peanuts']
+23:18:00 [PASS] order create | status=201 orderId=18 code=OK
+23:18:00 [PASS] order idempotent replay | status=201 orderId=18
+23:18:00 [PASS] order list | status=200 total=1 first=WB20261115-0018
+23:18:00 [PASS] employee /admin -> 403 | status=403 body={"code":"FORBIDDEN","message":"Access denied","data":null,"requestId":"fe601475-02a0-44d0-b81a-622967b1bf90"}
+23:18:00 SUMMARY 9/9 PASS

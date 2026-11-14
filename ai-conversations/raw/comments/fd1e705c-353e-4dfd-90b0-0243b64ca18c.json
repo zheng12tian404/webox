@@ -1,0 +1,20 @@
+[
+ {
+  "attachments": [],
+  "author_id": "947224b1-b569-45d9-9bb1-45def4b37386",
+  "author_type": "agent",
+  "body_state": "encrypted",
+  "content": "## 结论：CHANGES（G4 不通过，进入 Stage 5b）\n\n必查 19 条：**PASS 16 / FAIL 2 / NOT TESTED 1**。Tier 1 抽查全部通过；Tier 2 的 Console 改价与上下架因统一审计序列化异常返回 500，属 P0 阻断项。\n\n## 产物\n\n- `docs/product-acceptance.md`（新增，含逐条 AC 证据与 Stage 5b 修复指令）\n- `docs/defect-log.md`（新增/更新，PA-D-001 P0、PA-D-002/003 P2）\n- 原始证据：`artifacts/product-acceptance/evidence.log`、`artifacts/backend-8083-pa.log`\n\n## 抽查结果\n\n| AC | 结果 | 关键证据 |\n|---|---|---|\n| AC-001/004 | PASS | 注册 201 `role=EMPLOYEE`，DB `$2a$` 60 位；admin/employee 登录与 `/auth/me` 正常 |\n| AC-006/008 | PASS | 菜单 total=20、`¥28.00`；`size=101`→400；`CHICKEN` 命中 5 道；`' OR 1=1--`→200 空；51 字符→400 |\n| AC-013 | PASS | preview 字段齐全、total=4100；地址 201 字符→400 `VALIDATION_ADDRESS_LENGTH` |\n| AC-014/015 | PASS | 订单 9 total=8200、快照非空、1 条 RESERVE；同 key 3 次同 `orderId=9`、DB 1 单；异体 409、缺头 400 |\n| AC-018/019 | PASS | 取消回补 `RESERVE 2/RELEASE 2`，二次取消 409；Confirmed 取消 409 |\n| AC-020/024/026 | PASS | 3+3→400，3+2→201；截单六边界见 `artifacts/backend-testclock.txt`；重复下单 409+`existingOrderId=9` |\n| AC-028 | PASS | 员工 403、匿名 401、管理员 200 |\n| **AC-030/032** | **FAIL** | 改价/上下架均 500 `INTERNAL`；DB 价仍 3800、无审计行 |\n| AC-042/056/057 | PASS | 看板 2 单/17100 分与 DB 一致；20 菜/3 天库存/20 图/账号可下单；前端可见中文 0、金额全部 `¥xx.xx` |\n| AC-035 | NOT TESTED | 登录限流 20/min/IP，50 并发仅 18 用户就绪；仅 15/5 通过，不记 PASS |\n\n重点规则：过敏原弹窗、预算提示不阻断、For You 软排序、5 份上限、唯一有效单、幂等、取消回补、英文文案均通过。\n\n## P0 根因与修复\n\n`backend/src/main/java/com/webox/common/Util.java:21` 使用裸 `new ObjectMapper()`，`AuditService` 序列化 DB 行中的 `LocalDateTime created_at` 抛 `InvalidDefinitionException`，事务回滚（`artifacts/backend-8083-pa.log:458–472`）。修复：注册 `JavaTimeModule` 并禁用时间戳序列化，或只序列化 before/after 显式字段；随后回归 AC-030/032 及每日菜单、改库存接口。\n\n## Scenario checks\n\n- `general-engineering`：PASS（health 200、种子、英文、金额）\n- `transaction-order`：PASS（金额/库存/幂等/唯一单/回补/截单/5 份）；50 并发子项 FAIL（未测足，PA-D-002）\n- `identity-access`：FAIL（403/401/BCrypt 通过；Console 写审计 500 = PA-D-001）\n- `ai-llm`：N/A（本节点未抽查 Tier 3，不改变 Tier1/2 结论）\n\n## 风险与说明\n\n- 22:39 后端曾以 Java 8 启动导致 8083 不可用，已在 22:40 以 JDK17 重启恢复（PA-D-003，P2）。\n- 部分菜品图片与菜名语义不匹配（P2 体验项，不影响功能验收）。\n\n## 下一步\n\n`测试执行 + 后端修复（Stage 5b）`：修复 PA-D-001 → 回归 AC-030/032/031 → 测试复评；GO 前 `defect-log.md` 不得有 open P0/P1。",
+  "created_at": "2026-11-14T22:42:58+08:00",
+  "id": "6450509c-f2a7-5645-ab7a-56e3f73f5ca0",
+  "issue_id": "fd1e705c-353e-4dfd-90b0-0243b64ca18c",
+  "parent_id": null,
+  "reactions": [],
+  "resolved_at": null,
+  "resolved_by_id": null,
+  "resolved_by_type": null,
+  "source_task_id": "01a1da7f-3728-768f-873c-d88910aaee17",
+  "type": "comment",
+  "updated_at": "2026-11-14T22:42:58+08:00"
+ }
+]

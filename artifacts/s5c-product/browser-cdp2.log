@@ -1,0 +1,55 @@
+23:04:22 startup path=/menu
+23:04:22 user=WB | WeBox | Menu | My Orders | Preferences | Cart | 1 | s5c_pa_225849@test.com | Sign out
+23:04:22 ## AC-022 For You toggle (retry)
+23:04:27 url=/menu?sort=for-you&page=1&size=20 before_badges=0 after_badges=0
+23:04:27 screenshot -> b4-for-you.png
+23:04:27 ## AC-026/053 duplicate order recovery entry (retry)
+23:04:29 cart lines=1
+23:04:32 checkout path=/checkout
+23:04:32 checkout-empty=False submit=False
+23:04:42 submit appeared=False
+23:04:42 page text=WB
+WeBox
+Menu
+My Orders
+Preferences
+Cart
+2
+s5c_pa_225849@test.com
+Sign out
+Checkout
+
+Prices and stock are confirmed by the server when you place the order.
+
+Order items
+Caesar Salad × 2
+¥57.00
+Delivery
+Delivery date
+2026-11-14
+2026-11-15
+2026-11-16
+Meal
+Lunch
+Dinner
+Delivery address
+Building A, 12F
+New address
+15/200
+Summary
+Lunch has closed. Your order will be placed for Lunch on 2026-11-15 (cutoff 10:00).
+An active order already exists for this meal.
+View Existing Order
+Items
+2
+Subtotal
+¥57.00
+23:04:42 ## AC-021/022/023 preferences page save + refresh
+23:04:44 form before save={'peanuts': 'true', 'japanese': 'false', 'taste': 'Medium', 'min': '', 'max': ''}
+23:04:46 saved banner=True
+23:04:46 toast=Preferences saved.
+×
+23:04:46 error=None
+23:04:46 screenshot -> b7-preferences-saved.png
+23:04:48 form after refresh={'peanuts': 'true', 'japanese': 'false', 'taste': 'Medium', 'min': '', 'max': ''}
+23:04:48 screenshot -> b8-preferences-after-refresh.png

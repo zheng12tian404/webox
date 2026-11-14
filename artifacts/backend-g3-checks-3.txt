@@ -1,0 +1,27 @@
+===== Admin state machine + audit + CONFIRM ledger (order 8) =====
+-- Pending -> Confirmed
+{"code":"OK","message":"OK","data":{"orderId":8,"orderNo":"WB20261115-0008","status":"Confirmed","deliveryDate":"2026-11-15","mealType":"Lunch","address":"Admin Flow Test","totalCents":3000,"itemCount":1,"createdAt":"2026-11-14T22:37:35.099+08:00","cancelledAt":null,"cancelReason":null,"items":[{"dishId":17,"dishName":"Mushroom Risotto","unitPriceCents":3000,"options":[],"qty":1,"subtotalCents":3000}]},"requestId":"082005ed-6814-41bd-a263-7f90bfc7107b"}
+HTTP 200
+-- employee cancel Confirmed (expect 409)
+{"code":"ORDER_STATE_INVALID","message":"Only pending orders can be cancelled","data":null,"requestId":"04f907f1-bcaa-4daf-b59b-8efad46fa71a"}
+HTTP 409
+-- Confirmed -> Completed
+{"code":"OK","message":"OK","data":{"orderId":8,"orderNo":"WB20261115-0008","status":"Completed","deliveryDate":"2026-11-15","mealType":"Lunch","address":"Admin Flow Test","totalCents":3000,"itemCount":1,"createdAt":"2026-11-14T22:37:35.099+08:00","cancelledAt":null,"cancelReason":null,"items":[{"dishId":17,"dishName":"Mushroom Risotto","unitPriceCents":3000,"options":[],"qty":1,"subtotalCents":3000}]},"requestId":"77c29486-6c8b-4868-b9a9-18197729219e"}
+HTTP 200
+-- Completed -> Cancelled (expect 409)
+{"code":"ORDER_STATE_INVALID","message":"Illegal order state transition Completed -> Cancelled","data":null,"requestId":"8490c7a1-2299-41a1-b355-96e2f5cc7e71"}
+HTTP 409
+-- missing reason (expect 400)
+{"code":"VALIDATION_REASON_REQUIRED","message":"A reason of 1-200 characters is required","data":null,"requestId":"41a62db5-4147-4f1f-be63-0ffa4802ba1e"}
+HTTP 400
+-- DB
+id	status	cancel_reason
+8	Completed	NULL
+entry_type	qty	business_key
+RESERVE	1	ORD:8:D:17:RESERVE
+CONFIRM	1	ORD:8:D:17:CONFIRM
+action	object_id	reason	before_json	after_json	ip	request_id
+ORDER_STATUS	8	kitchen accepted	{"status": "Pending"}	{"status": "Confirmed"}	127.0.0.1	082005ed-6814-41bd-a263-7f90bfc7107b
+ORDER_STATUS	8	delivered	{"status": "Confirmed"}	{"status": "Completed"}	127.0.0.1	77c29486-6c8b-4868-b9a9-18197729219e
+total_qty	reserved_qty	sold_qty	available
+40	0	1	39

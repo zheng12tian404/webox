@@ -1,0 +1,66 @@
+{
+  "runId": "race1794666258",
+  "base": "http://127.0.0.1:8099",
+  "finishedAt": "2026-11-14T14:24:20.576Z",
+  "pass": 8,
+  "fail": 0,
+  "skipped": 0,
+  "results": [
+    {
+      "tc": "TC-058",
+      "name": "15 个用户就绪",
+      "ok": true,
+      "detail": "ready=15/15",
+      "at": "2026-11-14T14:24:20.166Z"
+    },
+    {
+      "tc": "TC-058",
+      "name": "成功数=可售数（5/5）",
+      "ok": true,
+      "detail": "201=5 409_STOCK=10 other=0 elapsed=178ms",
+      "at": "2026-11-14T14:24:20.519Z"
+    },
+    {
+      "tc": "TC-058",
+      "name": "其余为 STOCK_INSUFFICIENT",
+      "ok": true,
+      "detail": "201+409=15/15",
+      "at": "2026-11-14T14:24:20.520Z"
+    },
+    {
+      "tc": "TC-058",
+      "name": "库存不足响应含 dishId/requested/available",
+      "ok": true,
+      "detail": "sample={\"code\":\"STOCK_INSUFFICIENT\",\"message\":\"Some dishes are sold out or insufficient\",\"data\":{\"details\":[{\"dishId\":11,\"requested\":1,\"available\":0}]},\"requestId\":\"beb7d402-3ada-4b6a-9c1b-30bd556074c2\"}",
+      "at": "2026-11-14T14:24:20.520Z"
+    },
+    {
+      "tc": "TC-058",
+      "name": "available >= 0",
+      "ok": true,
+      "detail": "available=0",
+      "at": "2026-11-14T14:24:20.548Z"
+    },
+    {
+      "tc": "TC-058",
+      "name": "reserved+sold <= total",
+      "ok": true,
+      "detail": "reserved=5 sold=0 total=5",
+      "at": "2026-11-14T14:24:20.549Z"
+    },
+    {
+      "tc": "TC-058",
+      "name": "available 与成功数守恒",
+      "ok": true,
+      "detail": "after=0 before=5 ok=5",
+      "at": "2026-11-14T14:24:20.549Z"
+    },
+    {
+      "tc": "TC-058",
+      "name": "ledger RESERVE 汇总=成功数",
+      "ok": true,
+      "detail": "[[\"RESERVE\",\"5\",\"5\"]]",
+      "at": "2026-11-14T14:24:20.576Z"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+++ /opt/gem/bin/agent-browser --session s5e open http://127.0.0.1:5175/login
+[32m✓[0m [1mWeBox — Employee Meal Ordering[0m
+  [2mhttp://127.0.0.1:5175/login[0m
+++ /opt/gem/bin/agent-browser --session s5e fill '[data-testid=login-email]' s5e_prod_a_2318@test.com
+[31m✗[0m Element not found. Verify the selector is correct and the element exists in the DOM.
+++ /opt/gem/bin/agent-browser --session s5e fill '[data-testid=login-password]' Test12345
+[31m✗[0m Element not found. Verify the selector is correct and the element exists in the DOM.
+++ /opt/gem/bin/agent-browser --session s5e click '[data-testid=login-submit]'
+[31m✗[0m Element not found. Verify the selector is correct and the element exists in the DOM.
+++ /opt/gem/bin/agent-browser --session s5e wait 1800
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e get url
+http://127.0.0.1:5175/menu
+++ /opt/gem/bin/agent-browser --session s5e eval 'document.querySelector("[data-testid=current-user]")?.textContent'
+"s5c_e2e2@webox.com"
+++ /opt/gem/bin/agent-browser --session s5e open http://127.0.0.1:5175/preferences
+[32m✓[0m [1mWeBox — Employee Meal Ordering[0m
+  [2mhttp://127.0.0.1:5175/preferences[0m
+++ /opt/gem/bin/agent-browser --session s5e wait '[data-testid=pref-allergen-Peanuts]'
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e click '[data-testid=pref-allergen-Peanuts]'
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e click '[data-testid=pref-save]'
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e wait '[data-testid=pref-saved-toast]'
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e screenshot artifacts/s5e-product/a1-prefs-saved.png
+[32m✓[0m Screenshot saved to [32martifacts/s5e-product/a1-prefs-saved.png[0m
+++ /opt/gem/bin/agent-browser --session s5e eval 'localStorage.getItem("webox.prefs.v1")'
+"{\"state\":{\"prefs\":{\"allergens\":[\"Peanuts\"],\"preferredCategories\":[],\"spicePreference\":\"None\",\"tastePreference\":\"Medium\",\"budgetMinCents\":null,\"budgetMaxCents\":null,\"recommendEnabled\":false},\"ownerUserId\":119},\"version\":1}"

@@ -1,0 +1,53 @@
+server:
+  port: ${SERVER_PORT:8080}
+  shutdown: graceful
+
+spring:
+  application:
+    name: webox-backend
+  datasource:
+    url: jdbc:mysql://${MYSQL_HOST:127.0.0.1}:${MYSQL_PORT:3306}/${MYSQL_DATABASE:req_6343a752e110}?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&rewriteBatchedStatements=true
+    username: ${MYSQL_USER:test}
+    password: ${MYSQL_PASSWORD:test123456}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 30
+      minimum-idle: 5
+      connection-timeout: 3000
+      connection-init-sql: SET time_zone = '+08:00'
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 6MB
+  jackson:
+    time-zone: Asia/Shanghai
+  web:
+    resources:
+      static-locations: classpath:/static/,file:./uploads/
+
+webox:
+  jwt:
+    secret: ${JWT_SECRET:}
+    access-ttl-seconds: 7200
+    refresh-ttl-seconds: 604800
+  upload-dir: ${UPLOAD_DIR:./uploads/images}
+  redis:
+    enabled: ${REDIS_ENABLED:true}
+    host: ${REDIS_HOST:127.0.0.1}
+    port: ${REDIS_PORT:6379}
+    timeout-ms: 300
+  test:
+    clock-enabled: ${TEST_CLOCK_ENABLED:false}
+  llm:
+    api-key: ${LLM_API_KEY:}
+    base-url: ${LLM_BASE_URL:https://api.openai.com/v1}
+    model: ${LLM_MODEL:gpt-4o-mini}
+  cors:
+    allowed-origin: ${CORS_ORIGIN:http://127.0.0.1:5173}
+
+logging:
+  level:
+    root: INFO
+    com.webox: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %-5level [%X{requestId:-}] [%X{userId:-}] %logger{36} - %msg%n"

@@ -1,0 +1,108 @@
+PASS health 200 + db UP | {"status": "UP", "db": "UP", "redis": "UP", "cache": "UP"}
+PASS frontend proxy /api -> backend | status=200
+PASS frontend index 200 | status=200
+PASS POST /auth/register | status=400
+PASS POST /auth/register | status=201
+PASS POST /auth/register | status=409
+PASS POST /auth/login | status=200
+PASS login returns tokens+user | uid=124
+PASS POST /auth/refresh | status=200
+FAIL refresh rotates token
+PASS GET /auth/me | status=200
+PASS GET /auth/me
+PASS GET /me/preferences | status=200
+PASS preferences default
+PASS PUT /me/preferences | status=200
+PASS GET /me/preferences | status=200
+PASS preferences persisted | {"allergens": ["Egg"], "preferredCategories": ["Chinese", "Japanese"], "spicePreference": "Mild", "tastePreference": "Medium", "budgetMinCents": 1500, "budgetMaxCents": 3000, "recommendEnabled": true}
+PASS PUT /me/preferences | status=400
+PASS GET /menu | status=200
+PASS menu 20 dishes | items=20 total=20
+PASS menu fields | {"name": "Beef Noodle Soup", "priceDisplay": "\u00a528.00", "category": "Chinese", "availableQty": 40}
+PASS GET /menu?search=chicken | status=200
+PASS search chicken | hits=6
+PASS GET /menu?category=Chinese,Japanese | status=200
+PASS multi-category filter | hits=8
+PASS GET /menu?search=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa | status=400
+PASS GET /menu?category=Italian | status=400
+PASS GET /menu?page=1&size=5 | status=200
+PASS pagination
+PASS GET /menu/1 | status=200
+PASS dish detail allergens/price | {"name": "Kung Pao Chicken", "allergens": ["Peanuts"], "priceCents": 2200, "priceDisplay": "\u00a522.00", "spiceLevel": "Medium", "protein": "Chicken"}
+PASS GET /menu/4 | status=200
+PASS required option groups | groups=[('Pasta Type', True, 3), ('Add-ons', False, 2)]
+PASS GET /menu/9999 | status=404
+PASS GET /menu/filters | status=200
+PASS filters enums | cats=['Chinese', 'Western', 'Japanese', 'Light Meal', 'Korean', 'Southeast Asian'] dates=['2026-11-14', '2026-11-15', '2026-11-16']
+PASS POST /me/addresses | status=201
+PASS POST /me/addresses | status=400
+PASS GET /me/addresses | status=200
+PASS address book | count=1
+PASS POST /orders/preview | status=200
+PASS preview server pricing | {"totalCents": 6200, "itemCount": 3, "effectiveDate": "2026-11-15", "effectiveMeal": "Lunch", "autoSwitched": true, "budgetExceeded": true}
+PASS preview budget exceeded
+PASS preview auto switch (now past 15:00) | 2026-11-15 Lunch
+PASS POST /orders/preview | status=200
+PASS preview option surcharge | base=2650 delta=0 total=2650
+PASS POST /orders/preview | status=400
+FAIL 5-item limit
+PASS POST /orders | status=400
+PASS idempotency key required
+PASS POST /orders | status=201
+PASS order created 201 + orderNo | {"orderId": 20, "orderNo": "WB20261115-0020", "status": "Pending", "deliveryDate": "2026-11-15", "mealType": "Lunch", "address": "Building A, 12F", "totalCents": 2200, "itemCount": 1, "autoSwitched": true, "estimatedDelivery": "Lunch on 2026-11-15"}
+PASS order auto-switched
+PASS POST /orders | status=201
+PASS same key same body replays same order | orderId=20
+PASS POST /orders | status=409
+PASS same key altered body 409
+PASS POST /orders | status=409
+PASS duplicate active order 409+existingOrderId | {"existingOrderId": 20, "existingOrderNo": "WB20261115-0020"}
+PASS DB order snapshot/items | order_items=1 snapshot=1 RESERVE=1
+PASS GET /orders | status=200
+PASS my orders list
+PASS GET /orders/20 | status=200
+PASS order detail snapshot fields
+PASS GET /orders/active?date=2026-11-15&mealType=Lunch | status=200
+PASS active order lookup
+PASS POST /orders/20/cancel | status=200
+PASS cancel Pending order
+PASS cancel releases stock once | RELEASE=1
+PASS POST /orders/20/cancel | status=409
+PASS cancel twice 409
+PASS GET /admin/dishes | status=403
+PASS employee blocked from /admin
+PASS POST /auth/login | status=200
+PASS GET /admin/dishes?page=1&size=5&search=chicken | status=200
+PASS admin dishes search | total=6
+PASS POST /admin/dishes | status=201
+PASS admin create dish | dishId=21
+PASS PUT /admin/dishes/21 | status=200
+PASS admin edit dish + confirm
+PASS PUT /admin/dishes/21 | status=400
+PASS high-risk write requires confirm
+PASS PATCH /admin/dishes/21/status | status=200
+PASS admin off-shelf
+PASS PATCH /admin/dishes/21/status | status=200
+PASS admin on-shelf
+PASS GET /admin/audit-logs?page=1&size=10&action=DISH_UPDATE | status=200
+PASS audit log before/after | items=10
+PASS GET /admin/daily-menu?date=2026-11-14 | status=200
+PASS daily menu 20 rows | rows=20
+PASS PUT /admin/daily-menu/2026-11-14/1/stock | status=200
+PASS SSE realtime stock event | data:[{"dishId":1,"available":40},{"dishId":2,"available":30},{"dishId":3,"available":25},{"dishId":4,"available":35},{"dishId":5,"available":20},{"dishId":6,"available":30},{"dishId":7,"available":45},{"dishId":8,"available":28},{"dishId":9,"available":30},{"dishId":10,"available":40},{"dishId":11,"available":40},{"dishId":12,"available":40},{"dishId":13,"available":40},{"dishId":14,"available":40},{"dishId":15,"available":40},{"dishId":16,"available":40},{"dishId":17,"available":40},{"dishId":18,"available":40},{"dishId":19,"available":40},{"dishId":20,"available":40}]; :ping; retry:3000; event:stock
+PASS PUT /admin/daily-menu/2026-11-14/1/stock | status=200
+PASS GET /admin/dashboard | status=200
+PASS dashboard fields | today={'orders': 0, 'revenueCents': 0, 'completed': 0, 'pending': 0, 'cancelled': 0} trend=7 lowStock=0
+PASS GET /admin/orders?page=1&size=10 | status=200
+PASS admin orders list (masked address) | address masked
+PASS PATCH /admin/orders/19/status | status=200
+PASS admin Pending->Confirmed
+PASS PATCH /admin/orders/19/status | status=200
+PASS admin Confirmed->Completed
+PASS GET /admin/ai-rules | status=200
+PASS AI rules config readable | 4
+PASS GET /admin/inventory/reconcile?date=2026-11-14 | status=200
+PASS inventory reconcile | {"date": "2026-11-14", "checked": 20, "drift": []}
+PASS AI recommend SSE meta/dish/reason/done | events=['event:meta', 'event:dish', 'event:reason', 'event:dish', 'event:reason', 'event:dish'] fallback=true
+
+SUMMARY 104/106 PASS

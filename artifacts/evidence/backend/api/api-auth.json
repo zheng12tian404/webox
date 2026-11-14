@@ -1,0 +1,129 @@
+{
+  "runId": "api1794666509",
+  "base": "http://127.0.0.1:8099",
+  "finishedAt": "2026-11-14T14:32:01.607Z",
+  "pass": 12,
+  "fail": 5,
+  "skipped": 0,
+  "results": [
+    {
+      "tc": "TC-001",
+      "name": "注册 201",
+      "ok": true,
+      "detail": "status=201 body={\"code\":\"OK\",\"message\":\"OK\",\"data\":{\"id\":47,\"email\":\"u001_api1794666509_u7reqi@test.com\",\"role\":\"EMPLOYEE\"},\"requestId\":\"a60a2c60-0343-4972-9aad-13609611fac6\"}",
+      "at": "2026-11-14T14:29:30.350Z"
+    },
+    {
+      "tc": "TC-001",
+      "name": "role=EMPLOYEE",
+      "ok": true,
+      "detail": "role=EMPLOYEE",
+      "at": "2026-11-14T14:29:30.350Z"
+    },
+    {
+      "tc": "TC-001",
+      "name": "响应不含密码",
+      "ok": true,
+      "detail": "响应 JSON 不含 password 字段",
+      "at": "2026-11-14T14:29:30.350Z"
+    },
+    {
+      "tc": "TC-001",
+      "name": "BCrypt 前缀 $2",
+      "ok": true,
+      "detail": "hashPrefix=$2a$",
+      "at": "2026-11-14T14:29:30.383Z"
+    },
+    {
+      "tc": "TC-002",
+      "name": "重复注册 409 AUTH_EMAIL_EXISTS",
+      "ok": true,
+      "detail": "status=409 body={\"code\":\"AUTH_EMAIL_EXISTS\",\"message\":\"Email already registered\",\"data\":null,\"requestId\":\"506049db-c01f-4ba6-ac72-22dde8751acb\"}",
+      "at": "2026-11-14T14:29:30.461Z"
+    },
+    {
+      "tc": "TC-002",
+      "name": "大小写变体 409",
+      "ok": true,
+      "detail": "status=409 body={\"code\":\"AUTH_EMAIL_EXISTS\",\"message\":\"Email already registered\",\"data\":null,\"requestId\":\"ac7ae740-5ac3-46bc-ac1f-a7bf5bcba1cc\"}",
+      "at": "2026-11-14T14:29:30.538Z"
+    },
+    {
+      "tc": "TC-003",
+      "name": "非法邮箱 → 400 VALIDATION_EMAIL_FORMAT",
+      "ok": false,
+      "detail": "status=0 body=",
+      "at": "2026-11-14T14:30:00.541Z"
+    },
+    {
+      "tc": "TC-003",
+      "name": "7 位密码 → 400 VALIDATION_PASSWORD_POLICY",
+      "ok": false,
+      "detail": "status=0 body=",
+      "at": "2026-11-14T14:30:30.543Z"
+    },
+    {
+      "tc": "TC-003",
+      "name": "纯字母密码 → 400 VALIDATION_PASSWORD_POLICY",
+      "ok": true,
+      "detail": "status=400 body={\"code\":\"VALIDATION_PASSWORD_POLICY\",\"message\":\"Password must be 8-64 characters and contain both letters and digits\",\"data\":null,\"requestId\":\"23f906a9-4fc8-445b-90ba-9631cf06c5d0\"}",
+      "at": "2026-11-14T14:30:30.549Z"
+    },
+    {
+      "tc": "TC-003",
+      "name": "邮箱 201 字符 → 400 VALIDATION_EMAIL_LENGTH",
+      "ok": false,
+      "detail": "status=0 body=",
+      "at": "2026-11-14T14:31:00.549Z"
+    },
+    {
+      "tc": "TC-003",
+      "name": "8 位含字母数字通过 201",
+      "ok": true,
+      "detail": "status=201",
+      "at": "2026-11-14T14:31:00.628Z"
+    },
+    {
+      "tc": "TC-084",
+      "name": "注册 role=ADMIN 被拒绝或强制 EMPLOYEE",
+      "ok": false,
+      "detail": "status=0 role=null",
+      "at": "2026-11-14T14:31:30.628Z"
+    },
+    {
+      "tc": "TC-004",
+      "name": "员工登录 200 且返回 JWT",
+      "ok": true,
+      "detail": "status=200 token=yes",
+      "at": "2026-11-14T14:31:30.707Z"
+    },
+    {
+      "tc": "TC-004",
+      "name": "管理员登录 role=ADMIN",
+      "ok": true,
+      "detail": "status=200 role=ADMIN",
+      "at": "2026-11-14T14:31:30.785Z"
+    },
+    {
+      "tc": "TC-004",
+      "name": "/auth/me 200（刷新保持会话）",
+      "ok": false,
+      "detail": "status=0 body=",
+      "at": "2026-11-14T14:32:00.786Z"
+    },
+    {
+      "tc": "TC-005",
+      "name": "连续错误密码前 10 次 401",
+      "ok": true,
+      "detail": "codes=401,401,401,401,401,401,401,401,401,401,429",
+      "at": "2026-11-14T14:32:01.606Z"
+    },
+    {
+      "tc": "TC-005",
+      "name": "第 11 次 429 RATE_LIMITED",
+      "ok": true,
+      "detail": "codes=401,401,401,401,401,401,401,401,401,401,429",
+      "at": "2026-11-14T14:32:01.606Z"
+    }
+  ]
+}

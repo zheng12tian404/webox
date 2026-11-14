@@ -1,0 +1,44 @@
+== real backend http://127.0.0.1:8083/api/v1 ==
+-- health --
+{"code":"OK","message":"OK","data":{"status":"UP","db":"UP","redis":"UP","cache":"UP"},"requestId":"c76ce526-1120-414d-8c61-cf6464eecd3e"}
+-- login admin --
+{"code":"OK","message":"OK","data":{"accessToken":"[REDACTED]","refreshToken":"[REDACTED]","expiresIn":7200,"user":{"id":1,"email":"admin@webox.com","role":"ADMIN"}},"requestId":"f7
+-- menu --
+total 20
+11 Beef Noodle Soup 2800 avail 40 hasOptions False required False
+2 Caesar Salad 2850 avail 30 hasOptions True required False
+15 California Roll 2450 avail 40 hasOptions False required False
+6 Chicken Quinoa Bowl 3580 avail 30 hasOptions True required True
+14 Chicken Teriyaki Bento 3600 avail 40 hasOptions True required True
+9 Classic Beef Burger 3800 avail 30 hasOptions True required True
+16 Green Goddess Salad 2500 avail 40 hasOptions True required False
+13 Grilled Chicken Sandwich 2900 avail 40 hasOptions True required True
+8 Korean Bibimbap 3000 avail 28 hasOptions True required False
+-- filters --
+categories 6 dates ['2026-11-14', '2026-11-15', '2026-11-16']
+-- dish 1 --
+1 Kung Pao Chicken 2200 options 0
+-- preview --
+-- submit key1 --
+OK 4 WB20261115-0004 Pending 2026-11-15 5600
+-- replay key1 --
+OK 4
+-- new key duplicate --
+ORDER_DUPLICATE 4
+-- orders list --
+total 1 [('WB20261115-0004', 'Pending', 5600)]
+-- order detail --
+WB20261115-0004 Pending Beef Noodle Soup 2 2800 5600
+-- cancel --
+{"code":"OK","message":"OK","data":{"orderId":4,"status":"Cancelled","cancelledAt":"2026-11-14T22:23:36.572+08:00"},"requestId":"c5535fac-5f95-414d-b3e6-773714379c33"}
+-- admin dashboard --
+{'orders': 0, 'revenueCents': 0, 'completed': 0, 'pending': 0, 'cancelled': 0} top 0 trend 7 lowStock 0
+-- admin dishes --
+total 20 [(1, 'Kung Pao Chicken', 'ON_SHELF'), (2, 'Caesar Salad', 'ON_SHELF'), (3, 'Salmon Sashimi Set', 'ON_SHELF'), (4, 'Tomato Pasta', 'ON_SHELF'), (5, 'Tom Yum Soup', 'ON_SHELF')]
+-- admin daily-menu --
+rows 20 {'dishId': 1, 'dishName': 'Kung Pao Chicken', 'totalQty': 40, 'reservedQty': 0, 'soldQty': 0, 'available': 40, 'lowStock': False, 'inventoryMode': 'REDIS_PREALLOC', 'published': True}
+-- admin audit --
+total 3 [('ORDER_CANCEL', 'ORDER'), ('STOCK_UPDATE', 'STOCK'), ('STOCK_UPDATE', 'STOCK')]
+-- employee forbidden --
+403
+preview: {'totalCents': 5600, 'itemCount': 2, 'effectiveDate': '2026-11-15', 'effectiveMeal': 'Lunch', 'autoSwitched': True, 'budgetExceeded': False}

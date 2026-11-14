@@ -1,0 +1,46 @@
+# git push evidence — 2026-11-14 22:44:05 CST
+
+## git remote -v
+origin	https://github.com/zheng12tian404/webox.git (fetch)
+origin	https://github.com/zheng12tian404/webox.git (push)
+
+## git log --oneline -5
+be8056e feat: WeBox employee meal ordering platform (Tier1/2/3) + delivery docs and AI conversation export
+
+## git push -u origin main
+$ GIT_TERMINAL_PROMPT=0 git push -u origin main
+Missing or invalid credentials.
+Error: connect ECONNREFUSED /run/user/1000/vscode-git-f1aa334382.sock
+    at PipeConnectWrap.afterConnect [as oncomplete] (node:net:1637:16) {
+  errno: -111,
+  code: 'ECONNREFUSED',
+  syscall: 'connect',
+  address: '/run/user/1000/vscode-git-f1aa334382.sock'
+}
+Missing or invalid credentials.
+Error: connect ECONNREFUSED /run/user/1000/vscode-git-f1aa334382.sock
+    at PipeConnectWrap.afterConnect [as oncomplete] (node:net:1637:16) {
+  errno: -111,
+  code: 'ECONNREFUSED',
+  syscall: 'connect',
+  address: '/run/user/1000/vscode-git-f1aa334382.sock'
+}
+remote: No anonymous write access.
+fatal: Authentication failed for 'https://github.com/zheng12tian404/webox.git/'
+
+PUSH_EXIT=128
+
+## 凭据状态（只记录是否，不记录值）
+gh auth status: not logged in
+GitHub token in env: none
+SSH github.com:22: connection timed out
+
+## 仓库自检
+tracked_files=391
+node_modules_tracked=0
+target_tracked=0
+nested_git=0
+secret_scan=1
+
+## 结论
+未推送：无 GitHub 写权限凭据（No anonymous write access / Authentication failed）。本地仓库与 bundle 已保留，未虚报成功。

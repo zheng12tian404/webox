@@ -1,0 +1,29 @@
+[PASS] TC-029 preview 200 :: status=200 body={"code":"OK","message":"OK","data":{"items":[{"dishName":"Beef Noodle Soup","options":[],"qty":2,"unitPriceCents":2800,"subtotalCents":5600}],"totalCents":5600,"itemCount":2,"effectiveDate":"2026-11-15","effectiveMeal":"Lunch","cutoffAt":"2026-11-15T10:00+08:00","autoSwitched":true,"budgetExceeded":
+[PASS] TC-029 preview 含 effectiveDate/effectiveMeal/cutoffAt :: {"d":"2026-11-15","m":"Lunch","c":"2026-11-15T10:00+08:00"}
+[PASS] TC-029 preview totalCents 为整数 :: totalCents=5600
+[PASS] TC-029 preview itemCount=2 :: itemCount=2
+[FAIL] TC-029 地址 201 字符 → 400 VALIDATION_ADDRESS_LENGTH :: status=200
+[PASS] TC-030 下单 201 :: status=201 body={"code":"OK","data":{"orderId":70,"orderNo":"WB20261115-0070","status":"Pending","deliveryDate":"2026-11-15","mealType":"Lunch","address":"Office 1F, Test Street","totalCents":5600,"itemCount":2,"autoSwitched":false,"estimatedDelivery":"Lunch on 2026-11-15"},"message":"Order placed","requestId":"3e20dfee-9c97-4993-9017-726d88afb92a"}
+[PASS] TC-030 orderNo 匹配 ^WB\d{8}-\d{4,}$ :: orderNo=WB20261115-0070
+[PASS] TC-030 status=Pending :: status=Pending
+[PASS] TC-030 totalCents 为整数且等于 preview :: create=5600 preview=5600
+[FAIL] TC-030 详情含 items 快照与 snapshot_json :: items=1 snapshot=false
+[PASS] TC-030 ledger 恰 1 条 RESERVE :: [["RESERVE","1"]]
+[PASS] TC-031 篡改价下单成功但按 DB 重算 :: status=201 total=2800
+[PASS] TC-031 total=DB 单价×1 :: total=2800 db=2800
+[PASS] TC-044 第二单 409 ORDER_DUPLICATE :: status=409 body={"code":"ORDER_DUPLICATE","message":"An active order already exists for this meal","data":{"existingOrderId":70,"existingOrderNo":"WB20261115-0070"},"requestId":"55137d3d-8d75-4683-afbe-c00559b0be71"}
+[PASS] TC-044 返回 existingOrderId :: existingOrderId=70
+[PASS] TC-036 首次取消 200 且 Cancelled :: status=200 body={"code":"OK","message":"OK","data":{"orderId":70,"status":"Cancelled","cancelledAt":"2026-11-14T22:44:08.764+08:00"},"requestId":"94dfe78a-e3a9-425b-bc0e-c5e9022e9d38"}
+[PASS] TC-036 二次取消 409 ORDER_STATE_INVALID :: status=409
+[PASS] TC-036 取消只回补一次（1 条 RELEASE） :: [["RELEASE","1"]]
+[PASS] TC-046 取消后同日同餐次可再下单 201 :: status=201 body={"code":"OK","data":{"orderId":72,"orderNo":"WB20261115-0072","status":"Pending","deliveryDate":"2026-11-15","mealType":"Lunch","address":"Office 1F, Test Street","totalCents":2800,"itemCount":1,"autoSwitched":false,"estimatedDelivery":"Lunch on 2026
+[PASS] TC-045 同日跨餐次 201 :: status=201（409 仅当该餐次已截单/无菜单）
+[FAIL] TC-045 次日同餐次 201 :: status=409 body={"code":"ORDER_DUPLICATE","message":"An active order already exists for this meal","data":{"existingOrderId":72,"existingOrderNo":"WB20261115-0072"},"requestId":"0f2484ce-0b28-47c8-8f66-7052b79de265"}
+[PASS] TC-033 同键两次同一 orderId :: id1=74 id2=74 status=201/201
+[PASS] TC-033 DB 仅 1 单 :: count=1
+[PASS] TC-035 缺幂等键 400 IDEMPOTENCY_KEY_REQUIRED :: status=400
+[PASS] TC-035 7 字符键 400 :: status=400
+[PASS] TC-035 65 字符键 400 :: status=400
+[PASS] TC-035 同键异体 409 IDEMPOTENCY_CONFLICT :: status=409
+
+== api-orders.json: PASS=24 FAIL=3 SKIP=0 ==

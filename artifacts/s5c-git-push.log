@@ -1,0 +1,56 @@
+# Stage 5c git push evidence — 2026-11-14 23:10:38 CST
+
+## git remote -v
+origin	https://github.com/zheng12tian404/webox.git (fetch)
+origin	https://github.com/zheng12tian404/webox.git (push)
+
+## git log --oneline -3
+83a531f fix(stage5b/5c): close P0/P1 fixes and sync final delivery docs
+be8056e feat: WeBox employee meal ordering platform (Tier1/2/3) + delivery docs and AI conversation export
+
+## commit hash (final HEAD)
+83a531f14629516e645306258a4c6145fb8dad8b
+
+## git push -u origin main (retry)
+Missing or invalid credentials.
+Error: connect ECONNREFUSED /run/user/1000/vscode-git-f1aa334382.sock
+    at PipeConnectWrap.afterConnect [as oncomplete] (node:net:1637:16) {
+  errno: -111,
+  code: 'ECONNREFUSED',
+  syscall: 'connect',
+  address: '/run/user/1000/vscode-git-f1aa334382.sock'
+}
+Missing or invalid credentials.
+Error: connect ECONNREFUSED /run/user/1000/vscode-git-f1aa334382.sock
+    at PipeConnectWrap.afterConnect [as oncomplete] (node:net:1637:16) {
+  errno: -111,
+  code: 'ECONNREFUSED',
+  syscall: 'connect',
+  address: '/run/user/1000/vscode-git-f1aa334382.sock'
+}
+remote: No anonymous write access.
+fatal: Authentication failed for 'https://github.com/zheng12tian404/webox.git/'
+PUSH_EXIT=128
+
+## 凭据状态（仅记录是否）
+gh auth status: not logged in
+GitHub token in env: none
+SSH github.com:22: unreachable
+
+## 仓库自检
+tracked_files=497
+node_modules_tracked=0
+target_tracked=0
+dist_tracked=0
+env_files_tracked=0
+secret_scan_hits=0
+
+## git bundle
+bundle_exit=0
+bundle_size_bytes=32072493
+bundle_size_human=31M
+bundle_sha256=dd389946246967f4ddb401da3a215e539eca8595df0e1611b470d53c31a543f4
+bundle_verify=83a531f14629516e645306258a4c6145fb8dad8b HEAD The bundle records a complete history. 
+
+## 结论
+未推送：环境无 GitHub 写权限凭据（No anonymous write access / Authentication failed）。本地 commit 与 bundle 已保留，未虚报成功。

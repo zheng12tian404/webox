@@ -1,0 +1,129 @@
+{
+  "runId": "20261114224107",
+  "base": "http://127.0.0.1:8084",
+  "finishedAt": "2026-11-14T14:44:14.469Z",
+  "pass": 14,
+  "fail": 3,
+  "skipped": 0,
+  "results": [
+    {
+      "tc": "TC-070",
+      "name": "400 包络 {code,message,data,requestId} 且头体一致",
+      "ok": true,
+      "detail": "status=400 body={\"code\":\"VALIDATION_SEARCH_LENGTH\",\"message\":\"Search must be at most 50 characters\",\"data\":null,\"requestId\":\"c3c7a499-caa0-41ac-8282-6664666772a2\"}",
+      "at": "2026-11-14T14:44:13.741Z"
+    },
+    {
+      "tc": "TC-070",
+      "name": "400 无堆栈/SQL 泄漏",
+      "ok": true,
+      "detail": "{\"code\":\"VALIDATION_SEARCH_LENGTH\",\"message\":\"Search must be at most 50 characters\",\"data\":null,\"requestId\":\"c3c7a499-ca",
+      "at": "2026-11-14T14:44:13.742Z"
+    },
+    {
+      "tc": "TC-070",
+      "name": "401 包络 {code,message,data,requestId} 且头体一致",
+      "ok": true,
+      "detail": "status=401 body={\"code\":\"AUTH_UNAUTHORIZED\",\"message\":\"Authentication required\",\"data\":null,\"requestId\":\"284a3cad-9a49-4a94-a93f-4afc36273a06\"}",
+      "at": "2026-11-14T14:44:13.742Z"
+    },
+    {
+      "tc": "TC-070",
+      "name": "401 无堆栈/SQL 泄漏",
+      "ok": true,
+      "detail": "{\"code\":\"AUTH_UNAUTHORIZED\",\"message\":\"Authentication required\",\"data\":null,\"requestId\":\"284a3cad-9a49-4a94-a93f-4afc362",
+      "at": "2026-11-14T14:44:13.742Z"
+    },
+    {
+      "tc": "TC-070",
+      "name": "404 包络 {code,message,data,requestId} 且头体一致",
+      "ok": true,
+      "detail": "status=404 body={\"code\":\"DISH_NOT_FOUND\",\"message\":\"Dish not found on today's menu\",\"data\":null,\"requestId\":\"c5dcb60e-adda-4bec-9b39-1689fd6661fb\"}",
+      "at": "2026-11-14T14:44:13.742Z"
+    },
+    {
+      "tc": "TC-070",
+      "name": "404 无堆栈/SQL 泄漏",
+      "ok": true,
+      "detail": "{\"code\":\"DISH_NOT_FOUND\",\"message\":\"Dish not found on today's menu\",\"data\":null,\"requestId\":\"c5dcb60e-adda-4bec-9b39-168",
+      "at": "2026-11-14T14:44:13.742Z"
+    },
+    {
+      "tc": "TC-070",
+      "name": "409 包络 {code,message,data,requestId} 且头体一致",
+      "ok": true,
+      "detail": "status=409 body={\"code\":\"AUTH_EMAIL_EXISTS\",\"message\":\"Email already registered\",\"data\":null,\"requestId\":\"439f597e-c587-4f4e-bd03-182a314337f1\"}",
+      "at": "2026-11-14T14:44:13.742Z"
+    },
+    {
+      "tc": "TC-070",
+      "name": "409 无堆栈/SQL 泄漏",
+      "ok": true,
+      "detail": "{\"code\":\"AUTH_EMAIL_EXISTS\",\"message\":\"Email already registered\",\"data\":null,\"requestId\":\"439f597e-c587-4f4e-bd03-182a31",
+      "at": "2026-11-14T14:44:13.742Z"
+    },
+    {
+      "tc": "TC-071",
+      "name": "邮箱 200 字符通过",
+      "ok": false,
+      "detail": "status=400",
+      "at": "2026-11-14T14:44:13.920Z"
+    },
+    {
+      "tc": "TC-071",
+      "name": "邮箱 201 字符 400 VALIDATION_EMAIL_LENGTH",
+      "ok": false,
+      "detail": "status=400",
+      "at": "2026-11-14T14:44:13.921Z"
+    },
+    {
+      "tc": "TC-071",
+      "name": "密码 64 通过",
+      "ok": true,
+      "detail": "status=201",
+      "at": "2026-11-14T14:44:14.007Z"
+    },
+    {
+      "tc": "TC-071",
+      "name": "密码 65 → 400",
+      "ok": true,
+      "detail": "status=400",
+      "at": "2026-11-14T14:44:14.007Z"
+    },
+    {
+      "tc": "TC-071",
+      "name": "地址 200 通过",
+      "ok": true,
+      "detail": "status=201",
+      "at": "2026-11-14T14:44:14.022Z"
+    },
+    {
+      "tc": "TC-071",
+      "name": "地址 201 → 400 VALIDATION_ADDRESS_LENGTH",
+      "ok": true,
+      "detail": "status=400",
+      "at": "2026-11-14T14:44:14.022Z"
+    },
+    {
+      "tc": "TC-071",
+      "name": "原因 200 通过",
+      "ok": true,
+      "detail": "status=200",
+      "at": "2026-11-14T14:44:14.077Z"
+    },
+    {
+      "tc": "TC-071",
+      "name": "原因 201 → 400 VALIDATION_REASON_REQUIRED",
+      "ok": true,
+      "detail": "status=400",
+      "at": "2026-11-14T14:44:14.077Z"
+    },
+    {
+      "tc": "TC-072",
+      "name": "下单超限出现 429",
+      "ok": false,
+      "detail": "codes=201,409,409,409,409,409,409",
+      "at": "2026-11-14T14:44:14.468Z"
+    }
+  ]
+}

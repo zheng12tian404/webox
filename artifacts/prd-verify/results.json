@@ -1,0 +1,532 @@
+[
+ {
+  "name": "health 200 + db UP",
+  "pass": true,
+  "detail": "{\"status\": \"UP\", \"db\": \"UP\", \"redis\": \"UP\", \"cache\": \"UP\"}"
+ },
+ {
+  "name": "frontend proxy /api -> backend",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "frontend index 200",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "POST /auth/register",
+  "pass": true,
+  "detail": "status=400"
+ },
+ {
+  "name": "POST /auth/register",
+  "pass": true,
+  "detail": "status=201"
+ },
+ {
+  "name": "POST /auth/register",
+  "pass": true,
+  "detail": "status=409"
+ },
+ {
+  "name": "POST /auth/login",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "login returns tokens+user",
+  "pass": true,
+  "detail": "uid=124"
+ },
+ {
+  "name": "POST /auth/refresh",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "refresh rotates token",
+  "pass": false,
+  "detail": ""
+ },
+ {
+  "name": "GET /auth/me",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "GET /auth/me",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "GET /me/preferences",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "preferences default",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "PUT /me/preferences",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "GET /me/preferences",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "preferences persisted",
+  "pass": true,
+  "detail": "{\"allergens\": [\"Egg\"], \"preferredCategories\": [\"Chinese\", \"Japanese\"], \"spicePreference\": \"Mild\", \"tastePreference\": \"Medium\", \"budgetMinCents\": 1500, \"budgetMaxCents\": 3000, \"recommendEnabled\": true}"
+ },
+ {
+  "name": "PUT /me/preferences",
+  "pass": true,
+  "detail": "status=400"
+ },
+ {
+  "name": "GET /menu",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "menu 20 dishes",
+  "pass": true,
+  "detail": "items=20 total=20"
+ },
+ {
+  "name": "menu fields",
+  "pass": true,
+  "detail": "{\"name\": \"Beef Noodle Soup\", \"priceDisplay\": \"\\u00a528.00\", \"category\": \"Chinese\", \"availableQty\": 40}"
+ },
+ {
+  "name": "GET /menu?search=chicken",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "search chicken",
+  "pass": true,
+  "detail": "hits=6"
+ },
+ {
+  "name": "GET /menu?category=Chinese,Japanese",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "multi-category filter",
+  "pass": true,
+  "detail": "hits=8"
+ },
+ {
+  "name": "GET /menu?search=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "pass": true,
+  "detail": "status=400"
+ },
+ {
+  "name": "GET /menu?category=Italian",
+  "pass": true,
+  "detail": "status=400"
+ },
+ {
+  "name": "GET /menu?page=1&size=5",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "pagination",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "GET /menu/1",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "dish detail allergens/price",
+  "pass": true,
+  "detail": "{\"name\": \"Kung Pao Chicken\", \"allergens\": [\"Peanuts\"], \"priceCents\": 2200, \"priceDisplay\": \"\\u00a522.00\", \"spiceLevel\": \"Medium\", \"protein\": \"Chicken\"}"
+ },
+ {
+  "name": "GET /menu/4",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "required option groups",
+  "pass": true,
+  "detail": "groups=[('Pasta Type', True, 3), ('Add-ons', False, 2)]"
+ },
+ {
+  "name": "GET /menu/9999",
+  "pass": true,
+  "detail": "status=404"
+ },
+ {
+  "name": "GET /menu/filters",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "filters enums",
+  "pass": true,
+  "detail": "cats=['Chinese', 'Western', 'Japanese', 'Light Meal', 'Korean', 'Southeast Asian'] dates=['2026-11-14', '2026-11-15', '2026-11-16']"
+ },
+ {
+  "name": "POST /me/addresses",
+  "pass": true,
+  "detail": "status=201"
+ },
+ {
+  "name": "POST /me/addresses",
+  "pass": true,
+  "detail": "status=400"
+ },
+ {
+  "name": "GET /me/addresses",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "address book",
+  "pass": true,
+  "detail": "count=1"
+ },
+ {
+  "name": "POST /orders/preview",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "preview server pricing",
+  "pass": true,
+  "detail": "{\"totalCents\": 6200, \"itemCount\": 3, \"effectiveDate\": \"2026-11-15\", \"effectiveMeal\": \"Lunch\", \"autoSwitched\": true, \"budgetExceeded\": true}"
+ },
+ {
+  "name": "preview budget exceeded",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "preview auto switch (now past 15:00)",
+  "pass": true,
+  "detail": "2026-11-15 Lunch"
+ },
+ {
+  "name": "POST /orders/preview",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "preview option surcharge",
+  "pass": true,
+  "detail": "base=2650 delta=0 total=2650"
+ },
+ {
+  "name": "POST /orders/preview",
+  "pass": true,
+  "detail": "status=400"
+ },
+ {
+  "name": "5-item limit",
+  "pass": false,
+  "detail": ""
+ },
+ {
+  "name": "POST /orders",
+  "pass": true,
+  "detail": "status=400"
+ },
+ {
+  "name": "idempotency key required",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "POST /orders",
+  "pass": true,
+  "detail": "status=201"
+ },
+ {
+  "name": "order created 201 + orderNo",
+  "pass": true,
+  "detail": "{\"orderId\": 20, \"orderNo\": \"WB20261115-0020\", \"status\": \"Pending\", \"deliveryDate\": \"2026-11-15\", \"mealType\": \"Lunch\", \"address\": \"Building A, 12F\", \"totalCents\": 2200, \"itemCount\": 1, \"autoSwitched\": true, \"estimatedDelivery\": \"Lunch on 2026-11-15\"}"
+ },
+ {
+  "name": "order auto-switched",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "POST /orders",
+  "pass": true,
+  "detail": "status=201"
+ },
+ {
+  "name": "same key same body replays same order",
+  "pass": true,
+  "detail": "orderId=20"
+ },
+ {
+  "name": "POST /orders",
+  "pass": true,
+  "detail": "status=409"
+ },
+ {
+  "name": "same key altered body 409",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "POST /orders",
+  "pass": true,
+  "detail": "status=409"
+ },
+ {
+  "name": "duplicate active order 409+existingOrderId",
+  "pass": true,
+  "detail": "{\"existingOrderId\": 20, \"existingOrderNo\": \"WB20261115-0020\"}"
+ },
+ {
+  "name": "DB order snapshot/items",
+  "pass": true,
+  "detail": "order_items=1 snapshot=1 RESERVE=1"
+ },
+ {
+  "name": "GET /orders",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "my orders list",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "GET /orders/20",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "order detail snapshot fields",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "GET /orders/active?date=2026-11-15&mealType=Lunch",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "active order lookup",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "POST /orders/20/cancel",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "cancel Pending order",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "cancel releases stock once",
+  "pass": true,
+  "detail": "RELEASE=1"
+ },
+ {
+  "name": "POST /orders/20/cancel",
+  "pass": true,
+  "detail": "status=409"
+ },
+ {
+  "name": "cancel twice 409",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "GET /admin/dishes",
+  "pass": true,
+  "detail": "status=403"
+ },
+ {
+  "name": "employee blocked from /admin",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "POST /auth/login",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "GET /admin/dishes?page=1&size=5&search=chicken",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "admin dishes search",
+  "pass": true,
+  "detail": "total=6"
+ },
+ {
+  "name": "POST /admin/dishes",
+  "pass": true,
+  "detail": "status=201"
+ },
+ {
+  "name": "admin create dish",
+  "pass": true,
+  "detail": "dishId=21"
+ },
+ {
+  "name": "PUT /admin/dishes/21",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "admin edit dish + confirm",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "PUT /admin/dishes/21",
+  "pass": true,
+  "detail": "status=400"
+ },
+ {
+  "name": "high-risk write requires confirm",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "PATCH /admin/dishes/21/status",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "admin off-shelf",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "PATCH /admin/dishes/21/status",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "admin on-shelf",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "GET /admin/audit-logs?page=1&size=10&action=DISH_UPDATE",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "audit log before/after",
+  "pass": true,
+  "detail": "items=10"
+ },
+ {
+  "name": "GET /admin/daily-menu?date=2026-11-14",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "daily menu 20 rows",
+  "pass": true,
+  "detail": "rows=20"
+ },
+ {
+  "name": "PUT /admin/daily-menu/2026-11-14/1/stock",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "SSE realtime stock event",
+  "pass": true,
+  "detail": "data:[{\"dishId\":1,\"available\":40},{\"dishId\":2,\"available\":30},{\"dishId\":3,\"available\":25},{\"dishId\":4,\"available\":35},{\"dishId\":5,\"available\":20},{\"dishId\":6,\"available\":30},{\"dishId\":7,\"available\":45},{\"dishId\":8,\"available\":28},{\"dishId\":9,\"available\":30},{\"dishId\":10,\"available\":40},{\"dishId\":11,\"available\":40},{\"dishId\":12,\"available\":40},{\"dishId\":13,\"available\":40},{\"dishId\":14,\"available\":40},{\"dishId\":15,\"available\":40},{\"dishId\":16,\"available\":40},{\"dishId\":17,\"available\":40},{\"dishId\":18,\"available\":40},{\"dishId\":19,\"available\":40},{\"dishId\":20,\"available\":40}]; :ping; retry:3000; event:stock"
+ },
+ {
+  "name": "PUT /admin/daily-menu/2026-11-14/1/stock",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "GET /admin/dashboard",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "dashboard fields",
+  "pass": true,
+  "detail": "today={'orders': 0, 'revenueCents': 0, 'completed': 0, 'pending': 0, 'cancelled': 0} trend=7 lowStock=0"
+ },
+ {
+  "name": "GET /admin/orders?page=1&size=10",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "admin orders list (masked address)",
+  "pass": true,
+  "detail": "address masked"
+ },
+ {
+  "name": "PATCH /admin/orders/19/status",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "admin Pending->Confirmed",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "PATCH /admin/orders/19/status",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "admin Confirmed->Completed",
+  "pass": true,
+  "detail": ""
+ },
+ {
+  "name": "GET /admin/ai-rules",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "AI rules config readable",
+  "pass": true,
+  "detail": "4"
+ },
+ {
+  "name": "GET /admin/inventory/reconcile?date=2026-11-14",
+  "pass": true,
+  "detail": "status=200"
+ },
+ {
+  "name": "inventory reconcile",
+  "pass": true,
+  "detail": "{\"date\": \"2026-11-14\", \"checked\": 20, \"drift\": []}"
+ },
+ {
+  "name": "AI recommend SSE meta/dish/reason/done",
+  "pass": true,
+  "detail": "events=['event:meta', 'event:dish', 'event:reason', 'event:dish', 'event:reason', 'event:dish'] fallback=true"
+ }
+]

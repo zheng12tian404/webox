@@ -1,0 +1,145 @@
+today=2026-11-14 effectiveDateForCutoff=2026-11-15 hour=22
+
+===== 0. health =====
+{"code":"OK","message":"OK","data":{"status":"UP","db":"UP","redis":"UP","cache":"UP"},"requestId":"1b5727c7-9861-4acc-8161-d22efd5e398c"}
+HTTP 200
+
+===== 1. employee login (seeded) =====
+{"code":"OK","message":"OK","data":{"accessToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIyIiwiZW1haWwiOiJlbXBsb3llZUB3ZWJveC5jb20iLCJyb2xlIjoiRU1QTE9ZRUUiLCJpYXQiOjE3OTQ2NjYwNDMsImV4cCI6MTc5NDY3MzI0M30.-ReX6LV0rhmJjYZoEjE0FfJTZDUkH703okkVDt7ZfG0","refreshToken":"b7NiCRJVvFTxAvmG5CcbZdS7U3alqqATc07Cydiua7M","expiresIn":7200,"user":{"id":2,"email":"employee@webox.com","role":"EMPLOYEE"}},"requestId":"790f5ff5-57d4-4f1e-8f6e-2db17fef7f87"}
+
+===== 2. menu page=1 size=5 =====
+{"code":"OK","message":"OK","data":{"items":[{"dishId":11,"name":"Beef Noodle Soup","description":"Slow-cooked beef brisket with wheat noodles in rich broth","priceCents":2800,"priceDisplay":"¥28.00","category":"Chinese","spiceLevel":"Mild","imageUrl":"/images/image_11.jpg","available":true,"availableQty":40,"lowStock":false,"soldOut":false,"hasOptions":false,"hasRequiredOptions":false,"forYou":false},{"dishId":2,"name":"Caesar Salad","description":"Fresh romaine lettuce with Parmesan and Caesar dressing","priceCents":2850,"priceDisplay":"¥28.50","category":"Light Meal","spiceLevel":"None","imageUrl":"/images/image_02.jpg","available":true,"availableQty":30,"lowStock":false,"soldOut":false,"hasOptions":true,"hasRequiredOptions":false,"forYou":false},{"dishId":15,"name":"California Roll","description":"Crab, avocado and cucumber roll with sesame","priceCents":2450,"priceDisplay":"¥24.50","category":"Japanese","spiceLevel":"None","imageUrl":"/images/image_15.jpg","available":true,"availableQty":40,"lowStock":false,"soldOut":false,"hasOptions":false,"hasRequiredOptions":false,"forYou":false},{"dishId":6,"name":"Chicken Quinoa Bowl","description":"Low-fat high-protein grilled chicken with quinoa, avocado, veggies","priceCents":3580,"priceDisplay":"¥35.80","category":"Light Meal","spiceLevel":"None","imageUrl":"/images/image_06.jpg","available":true,"availableQty":30,"lowStock":false,"soldOut":false,"hasOptions":true,"hasRequiredOptions":true,"forYou":false},{"dishId":14,"name":"Chicken Teriyaki Bento","description":"Teriyaki chicken with rice, pickles and seasonal vegetables","priceCents":3600,"priceDisplay":"¥36.00","category":"Japanese","spiceLevel":"Mild","imageUrl":"/images/image_14.jpg","available":true,"availableQty":40,"lowStock":false,"soldOut":false,"hasOptions":true,"hasRequiredOptions":true,"forYou":false}],"page":1,"size":5,"total":20},"requestId":"3612da84-2f4d-4880-9d90-3f76fde12757"}
+HTTP 200
+
+===== 3. menu detail dish 9 =====
+{"code":"OK","message":"OK","data":{"dishId":9,"name":"Classic Beef Burger","description":"Angus beef patty with lettuce, tomato, onion","priceCents":3800,"priceDisplay":"¥38.00","category":"Western","protein":"Beef","allergens":["Gluten","Dairy"],"spiceLevel":"None","imageUrl":"/images/image_09.jpg","available":true,"availableQty":30,"optionGroups":[{"groupId":6,"name":"Bun","required":true,"minSelect":1,"maxSelect":1,"options":[{"optionId":15,"name":"Plain","priceDeltaCents":0},{"optionId":16,"name":"Whole Wheat","priceDeltaCents":0}]},{"groupId":7,"name":"Sauce","required":true,"minSelect":1,"maxSelect":1,"options":[{"optionId":17,"name":"Ketchup","priceDeltaCents":0},{"optionId":18,"name":"Mustard","priceDeltaCents":0},{"optionId":19,"name":"Mayo","priceDeltaCents":0},{"optionId":20,"name":"BBQ","priceDeltaCents":0}]},{"groupId":8,"name":"Add-ons","required":false,"minSelect":0,"maxSelect":3,"options":[{"optionId":21,"name":"Cheese","priceDeltaCents":300},{"optionId":22,"name":"Bacon","priceDeltaCents":500},{"optionId":23,"name":"Fried Egg","priceDeltaCents":200}]}]},"requestId":"30fbd77f-df12-444a-9cfb-593cfac99e67"}
+HTTP 200
+
+===== 4. filters =====
+{"code":"OK","message":"OK","data":{"categories":["Chinese","Western","Japanese","Light Meal","Korean","Southeast Asian"],"spiceLevels":["None","Mild","Medium","Hot"],"allergens":["Peanuts","Dairy","Egg","Gluten","Soy","Fish","Shellfish"],"dates":[{"date":"2026-11-14","published":true},{"date":"2026-11-15","published":true},{"date":"2026-11-16","published":true}]},"requestId":"43bb3e2b-de03-4ff1-925d-94a20130ea26"}
+HTTP 200
+
+===== 5. preview dish 9 + Bun/Sauce options (expect 3800) =====
+{"code":"OK","message":"OK","data":{"items":[{"dishName":"Classic Beef Burger","options":[{"name":"Plain","priceDeltaCents":0},{"name":"Ketchup","priceDeltaCents":0}],"qty":1,"unitPriceCents":3800,"subtotalCents":3800}],"totalCents":3800,"itemCount":1,"effectiveDate":"2026-11-15","effectiveMeal":"Lunch","cutoffAt":"2026-11-15T10:00+08:00","autoSwitched":true,"budgetExceeded":false,"addresses":[{"id":2,"address":"Building A, 12F","lastUsedAt":"2026-11-14T22:20:25.414+08:00"},{"id":1,"address":"Building A, 12F, WeBox HQ","lastUsedAt":"2026-11-14T22:20:25.414+08:00"}]},"requestId":"29605be7-ec21-4934-9cb8-737f78c43673"}
+HTTP 200
+
+===== 6. submit order (new Idempotency-Key) =====
+{"message":"Order placed","code":"OK","data":{"orderId":3,"orderNo":"WB20261115-0003","status":"Pending","deliveryDate":"2026-11-15","mealType":"Lunch","address":"Building A, 12F","totalCents":3800,"itemCount":1,"autoSwitched":true,"estimatedDelivery":"Lunch on 2026-11-15"},"requestId":"7ccad299-a37e-42ce-895a-893cffbcf150"}
+orderId=3
+
+===== 7. submit again with SAME key and SAME body (expect replay, same orderId) =====
+{"code":"OK","data":{"status":"Pending","address":"Building A, 12F","orderId":3,"orderNo":"WB20261115-0003","mealType":"Lunch","itemCount":1,"totalCents":3800,"autoSwitched":true,"deliveryDate":"2026-11-15","estimatedDelivery":"Lunch on 2026-11-15"},"message":"Order placed","requestId":"a221d6e5-0bcd-41e4-a91e-4ebd5c8c5bb4"}
+HTTP 201
+
+===== 8. submit same key DIFFERENT body (expect 409 IDEMPOTENCY_CONFLICT) =====
+{"code":"IDEMPOTENCY_CONFLICT","message":"Idempotency-Key was used with a different request body","data":null,"requestId":"9ca0664e-26f7-4247-b4f6-324250aabec4"}
+HTTP 409
+
+===== 9. submit different key same meal (expect 409 ORDER_DUPLICATE + existingOrderId) =====
+{"code":"ORDER_DUPLICATE","message":"An active order already exists for this meal","data":{"existingOrderId":3,"existingOrderNo":"WB20261115-0003"},"requestId":"fb662e17-00e5-4c86-a867-9b2126c5aa3e"}
+HTTP 409
+
+===== 10. order detail =====
+{"code":"OK","message":"OK","data":{"orderId":3,"orderNo":"WB20261115-0003","status":"Pending","deliveryDate":"2026-11-15","mealType":"Lunch","address":"Building A, 12F","totalCents":3800,"itemCount":1,"createdAt":"2026-11-14T22:20:43.695+08:00","cancelledAt":null,"cancelReason":null,"items":[{"dishId":9,"dishName":"Classic Beef Burger","unitPriceCents":3800,"options":[{"name":"Plain","priceDeltaCents":0},{"name":"Ketchup","priceDeltaCents":0}],"qty":1,"subtotalCents":3800}]},"requestId":"b996ba3e-2f5d-42a1-85a6-d4e4a59b2c51"}
+HTTP 200
+
+===== 11. active order =====
+{"code":"OK","message":"OK","data":null,"requestId":"2bacacc3-05d0-4e50-b9e0-557bf4da1dfe"}
+HTTP 200
+
+===== 12. cancel order (employee, reason optional) =====
+{"code":"OK","message":"OK","data":{"orderId":3,"status":"Cancelled","cancelledAt":"2026-11-14T22:20:43.874+08:00"},"requestId":"34a13152-e2f9-48c1-ad0e-a02b4aff281c"}
+HTTP 200
+
+===== 13. cancel again (expect 409 ORDER_STATE_INVALID) =====
+{"code":"ORDER_STATE_INVALID","message":"Only pending orders can be cancelled","data":null,"requestId":"ea636a92-2fd4-48d8-882b-7a102ead9dd9"}
+HTTP 409
+
+===== 14. employee calls /admin/dishes (expect 403 FORBIDDEN) =====
+{"code":"FORBIDDEN","message":"Access denied","data":null,"requestId":"eb1b4e81-bc83-4dfe-b6fc-200c4ff08db6"}
+HTTP 403
+
+===== 15. admin login + set dish 9 stock 0 =====
+{"code":"OK","message":"OK","data":{"dishId":9,"serveDate":"2026-11-15","totalQty":0,"available":0},"requestId":"b753b003-e707-4e10-84b3-8899d9c56366"}
+HTTP 200
+
+===== 16. submit while sold out (expect 409 STOCK_INSUFFICIENT) =====
+{"code":"STOCK_INSUFFICIENT","message":"Some dishes are sold out or insufficient","data":{"details":[{"dishId":9,"requested":1,"available":0}]},"requestId":"57843147-ec62-4d1d-a9b0-f6d8b9f7b2a0"}
+HTTP 409
+
+===== 17. restore dish 9 stock 30 =====
+{"code":"OK","message":"OK","data":{"dishId":9,"serveDate":"2026-11-15","totalQty":30,"available":30},"requestId":"553ca606-ec60-4d07-bf59-0e6451d15bd6"}
+HTTP 200
+
+===== 18. register new employee (expect 201) =====
+{"code":"OK","message":"OK","data":{"id":6,"email":"smoke1794666044@webox.com","role":"EMPLOYEE"},"requestId":"68cb7cc9-af1a-42a5-bffc-d508fa1c8b9b"}
+HTTP 201
+
+===== 19. invalid login (expect 401 AUTH_INVALID_CREDENTIALS) =====
+{"code":"AUTH_INVALID_CREDENTIALS","message":"Invalid email or password","data":null,"requestId":"acc58281-2e3e-4658-92a9-3df731abee70"}
+HTTP 401
+
+===== 20. search injection attempt (expect 200, empty/normal result) =====
+{"code":"OK","message":"OK","data":{"items":[],"page":1,"size":20,"total":0},"requestId":"9d4c2eda-a52f-4c9a-9db3-1313fed9cbac"}
+HTTP 200
+
+===== 21. admin dashboard =====
+{"code":"OK","message":"OK","data":{"today":{"orders":0,"revenueCents":0,"completed":0,"pending":0,"cancelled":0},"topDishes":[],"mealSplit":{"lunch":0,"dinner":0},"trend":[{"date":"2026-11-08","orders":0,"revenueCents":0},{"date":"2026-11-09","orders":0,"revenueCents":0},{"date":"2026-11-10","orders":0,"revenueCents":0},{"date":"2026-11-11","orders":0,"revenueCents":0},{"date":"2026-11-12","orders":0,"revenueCents":0},{"date":"2026-11-13","orders":0,"revenueCents":0},{"date":"2026-11-14","orders":0,"revenueCents":0}],"lowStock":[]},"requestId":"58aebae2-b34e-48da-84de-fd674c4afcf6"}
+HTTP 200
+
+===== 22. admin reconcile =====
+{"code":"OK","message":"OK","data":{"date":"2026-11-14","checked":20,"drift":[]},"requestId":"5ab52c61-2260-4187-b442-b248a108be53"}
+HTTP 200
+
+===== 23. admin audit logs (last 3) =====
+{"code":"OK","message":"OK","data":{"items":[{"id":7,"actorId":1,"actorEmail":"admin@webox.com","action":"STOCK_UPDATE","objectType":"STOCK","objectId":"9:2026-11-15","before":null,"after":{"totalQty":30,"available":30},"reason":"restore after smoke test","ip":"127.0.0.1","requestId":"553ca606-ec60-4d07-bf59-0e6451d15bd6","createdAt":"2026-11-14T22:20:44.072+08:00"},{"id":6,"actorId":1,"actorEmail":"admin@webox.com","action":"STOCK_UPDATE","objectType":"STOCK","objectId":"9:2026-11-15","before":null,"after":{"totalQty":0,"available":0},"reason":"smoke test sold out","ip":"127.0.0.1","requestId":"b753b003-e707-4e10-84b3-8899d9c56366","createdAt":"2026-11-14T22:20:44.030+08:00"}],"page":1,"size":3,"total":2},"requestId":"b6472b8c-e754-49e4-8fb8-317a76f04f05"}
+HTTP 200
+
+===== 24. AI recommend (fallback SSE) =====
+retry:3000
+event:meta
+data:{"fallback":true,"model":"rule-based","sessionId":"s-8af28127"}
+
+event:dish
+data:{"dishId":11,"name":"Beef Noodle Soup","priceCents":2800,"priceDisplay":"¥28.00","category":"Chinese","available":40}
+
+event:reason
+data:{"dishId":11,"text":"Matches your preferences: Chinese, Mild spice, ready today."}
+
+event:dish
+data:{"dishId":2,"name":"Caesar Salad","priceCents":2850,"priceDisplay":"¥28.50","category":"Light Meal","available":30}
+
+event:reason
+data:{"dishId":2,"text":"Matches your preferences: Light Meal, None spice, ready today."}
+
+event:dish
+data:{"dishId":15,"name":"California Roll","priceCents":2450,"priceDisplay":"¥24.50","category":"Japanese","available":40}
+
+event:reason
+data:{"dishId":15,"text":"Matches your preferences: Japanese, None spice, ready today."}
+
+event:dish
+data:{"dishId":6,"name":"Chicken Quinoa Bowl","priceCents":3580,"priceDisplay":"¥35.80","category":"Light Meal","available":30}
+
+event:reason
+data:{"dishId":6,"text":"Matches your preferences: Light Meal, None spice, ready today."}
+
+event:dish
+data:{"dishId":14,"name":"Chicken Teriyaki Bento","priceCents":3600,"priceDisplay":"¥36.00","category":"Japanese","available":40}
+
+event:reason
+data:{"dishId":14,"text":"Matches your preferences: Japanese, Mild spice, ready today."}
+
+event:done
+data:{"dishIds":[11,2,15,6,14]}
+
+
+===== 25. invalid idempotency key length (expect 400 IDEMPOTENCY_KEY_REQUIRED) =====
+{"code":"IDEMPOTENCY_KEY_REQUIRED","message":"Idempotency-Key must be 8-64 characters","data":null,"requestId":"245e83d6-1dff-4aae-b87c-dce9801abb59"}
+HTTP 400
+
+===== 26. unauth menu (expect 401) =====
+{"code":"AUTH_UNAUTHORIZED","message":"Authentication required","data":null,"requestId":"ff3ca0eb-ef18-4e41-acd6-0007a97246c9"}
+HTTP 401
+
+SMOKE COMPLETE

@@ -1,0 +1,70 @@
+# Stage 5b backend fix log (2026-11-14 22:53:10 CST)
+
+## Deployment (PA-D-001 / PA-D-003)
+- old pid: 1355523 (jar loaded 22:40, pre-fix) -> killed
+- new pid: 1385859, health=200
+- jar: 2026-11-14 22:51:39.243185372 (29970878 bytes)
+- java: /usr/lib/jvm/java-17-openjdk-amd64/bin/java -Duser.timezone=Asia/Shanghai
+
+## Diff summary
+ .../java/com/webox/admin/AdminControllers.java     |  2 +-
+ .../main/java/com/webox/admin/AdminService.java    | 52 ++++++++++---
+ .../src/main/java/com/webox/auth/MeController.java | 17 ++--
+ backend/src/main/java/com/webox/common/Util.java   | 19 +++++
+ .../src/main/java/com/webox/job/ScheduledJobs.java | 19 +++++
+ .../main/java/com/webox/order/OrderService.java    | 11 ++-
+ docs/api-contract.md                               |  2 +-
+ docs/backend-review.md                             | 26 +++++--
+ docs/defect-log.md                                 | 89 ++++++++++++++++++++-
+ docs/review-findings.md                            | 90 ++++++++++++++++++++++
+ 10 files changed, 298 insertions(+), 29 deletions(-)
+
+## Fixes
+- D-BE-11/DEF-001: Util.requireConfirm applied to AdminService updateDish/updateDishStatus/saveDailyMenu/updateStock/adjust/putAiRules + OrderService.adminPatchStatus; 400 before any write/audit.
+- D-BE-12: DuplicateKey branch compensates then sets prealloc=null (no double INCRBY).
+- DEF-002: RateLimiter 5/min/user on POST /orders.
+- DEF-004: afterCommit SseHub.publishStock + RedisStockService.sync for admin stock/daily-menu changes.
+- DEF-005: ScheduledJobs.autoCompleteOrders (Confirmed past delivery day -> Completed + SYSTEM audit).
+- DEF-007: 7 cache invalidations moved to Util.afterCommit.
+- D-BE-10: nullable audit map; getAiRules updated_at->created_at (real 500 root cause).
+- FR-B1 backend: budget 0/0 => unset; taste Balanced => Medium.
+- DEF-003: scripts/backup.sh, scripts/restore.sh, docs/observability.md, scripts/start.sh.
+
+## Curl evidence (excerpt)
+### 1. confirm=false -> expect 400 VALIDATION_CONFIRM_REQUIRED
+HTTP 400
+{"code":"VALIDATION_CONFIRM_REQUIRED","message":"confirm=true is required for this operation","data":null,"requestId":"1aeedbc6-f9fe-4b92-8cf7-1211d9dd7678"}
+### 2. confirm=true -> expect 200 + audit
+HTTP 200
+### 3. audit row
+DISH_UPDATE	20	2600	1880	s5b deploy verify	127.0.0.1
+### 4. preferences 0/0 + Balanced -> expect 200
+HTTP 200
+{"code":"OK","message":"OK","data":{"allergens":["Peanuts"],"preferredCategories":["Chinese"],"spicePreference":"Mild","tastePreference":"Medium","budgetMinCents":null,"budgetMaxCents":null,"recommendEnabled":true},"requestId":"f0cc7f1e-eee5-4496-a99e-a0e95ef0bcda"}
+### 5. ai-rules normal update -> expect 200
+HTTP 500
+### 6. order rate limit: 6 submissions for same user -> expect 6th 429
+attempt 1 -> HTTP 400 {"code":"VALIDATION_OPTION_REQUIRED","message":"Group 'Base' requires a selection","data":null,"requestId":"9d46d0c7-8286-4ccf-9e72-7d5e4b2f3cac"}
+attempt 2 -> HTTP 400 {"code":"VALIDATION_OPTION_REQUIRED","message":"Group 'Base' requires a selection","data":null,"requestId":"9e6f3a49-101a-4ed7-83d7-3d9fa9369d42"}
+attempt 3 -> HTTP 400 {"code":"VALIDATION_OPTION_REQUIRED","message":"Group 'Base' requires a selection","data":null,"requestId":"a09608e7-3176-4585-a73b-7d130b186963"}
+attempt 4 -> HTTP 400 {"code":"VALIDATION_OPTION_REQUIRED","message":"Group 'Base' requires a selection","data":null,"requestId":"5707ef49-b932-4cdc-a360-5f9ae24c97b5"}
+attempt 5 -> HTTP 400 {"code":"VALIDATION_OPTION_REQUIRED","message":"Group 'Base' requires a selection","data":null,"requestId":"48e7383d-391c-4d22-a7f4-0b21eb3abab9"}
+attempt 6 -> HTTP 429 {"code":"RATE_LIMITED","message":"Too many requests","data":null,"requestId":"10b69766-4f13-4936-a931-dfab26de4433"}
+### 7. admin stock update -> SSE+Redis
+HTTP 200
+redis value: 50
+db available: 50
+### 8. employee -> /admin expect 403
+HTTP 403
+### 5(retry). ai-rules normal update
+HTTP 200
+
+## SSE evidence
+event:stock  data:{"dishId":20,"available":46}  (<=1s after stock update 200)
+redis webox:stock:2026-11-16:20 = 46
+db available = 46
+
+## mvn test
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.160 s -- in com.webox.UtilTest
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.004 s -- in com.webox.S5bFixTest
+Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.559 s -- in com.webox.WeBoxApiIT

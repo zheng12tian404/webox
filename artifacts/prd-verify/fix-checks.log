@@ -1,0 +1,5 @@
+PASS refreshToken rotated (old!=new): True
+PASS old refreshToken reuse -> 401: True
+INFO accessToken may be byte-identical within same second (same claims) — contract only requires refresh rotation
+PASS single line qty=6 -> 400 VALIDATION_QUANTITY: True
+PASS total 6 across lines -> 400 ORDER_LIMIT_EXCEEDED: True

@@ -1,0 +1,68 @@
+{
+  "runId": "api1794666509",
+  "base": "http://127.0.0.1:8099",
+  "finishedAt": "2026-11-14T14:28:59.957Z",
+  "pass": 5,
+  "fail": 1,
+  "skipped": 2,
+  "results": [
+    {
+      "tc": "TC-079",
+      "name": "health 200 且 db=UP",
+      "ok": true,
+      "detail": "status=200 body={\"code\":\"OK\",\"message\":\"OK\",\"data\":{\"status\":\"UP\",\"db\":\"UP\",\"redis\":\"DOWN\",\"cache\":\"UP\"},\"requestId\":\"e72400f5-ef05-4697-9348-89f4c9c6c9af\"}",
+      "at": "2026-11-14T14:28:29.794Z"
+    },
+    {
+      "tc": "TC-004",
+      "name": "种子管理员可登录",
+      "ok": true,
+      "detail": "token 已获取（不落盘）",
+      "at": "2026-11-14T14:28:29.876Z"
+    },
+    {
+      "tc": "TC-004",
+      "name": "种子员工可登录",
+      "ok": true,
+      "detail": "token 已获取（不落盘）",
+      "at": "2026-11-14T14:28:29.954Z"
+    },
+    {
+      "tc": "TC-010",
+      "name": "菜单 200 且有菜品",
+      "ok": false,
+      "detail": "status=0 items=0",
+      "at": "2026-11-14T14:28:59.957Z"
+    },
+    {
+      "tc": "TC-079",
+      "name": "当日菜单数量 ≥9（目标 20）",
+      "ok": true,
+      "detail": "total=undefined",
+      "at": "2026-11-14T14:28:59.957Z"
+    },
+    {
+      "tc": "TC-079",
+      "name": "菜品详情",
+      "ok": null,
+      "skipped": true,
+      "detail": "菜单无数据，检查种子",
+      "at": "2026-11-14T14:28:59.957Z"
+    },
+    {
+      "tc": "TC-079",
+      "name": "抽样图片可访问",
+      "ok": true,
+      "detail": "ok=0/0",
+      "at": "2026-11-14T14:28:59.957Z"
+    },
+    {
+      "tc": "TC-079",
+      "name": "图片映射",
+      "ok": null,
+      "skipped": true,
+      "detail": "菜单未返回 imageUrl，需核对 D20",
+      "at": "2026-11-14T14:28:59.957Z"
+    }
+  ]
+}

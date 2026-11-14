@@ -1,0 +1,43 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.3.5)
+
+2026-11-14T22:41:00.261+08:00 INFO  [] [] com.webox.WeBoxApplication - Starting WeBoxApplication v1.0.0 using Java 17.0.21.0.3 with PID 1356252 (/home/gem/code/req-squad/workspace/6343a752-e110-407c-8dfb-a5873425d917/backend/target/webox-backend.jar started by gem in /home/gem/code/req-squad/workspace/6343a752-e110-407c-8dfb-a5873425d917/backend)
+2026-11-14T22:41:00.347+08:00 INFO  [] [] com.webox.WeBoxApplication - No active profile set, falling back to 1 default profile: "default"
+2026-11-14T22:41:05.765+08:00 INFO  [] [] o.s.b.w.e.tomcat.TomcatWebServer - Tomcat initialized with port 8083 (http)
+2026-11-14T22:41:05.859+08:00 INFO  [] [] o.a.catalina.core.StandardService - Starting service [Tomcat]
+2026-11-14T22:41:05.859+08:00 INFO  [] [] o.a.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.31]
+2026-11-14T22:41:05.969+08:00 INFO  [] [] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-11-14T22:41:05.970+08:00 INFO  [] [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 5321 ms
+2026-11-14T22:41:06.253+08:00 WARN  [] [] com.webox.security.JwtService - JWT_SECRET not set; using an ephemeral random key (tokens invalid after restart)
+2026-11-14T22:41:07.551+08:00 WARN  [] [] o.s.b.a.s.s.UserDetailsServiceAutoConfiguration - 
+
+Using generated security password: 4da828ab-e116-4306-b99c-d7cb6f838e8a
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2026-11-14T22:41:07.562+08:00 INFO  [] [] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name inMemoryUserDetailsManager
+2026-11-14T22:41:08.761+08:00 WARN  [] [] o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'
+2026-11-14T22:41:08.773+08:00 INFO  [] [] o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2026-11-14T22:41:08.782+08:00 ERROR [] [] o.s.b.d.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8083 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8083 or configure this application to listen on another port.
+

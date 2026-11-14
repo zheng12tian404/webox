@@ -1,0 +1,12 @@
+[PASS] TC-058 15 个用户就绪 :: ready=15/15
+target dish=11 date=2026-11-15 expectedSuccess=5 before=[["5","0","0","5"]]
+[PASS] TC-058 成功数=可售数（5/5） :: 201=5 409_STOCK=10 other=0 elapsed=178ms
+[PASS] TC-058 其余为 STOCK_INSUFFICIENT :: 201+409=15/15
+[PASS] TC-058 库存不足响应含 dishId/requested/available :: sample={"code":"STOCK_INSUFFICIENT","message":"Some dishes are sold out or insufficient","data":{"details":[{"dishId":11,"requested":1,"available":0}]},"requestId":"beb7d402-3ada-4b6a-9c1b-30bd556074c2"}
+[PASS] TC-058 available >= 0 :: available=0
+[PASS] TC-058 reserved+sold <= total :: reserved=5 sold=0 total=5
+[PASS] TC-058 available 与成功数守恒 :: after=0 before=5 ok=5
+[PASS] TC-058 ledger RESERVE 汇总=成功数 :: [["RESERVE","5","5"]]
+per-request: [{"i":0,"status":201,"code":"OK"},{"i":1,"status":409,"code":"STOCK_INSUFFICIENT"},{"i":2,"status":409,"code":"STOCK_INSUFFICIENT"},{"i":3,"status":201,"code":"OK"},{"i":4,"status":201,"code":"OK"},{"i":5,"status":409,"code":"STOCK_INSUFFICIENT"},{"i":6,"status":409,"code":"STOCK_INSUFFICIENT"},{"i":7,"status":409,"code":"STOCK_INSUFFICIENT"},{"i":8,"status":409,"code":"STOCK_INSUFFICIENT"},{"i":9,"status":409,"code":"STOCK_INSUFFICIENT"},{"i":10,"status":201,"code":"OK"},{"i":11,"status":409,"code":"STOCK_INSUFFICIENT"},{"i":12,"status":409,"code":"STOCK_INSUFFICIENT"},{"i":13,"status":201,"code":"OK"},{"i":14,"status":409,"code":"STOCK_INSUFFICIENT"}]
+
+== conc-order.json: PASS=8 FAIL=0 SKIP=0 ==

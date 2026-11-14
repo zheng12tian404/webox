@@ -1,0 +1,13 @@
+23:05:21 start path=/preferences
+23:05:21 form initial={'peanuts': 'true', 'japanese': 'false', 'spice': 'Medium', 'taste': 'Medium', 'min': '', 'max': '', 'recommend': False}
+23:05:21 form to save={'peanuts': 'true', 'japanese': 'true', 'spice': 'Mild', 'taste': 'Rich', 'min': '10', 'max': '15', 'recommend': True}
+23:05:23 saved banner=True
+23:05:23 toast=Preferences saved.
+×
+23:05:23 error=None
+23:05:23 screenshot -> b7-preferences-saved.png
+23:05:26 form after full refresh={'peanuts': 'true', 'japanese': 'true', 'spice': 'Mild', 'taste': 'Rich', 'min': '10.00', 'max': '15.00', 'recommend': True}
+23:05:26 screenshot -> b8-preferences-after-refresh.png
+23:05:28 for-you badges=10 cards=20 ids=['for-you-11', 'for-you-15', 'for-you-14', 'for-you-8', 'for-you-20', 'for-you-1', 'for-you-7', 'for-you-19', 'for-you-3', 'for-you-10']
+23:05:28 screenshot -> b4-for-you.png
+23:05:28 DONE

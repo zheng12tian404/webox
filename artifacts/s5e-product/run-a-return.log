@@ -1,0 +1,47 @@
+++ /opt/gem/bin/agent-browser --session s5e eval 'document.querySelector("[data-testid=logout]").click(); "logout-clicked"'
+"logout-clicked"
+++ /opt/gem/bin/agent-browser --session s5e wait 1300
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e get url
+http://127.0.0.1:5175/login
+++ /opt/gem/bin/agent-browser --session s5e eval 'JSON.stringify({prefs:localStorage.getItem("webox.prefs.v1"),cart:localStorage.getItem("webox.cart.v1"),auth:localStorage.getItem("webox.auth.v1")})'
+"{\"prefs\":null,\"cart\":null,\"auth\":null}"
+++ /opt/gem/bin/agent-browser --session s5e screenshot artifacts/s5e-product/b2-after-logout.png
+[32m✓[0m Screenshot saved to [32martifacts/s5e-product/b2-after-logout.png[0m
+++ /opt/gem/bin/agent-browser --session s5e wait '[data-testid=login-email]'
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e fill '[data-testid=login-email]' s5e_prod_a_2318@test.com
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e fill '[data-testid=login-password]' Test12345
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e click '[data-testid=login-submit]'
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e wait 1600
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e eval 'document.querySelector("[data-testid=current-user]")?.textContent'
+"s5e_prod_a_2318@test.com"
+++ /opt/gem/bin/agent-browser --session s5e eval 'localStorage.getItem("webox.prefs.v1")'
+"{\"state\":{\"prefs\":{\"allergens\":[\"Peanuts\"],\"preferredCategories\":[],\"spicePreference\":\"None\",\"tastePreference\":\"Medium\",\"budgetMinCents\":null,\"budgetMaxCents\":null,\"recommendEnabled\":false},\"ownerUserId\":121},\"version\":1}"
+++ /opt/gem/bin/agent-browser --session s5e open http://127.0.0.1:5175/menu
+[32m✓[0m [1mWeBox — Employee Meal Ordering[0m
+  [2mhttp://127.0.0.1:5175/menu[0m
+++ /opt/gem/bin/agent-browser --session s5e wait '[data-testid=add-to-cart-1]'
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e eval 'document.querySelector("[data-testid=add-to-cart-1]").click(); "jsclicked"'
+"jsclicked"
+++ /opt/gem/bin/agent-browser --session s5e wait 1500
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e get count '[data-testid=allergen-modal]'
+1
+++ /opt/gem/bin/agent-browser --session s5e eval 'document.querySelector("[data-testid=allergen-modal]")?.innerText || null'
+"This dish contains an allergen you flagged: Peanuts. Add anyway?"
+++ /opt/gem/bin/agent-browser --session s5e screenshot artifacts/s5e-product/a4-return-modal.png
+[32m✓[0m Screenshot saved to [32martifacts/s5e-product/a4-return-modal.png[0m
+++ /opt/gem/bin/agent-browser --session s5e get url
+http://127.0.0.1:5175/menu
+++ /opt/gem/bin/agent-browser --session s5e eval 'document.querySelector("[data-testid=logout]").click(); "logout-clicked"'
+"logout-clicked"
+++ /opt/gem/bin/agent-browser --session s5e wait 1200
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e eval 'JSON.stringify({prefs:localStorage.getItem("webox.prefs.v1"),cart:localStorage.getItem("webox.cart.v1"),auth:localStorage.getItem("webox.auth.v1")})'
+"{\"prefs\":null,\"cart\":null,\"auth\":null}"

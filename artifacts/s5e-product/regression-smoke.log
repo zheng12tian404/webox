@@ -1,0 +1,59 @@
+# S5e regression smoke 2026-11-14 23:18:54
+mysql: [Warning] Using a password on the command line interface can be insecure.
+## AC-032 baseline dish1: 1	Kung Pao Chicken	2200	ON_SHELF
+mysql: [Warning] Using a password on the command line interface can be insecure.
+audit_count_before=40
+## AC-032 confirm=false price 2200->2500 (expect 400, no change)
+{"code":"VALIDATION_CONFIRM_REQUIRED","message":"confirm=true is required for this operation","data":null,"requestId":"4bad8f9a-b9af-45cb-8ca5-a1bd3d039f3e"}
+HTTP 400
+mysql: [Warning] Using a password on the command line interface can be insecure.
+1	2200	ON_SHELF
+## AC-032 confirm=true price ->2500 (expect 200 + audit)
+{"code":"VALIDATION_INVALID","message":"name is required (max 100)","data":null,"requestId":"f75c6144-814d-4734-bbba-215e968d482c"}
+HTTP 400
+mysql: [Warning] Using a password on the command line interface can be insecure.
+1	2200
+STOCK_UPDATE	STOCK	20:2026-11-16	NULL	NULL	S5c DEF-004 restore
+## restore price 2200
+HTTP 400
+mysql: [Warning] Using a password on the command line interface can be insecure.
+1	2200
+## AC-030 off-shelf dish1
+{"code":"OK","message":"OK","data":{"dishId":1,"status":"OFF_SHELF"},"requestId":"15972d00-f5da-4dcb-8a08-b955b121f369"}
+HTTP 200
+items= 19 dish1= 0
+## AC-030 restore on-shelf
+HTTP 200
+items= 20 dish1= 1
+## AC-014/015 order submit + idempotent replay (B)
+{"code":"OK","data":{"orderId":19,"orderNo":"WB20261115-0019","status":"Pending","deliveryDate":"2026-11-15","mealType":"Lunch","address":"Building A, 12F","totalCents":2200,"itemCount":1,"autoSwitched":true,"estimatedDelivery":"Lunch on 2026-11-15"},"message":"Order placed","requestId":"d6190e78-8f67-4492-8ef2-b3d69201ba47"}
+HTTP 201
+-- replay same key/body
+{"code":"OK","data":{"status":"Pending","address":"Building A, 12F","orderId":19,"orderNo":"WB20261115-0019","mealType":"Lunch","itemCount":1,"totalCents":2200,"autoSwitched":true,"deliveryDate":"2026-11-15","estimatedDelivery":"Lunch on 2026-11-15"},"message":"Order placed","requestId":"72d43ce7-c554-496c-9d0a-05046cd5da6f"}
+HTTP 201
+-- missing key (expect 400 IDEMPOTENCY_KEY_REQUIRED)
+{"code":"IDEMPOTENCY_KEY_REQUIRED","message":"Idempotency-Key header is required","data":null,"requestId":"50fc0028-d8c9-4bf7-8772-4fb933822f45"}
+HTTP 400
+## DB check orders for B (user 122)
+mysql: [Warning] Using a password on the command line interface can be insecure.
+19	WB20261115-0019	Pending	2200	2026-11-15	Lunch
+## AC-032 confirm=true full-body price 2200->2500 (expect 200 + audit)
+{"code":"OK","message":"OK","data":{"dishId":1,"name":"Kung Pao Chicken","description":"Classic Sichuan dish, chicken stir-fried with peanuts and dried chili","priceCents":2500,"category":"Chinese","protein":"Chicken","allergens":["Peanuts"],"spiceLevel":"Medium","imageUrl":"/images/image_01.jpg","status":"ON_SHELF"},"requestId":"81901d2a-6e62-4275-be0e-b57320942f67"}
+HTTP 200
+mysql: [Warning] Using a password on the command line interface can be insecure.
+1	2500	ON_SHELF
+mysql: [Warning] Using a password on the command line interface can be insecure.
+DISH_UPDATE	DISH	1	NULL	NULL	s5e smoke price 2200->2500	127.0.0.1
+## restore price 2200
+HTTP 200
+mysql: [Warning] Using a password on the command line interface can be insecure.
+1	2200
+DISH_UPDATE	NULL	NULL	s5e smoke restore
+## AC-014 snapshot / items / ledger for order 19
+mysql: [Warning] Using a password on the command line interface can be insecure.
+19	WB20261115-0019	Pending	2200	1	122:2026-11-15:Lunch
+19	Kung Pao Chicken	2200	1	2200
+ERROR 1054 (42S22) at line 1: Unknown column 'type' in 'field list'
+## AC-015 same key altered body (expect 409 IDEMPOTENCY_CONFLICT)
+{"code":"IDEMPOTENCY_CONFLICT","message":"Idempotency-Key was used with a different request body","data":null,"requestId":"e5d199f3-f8c1-4321-80e7-eb3920e68cdc"}
+HTTP 409

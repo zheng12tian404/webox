@@ -1,0 +1,12 @@
+===== X-Test-Clock six-boundary verification (test profile, DB=req_6343a752e110_test) =====
+SELECT DATABASE() first: req_6343a752e110_test
+X-Test-Clock 2026-11-14T09:59:59+08:00 -> OK effective=2026-11-14 Lunch autoSwitched=False
+X-Test-Clock 2026-11-14T10:00:00+08:00 -> OK effective=2026-11-14 Dinner autoSwitched=True
+X-Test-Clock 2026-11-14T10:00:01+08:00 -> OK effective=2026-11-14 Dinner autoSwitched=True
+X-Test-Clock 2026-11-14T14:59:59+08:00 -> OK effective=2026-11-14 Dinner autoSwitched=True
+X-Test-Clock 2026-11-14T15:00:00+08:00 -> OK effective=2026-11-15 Lunch autoSwitched=True
+X-Test-Clock 2026-11-14T15:00:01+08:00 -> OK effective=2026-11-15 Lunch autoSwitched=True
+
+Production profile rejects X-Test-Clock (demo instance 8090):
+{"code":"VALIDATION_TEST_CLOCK_FORBIDDEN","message":"X-Test-Clock is only allowed in test profile","data":null,"requestId":"24db369b-8264-44fa-bab6-8f8babed0e4c"}
+HTTP 400

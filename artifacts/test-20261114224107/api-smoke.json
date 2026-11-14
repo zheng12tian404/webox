@@ -1,0 +1,73 @@
+{
+  "runId": "20261114224107",
+  "base": "http://127.0.0.1:8084",
+  "finishedAt": "2026-11-14T14:43:54.055Z",
+  "pass": 9,
+  "fail": 0,
+  "skipped": 0,
+  "results": [
+    {
+      "tc": "TC-079",
+      "name": "health 200 且 db=UP",
+      "ok": true,
+      "detail": "status=200 body={\"code\":\"OK\",\"message\":\"OK\",\"data\":{\"status\":\"UP\",\"db\":\"UP\",\"redis\":\"DOWN\",\"cache\":\"UP\"},\"requestId\":\"f3f09621-f4f4-4080-88ec-08dc360548e8\"}",
+      "at": "2026-11-14T14:43:53.731Z"
+    },
+    {
+      "tc": "TC-004",
+      "name": "种子管理员可登录",
+      "ok": true,
+      "detail": "token 已获取（不落盘）",
+      "at": "2026-11-14T14:43:53.918Z"
+    },
+    {
+      "tc": "TC-004",
+      "name": "种子员工可登录",
+      "ok": true,
+      "detail": "token 已获取（不落盘）",
+      "at": "2026-11-14T14:43:53.997Z"
+    },
+    {
+      "tc": "TC-010",
+      "name": "菜单 200 且有菜品",
+      "ok": true,
+      "detail": "status=200 items=20",
+      "at": "2026-11-14T14:43:54.030Z"
+    },
+    {
+      "tc": "TC-079",
+      "name": "当日菜单数量 ≥9（目标 20）",
+      "ok": true,
+      "detail": "total=20",
+      "at": "2026-11-14T14:43:54.030Z"
+    },
+    {
+      "tc": "TC-010",
+      "name": "菜品含 id/name/priceCents/category",
+      "ok": true,
+      "detail": "{\"dishId\":11,\"name\":\"Beef Noodle Soup\",\"description\":\"Slow-cooked beef brisket with wheat noodles in rich broth\",\"priceCents\":2800,\"priceDisplay\":\"¥28.00\",\"category\":\"Chinese\",\"spiceLevel\":\"Mild\",\"imageUrl\":\"/images/image_11.jpg\",\"available\":true,\"availableQty\":30,\"lowStock\":false,\"soldOut\":false,\"h",
+      "at": "2026-11-14T14:43:54.030Z"
+    },
+    {
+      "tc": "TC-010",
+      "name": "priceDisplay 匹配 ¥xx.xx",
+      "ok": true,
+      "detail": "¥28.00",
+      "at": "2026-11-14T14:43:54.031Z"
+    },
+    {
+      "tc": "TC-079",
+      "name": "当日库存 20~50（种子）",
+      "ok": true,
+      "detail": "available=true",
+      "at": "2026-11-14T14:43:54.031Z"
+    },
+    {
+      "tc": "TC-079",
+      "name": "抽样图片可访问",
+      "ok": true,
+      "detail": "ok=5/5",
+      "at": "2026-11-14T14:43:54.055Z"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+[PASS] TC-079 health 200 且 db=UP :: status=200 body={"code":"OK","message":"OK","data":{"status":"UP","db":"UP","redis":"DOWN","cache":"UP"},"requestId":"e72400f5-ef05-4697-9348-89f4c9c6c9af"}
+[PASS] TC-004 种子管理员可登录 :: token 已获取（不落盘）
+[PASS] TC-004 种子员工可登录 :: token 已获取（不落盘）
+[FAIL] TC-010 菜单 200 且有菜品 :: status=0 items=0
+[PASS] TC-079 当日菜单数量 ≥9（目标 20） :: total=undefined
+[SKIP] TC-079 菜品详情 :: 菜单无数据，检查种子
+[PASS] TC-079 抽样图片可访问 :: ok=0/0
+[SKIP] TC-079 图片映射 :: 菜单未返回 imageUrl，需核对 D20
+
+== api-smoke.json: PASS=5 FAIL=1 SKIP=2 ==

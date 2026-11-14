@@ -1,0 +1,12 @@
+# DEF-005 auto-complete live probe 2026-11-14 22:59:38
+order_id=14 status_before=Confirmed
+t+5s status=Confirmed
+t+10s status=Confirmed
+t+15s status=Confirmed
+t+20s status=Confirmed
+t+25s status=Confirmed
+t+30s status=Confirmed
+t+35s status=Confirmed
+t+40s status=Completed
+action	actor_email	object_id	reason	before_json	after_json
+ORDER_AUTO_COMPLETE	SYSTEM	14	AUTO_COMPLETE	{"status": "Confirmed"}	{"status": "Completed"}

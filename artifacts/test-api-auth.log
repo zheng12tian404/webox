@@ -1,0 +1,19 @@
+[PASS] TC-001 注册 201 :: status=201 body={"code":"OK","message":"OK","data":{"id":160,"email":"u001_20261114224107_2776jj@test.com","role":"EMPLOYEE"},"requestId":"fce6dd1b-91e9-492b-813e-e670e84a47e9"}
+[PASS] TC-001 role=EMPLOYEE :: role=EMPLOYEE
+[PASS] TC-001 响应不含密码 :: 响应 JSON 不含 password 字段
+[PASS] TC-001 BCrypt 前缀 $2 :: hashPrefix=$2a$
+[PASS] TC-002 重复注册 409 AUTH_EMAIL_EXISTS :: status=409 body={"code":"AUTH_EMAIL_EXISTS","message":"Email already registered","data":null,"requestId":"1107325b-164a-4960-9f1d-bd0237d7ffbc"}
+[PASS] TC-002 大小写变体 409 :: status=409 body={"code":"AUTH_EMAIL_EXISTS","message":"Email already registered","data":null,"requestId":"44199d3d-46f4-4e8d-9f6a-39ed04ec7383"}
+[PASS] TC-003 非法邮箱 → 400 VALIDATION_EMAIL_FORMAT :: status=400 body={"code":"VALIDATION_EMAIL_FORMAT","message":"must be a well-formed email address","data":null,"requestId":"9dcab8b0-d85f-4bd6-9ad6-fd3e787eb20b"}
+[PASS] TC-003 7 位密码 → 400 VALIDATION_PASSWORD_POLICY :: status=400 body={"code":"VALIDATION_PASSWORD_POLICY","message":"size must be between 8 and 64","data":null,"requestId":"319056e8-36f1-4039-8bb8-8116cbff202d"}
+[PASS] TC-003 纯字母密码 → 400 VALIDATION_PASSWORD_POLICY :: status=400 body={"code":"VALIDATION_PASSWORD_POLICY","message":"Password must be 8-64 characters and contain both letters and digits","data":null,"requestId":"371fa122-afdf-47ea-9a02-7ece3c356db0"}
+[FAIL] TC-003 邮箱 201 字符 → 400 VALIDATION_EMAIL_LENGTH :: status=400 body={"code":"VALIDATION_EMAIL_FORMAT","message":"must be a well-formed email address","data":null,"requestId":"74048db1-d0d3-4cce-b29c-9dc3c66b2311"}
+[PASS] TC-003 8 位含字母数字通过 201 :: status=201
+[PASS] TC-084 注册 role=ADMIN 被拒绝或强制 EMPLOYEE :: status=201 role=EMPLOYEE
+[PASS] TC-004 员工登录 200 且返回 JWT :: status=200 token=yes
+[PASS] TC-004 管理员登录 role=ADMIN :: status=200 role=ADMIN
+[PASS] TC-004 /auth/me 200（刷新保持会话） :: status=200 body={"code":"OK","message":"OK","data":{"id":2,"email":"employee@webox.com","role":"EMPLOYEE","displayName":"Demo Employee"},"requestId":"c2526969-6d2a-49cb-93a4-dffb4eb140ee"}
+[PASS] TC-005 连续错误密码前 10 次 401 :: codes=401,401,401,401,401,401,401,401,401,401,429
+[PASS] TC-005 第 11 次 429 RATE_LIMITED :: codes=401,401,401,401,401,401,401,401,401,401,429
+
+== api-auth.json: PASS=16 FAIL=1 SKIP=0 ==

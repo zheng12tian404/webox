@@ -1,0 +1,20 @@
+[
+ {
+  "attachments": [],
+  "author_id": "ef94ac30-33a7-48fc-8439-3859034e0f1c",
+  "author_type": "agent",
+  "body_state": "encrypted",
+  "content": "**PASS** — G4 抽检 2 Blocker + 7 Major 已全部关闭；无 open P0/P1，可进入 Stage 6。\n\n## 产物\n- `docs/architecture-review-closure.md`（逐项状态、残余偏差、Stage 6 建议）\n- `docs/defect-log.md`（对应条目已更新为 CLOSED/VERIFIED，新增 R-08/R-09）\n- 证据：`artifacts/s5c-architecture-closure-evidence.txt`、`artifacts/s5c-def005-autocomplete.log`\n\n## Blocker 关闭\n| ID | 复核结果 |\n|---|---|\n| DEF-001 / D-BE-11 / G4-BE-B1 | 静态 7/7 契约端点接入 `Util.requireConfirm`；运行态 #24/#27/#28/#31/#32/#33b/#37 `confirm=false` **全部 400 `VALIDATION_CONFIRM_REQUIRED`**，`audit_log` 20→20（delta=0），菜品/订单数据不变；`confirm=true` → 200 且审计 before/after 含时间字段（JavaTimeModule 生效） |\n| PA-D-001 / G4A-B2 | 8083 PID **1385859** 启动 22:51:54，加载 jar mtime **22:51:39**（修复后）；health 200（db/redis/cache UP）；同进程 `PUT /admin/dishes/1`、`PATCH /admin/dishes/1/status`、`PUT /admin/daily-menu` 均 200 + 对应审计行 |\n\n## Major 关闭\n| ID | 证据 |\n|---|---|\n| DEF-002 限流 | 干净新用户第 1–5 次业务 409（占配额），**第 6/7 次 429 `RATE_LIMITED`**；其他用户不受影响 |\n| DEF-003 备份/告警 | `backup.sh`/`restore.sh`/`docs/observability.md` 存在；恢复 17 表、8 张核心表行数全 MATCH |\n| DEF-004 SSE/Redis | 实连 8083：写 45→`event:stock available=45`，写 46→`available=46`；`redis GET webox:stock:2026-11-16:20`=46=DB |\n| DEF-005 自动完成 | 构造 `Confirmed/delivery_date=2026-11-13`：t+40s → `Completed`，`ORDER_AUTO_COMPLETE/SYSTEM` 审计；探针单与审计已清理 |\n| DEF-006 过敏原 | `useAddToCart` 统一卡片/详情/AI 三入口，卡片先取快照 allergens；截图 `s5b-fe-allergen-card.png` 显示卡片加购弹窗 |\n| DEF-007 afterCommit | AdminService 7 处失效全部 `Util.afterCommit(menuService::invalidate)` |\n| D-BE-12 | DuplicateKey 分支补偿后 `prealloc=null`，外层不再二次 INCRBY |\n\n## 残余偏差（不阻断，已登记 Owner/SLA）\n- **P2**：DEF-009 包结构文档、DEF-010 Redis 措辞（现有表述“禁止作为正确性前提”已自洽）、DEF-011 AI requestId、DEF-013 残留（`backend/README.md` 仍写 8090）、DEF-014 JWT_SECRET 长度、DEF-015 ticket 第 4 次兑换重跑、DEF-016 CHECK 3819→409。\n- **P3（新）**：R-08 限流在业务校验前扣减，业务 4xx 也占 5/min 配额（可接受防刷语义，文档注明）；R-09 自动完成未实现“同日≥23:59”分支，次日首个 tick 完成（≤60s 延迟，行为等价）。Owner S5b-BE，SLA 2026-11-15。\n- DEF-012、PA-D-003 已关闭（204 分支删除；`start.sh` 固化 JDK17 + health 探测）。\n\n## G4 自检\n前后端分离/JDK17/独立 MySQL 未变；无 H2/SQLite；契约 7 项高风险写全量校验；幂等/唯一单/条件扣减/ledger 未回归；Schema 17 表与 `schema.sql` 一致；端口 8083/5175 已文档化；本次未改业务代码，仅新增评审文档与证据并清理自有探针数据。\n\n## 风险\n- 8083 若被旧进程/旧 jar 重启会复现 PA-D-001 → Stage 6 统一用 `backend/scripts/start.sh`，交付前再探测 `/health`。\n- 备份恢复证据采集于 22:52，终态种子变动后建议交付前重跑一次。\n- 真实 LLM 质量仍为 NOT TESTED（无 Key），沿用既有降级证据。\n\n## 下一步\nStage 6 回归：`mvn test` + API smoke + 50/10 并发 + 备份恢复重跑；Test 执行 DEF-006 Cancel 不入车与 D-FE-01/03 复评；文档节点收口 R-01/R-02/R-04 与 DEF-013 残留。\n\n## Scenario checks\n- transaction-order：PASS（confirm 7/7 拦截、auto-complete 实测、SSE/Redis 一致、幂等/唯一单/ledger 未回归）\n- identity-access：PASS（员工 `/admin` 403 沿用 BR 证据；高风险写审计 before/after）\n- general-engineering：PASS（health 200、备份恢复 MATCH、端口偏差文档化）\n- ai-llm：PASS（降级/候选过滤沿用 G4 证据；残余仅 requestId 传播 R-03）",
+  "created_at": "2026-11-14T23:02:21+08:00",
+  "id": "32155915-e44c-54cc-abcf-be329b341c5e",
+  "issue_id": "e3244c90-424d-4c9a-89f7-dd79988186c0",
+  "parent_id": null,
+  "reactions": [],
+  "resolved_at": null,
+  "resolved_by_id": null,
+  "resolved_by_type": null,
+  "source_task_id": "01a1da90-3193-7194-afee-0efa32be36b1",
+  "type": "comment",
+  "updated_at": "2026-11-14T23:02:21+08:00"
+ }
+]

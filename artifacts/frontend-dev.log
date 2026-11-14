@@ -1,0 +1,48 @@
+
+> webox-frontend@1.0.0 dev
+> vite
+
+
+  VITE v5.4.8  ready in 189 ms
+
+  ➜  Local:   http://localhost:5175/
+  ➜  Network: http://10.255.214.131:5175/
+10:51:08 PM [vite] http proxy error: /api/v1/health
+Error: connect ECONNREFUSED 127.0.0.1:8083
+    at TCPConnectWrap.afterConnect [as oncomplete] (node:net:1637:16)
+10:51:45 PM [vite] hmr update /src/pages/employee/DishDetailPage.tsx, /src/pages/employee/PreferencesPage.tsx, /src/pages/employee/CheckoutPage.tsx
+10:51:52 PM [vite] hmr update /src/components/layout/AppLayout.tsx, /src/pages/employee/OrdersPage.tsx, /src/pages/employee/OrderSuccessPage.tsx, /src/pages/console/DashboardPage.tsx, /src/pages/employee/OrderDetailPage.tsx, /src/pages/employee/DishDetailPage.tsx, /src/pages/console/ConsoleOrdersPage.tsx, /src/pages/employee/CartPage.tsx, /src/pages/employee/PreferencesPage.tsx, /src/pages/employee/CheckoutPage.tsx, /src/pages/console/DishesPage.tsx, /src/components/dish/DishCard.tsx, /src/components/ai/AiAssistant.tsx
+10:52:03 PM [vite] hmr update /src/pages/employee/PreferencesPage.tsx
+10:52:08 PM [vite] hmr update /src/components/dish/DishCard.tsx
+10:52:10 PM [vite] hmr update /src/components/dish/DishCard.tsx
+10:52:10 PM [vite] hmr update /src/components/dish/DishCard.tsx
+10:52:16 PM [vite] hmr update /src/pages/employee/DishDetailPage.tsx
+10:52:21 PM [vite] hmr update /src/pages/employee/DishDetailPage.tsx
+10:52:24 PM [vite] hmr update /src/pages/employee/DishDetailPage.tsx
+10:52:27 PM [vite] hmr update /src/components/ai/AiAssistant.tsx
+10:52:29 PM [vite] hmr update /src/components/ai/AiAssistant.tsx
+10:52:30 PM [vite] hmr update /src/components/ai/AiAssistant.tsx
+10:52:31 PM [vite] hmr update /src/components/ai/AiAssistant.tsx
+10:52:35 PM [vite] hmr update /src/pages/employee/CheckoutPage.tsx
+10:52:36 PM [vite] hmr update /src/pages/employee/CheckoutPage.tsx
+10:52:48 PM [vite] hmr update /src/pages/employee/CheckoutPage.tsx
+10:52:51 PM [vite] hmr update /src/pages/employee/CheckoutPage.tsx
+10:52:52 PM [vite] hmr update /src/pages/employee/CheckoutPage.tsx
+10:52:53 PM [vite] hmr update /src/pages/employee/CheckoutPage.tsx
+10:52:57 PM [vite] hmr update /src/App.tsx, /src/components/layout/AppLayout.tsx, /src/routes/guards.tsx, /src/pages/auth/RegisterPage.tsx, /src/components/layout/ConsoleLayout.tsx, /src/pages/auth/LoginPage.tsx, /src/pages/employee/MenuPage.tsx, /src/pages/employee/OrdersPage.tsx, /src/pages/console/InventoryPage.tsx, /src/pages/console/AiRulesPage.tsx, /src/pages/console/DailyMenuPage.tsx, /src/pages/employee/OrderDetailPage.tsx, /src/pages/employee/DishDetailPage.tsx, /src/pages/console/ConsoleOrdersPage.tsx, /src/pages/console/AuditPage.tsx, /src/pages/employee/PreferencesPage.tsx, /src/pages/employee/CheckoutPage.tsx, /src/pages/console/DishesPage.tsx, /src/pages/employee/OrderSuccessPage.tsx, /src/pages/console/DashboardPage.tsx
+10:53:02 PM [vite] hmr update /src/components/ui/ToastHost.tsx, /src/pages/system/NotFoundPage.tsx, /src/components/layout/AppLayout.tsx, /src/pages/employee/OrdersPage.tsx, /src/routes/guards.tsx, /src/pages/employee/OrderSuccessPage.tsx, /src/pages/system/ForbiddenPage.tsx, /src/pages/auth/RegisterPage.tsx, /src/pages/console/InventoryPage.tsx, /src/components/layout/ConsoleLayout.tsx, /src/pages/console/DashboardPage.tsx, /src/pages/console/AiRulesPage.tsx, /src/pages/auth/LoginPage.tsx, /src/pages/console/DailyMenuPage.tsx, /src/pages/employee/OrderDetailPage.tsx, /src/pages/employee/DishDetailPage.tsx, /src/pages/employee/MenuPage.tsx, /src/pages/console/ConsoleOrdersPage.tsx, /src/pages/console/AuditPage.tsx, /src/pages/employee/CartPage.tsx, /src/pages/employee/PreferencesPage.tsx, /src/pages/employee/CheckoutPage.tsx, /src/pages/console/DishesPage.tsx, /src/components/dish/DishCard.tsx, /src/App.tsx, /src/components/ui/Feedback.tsx, /src/components/ui/Pagination.tsx, /src/components/console/ConfirmReasonModal.tsx, /src/components/ai/AiAssistant.tsx
+10:53:03 PM [vite] hmr update /src/components/ui/ToastHost.tsx, /src/pages/system/NotFoundPage.tsx, /src/components/layout/AppLayout.tsx, /src/pages/employee/OrdersPage.tsx, /src/routes/guards.tsx, /src/pages/employee/OrderSuccessPage.tsx, /src/pages/system/ForbiddenPage.tsx, /src/pages/auth/RegisterPage.tsx, /src/pages/console/InventoryPage.tsx, /src/components/layout/ConsoleLayout.tsx, /src/pages/console/DashboardPage.tsx, /src/pages/console/AiRulesPage.tsx, /src/pages/auth/LoginPage.tsx, /src/pages/console/DailyMenuPage.tsx, /src/pages/employee/OrderDetailPage.tsx, /src/pages/employee/DishDetailPage.tsx, /src/pages/employee/MenuPage.tsx, /src/pages/console/ConsoleOrdersPage.tsx, /src/pages/console/AuditPage.tsx, /src/pages/employee/CartPage.tsx, /src/pages/employee/PreferencesPage.tsx, /src/pages/employee/CheckoutPage.tsx, /src/pages/console/DishesPage.tsx, /src/components/dish/DishCard.tsx, /src/App.tsx, /src/components/ui/Feedback.tsx, /src/components/ui/Pagination.tsx, /src/components/console/ConfirmReasonModal.tsx, /src/components/ai/AiAssistant.tsx
+11:12:25 PM [vite] hmr update /src/pages/employee/PreferencesPage.tsx, /src/pages/employee/CheckoutPage.tsx, /src/hooks/useAddToCart.tsx
+11:12:25 PM [vite] hmr invalidate /src/hooks/useAddToCart.tsx Could not Fast Refresh. Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+11:12:25 PM [vite] hmr update /src/pages/employee/DishDetailPage.tsx, /src/components/dish/DishCard.tsx, /src/components/ai/AiAssistant.tsx
+11:12:29 PM [vite] hmr update /src/components/layout/AppLayout.tsx, /src/pages/employee/DishDetailPage.tsx, /src/pages/employee/CartPage.tsx, /src/pages/employee/CheckoutPage.tsx, /src/components/dish/DishCard.tsx, /src/hooks/useAddToCart.tsx
+11:12:29 PM [vite] hmr invalidate /src/hooks/useAddToCart.tsx Could not Fast Refresh. Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+11:12:29 PM [vite] hmr update /src/pages/employee/DishDetailPage.tsx, /src/components/dish/DishCard.tsx, /src/components/ai/AiAssistant.tsx
+11:12:31 PM [vite] hmr update /src/components/layout/AppLayout.tsx, /src/pages/employee/DishDetailPage.tsx, /src/pages/employee/CartPage.tsx, /src/pages/employee/CheckoutPage.tsx, /src/components/dish/DishCard.tsx, /src/hooks/useAddToCart.tsx
+11:12:31 PM [vite] hmr invalidate /src/hooks/useAddToCart.tsx Could not Fast Refresh. Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+11:12:31 PM [vite] hmr update /src/pages/employee/DishDetailPage.tsx, /src/components/dish/DishCard.tsx, /src/components/ai/AiAssistant.tsx
+11:12:35 PM [vite] hmr update /src/App.tsx, /src/components/layout/AppLayout.tsx, /src/routes/guards.tsx, /src/pages/auth/RegisterPage.tsx, /src/components/layout/ConsoleLayout.tsx, /src/pages/auth/LoginPage.tsx, /src/pages/employee/MenuPage.tsx
+11:12:36 PM [vite] hmr update /src/App.tsx, /src/components/layout/AppLayout.tsx, /src/routes/guards.tsx, /src/pages/auth/RegisterPage.tsx, /src/components/layout/ConsoleLayout.tsx, /src/pages/auth/LoginPage.tsx, /src/pages/employee/MenuPage.tsx
+11:12:37 PM [vite] hmr update /src/App.tsx, /src/components/layout/AppLayout.tsx, /src/routes/guards.tsx, /src/pages/auth/RegisterPage.tsx, /src/components/layout/ConsoleLayout.tsx, /src/pages/auth/LoginPage.tsx, /src/pages/employee/MenuPage.tsx
+11:12:43 PM [vite] hmr update /src/App.tsx, /src/components/layout/AppLayout.tsx, /src/routes/guards.tsx, /src/pages/auth/RegisterPage.tsx, /src/components/layout/ConsoleLayout.tsx, /src/pages/auth/LoginPage.tsx, /src/pages/employee/MenuPage.tsx
+11:12:43 PM [vite] hmr update /src/App.tsx, /src/components/layout/AppLayout.tsx, /src/routes/guards.tsx, /src/pages/auth/RegisterPage.tsx, /src/components/layout/ConsoleLayout.tsx, /src/pages/auth/LoginPage.tsx, /src/pages/employee/MenuPage.tsx

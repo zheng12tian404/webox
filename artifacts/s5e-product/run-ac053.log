@@ -1,0 +1,25 @@
+++ /opt/gem/bin/agent-browser --session s5e wait '[data-testid=login-email]'
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e fill '[data-testid=login-email]' s5e_prod_b_2318@test.com
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e fill '[data-testid=login-password]' Test12345
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e click '[data-testid=login-submit]'
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e wait 1600
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e open http://127.0.0.1:5175/menu
+[32m✓[0m [1mWeBox — Employee Meal Ordering[0m
+  [2mhttp://127.0.0.1:5175/menu[0m
+++ /opt/gem/bin/agent-browser --session s5e wait '[data-testid=add-to-cart-1]'
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e eval '(()=>{const b=document.querySelector("[data-testid=add-to-cart-1]");for(let i=0;i<10;i++)b.click();return "10 clicks dispatched"})()'
+"10 clicks dispatched"
+++ /opt/gem/bin/agent-browser --session s5e wait 1500
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e eval 'localStorage.getItem("webox.cart.v1")'
+"{\"state\":{\"lines\":[{\"lineId\":\"1|#L1-xu2xog\",\"dishId\":1,\"name\":\"Kung Pao Chicken\",\"imageUrl\":\"/images/image_01.jpg\",\"basePriceCents\":2200,\"options\":[],\"unitPriceCents\":2200,\"qty\":1,\"addedAt\":1794669562135}]},\"version\":1}"
+++ /opt/gem/bin/agent-browser --session s5e get count '[data-testid=allergen-modal]'
+0
+++ /opt/gem/bin/agent-browser --session s5e screenshot artifacts/s5e-product/ac053-doubleclick.png
+[32m✓[0m Screenshot saved to [32martifacts/s5e-product/ac053-doubleclick.png[0m

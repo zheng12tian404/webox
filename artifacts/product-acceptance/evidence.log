@@ -1,0 +1,162 @@
+== AC-004 admin login ==
+{"code":"OK","message":"OK","data":{"accessToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxIiwiZW1haWwiOiJhZG1pbkB3ZWJveC5jb20iLCJyb2xlIjoiQURNSU4iLCJpYXQiOjE3OTQ2NjcyODcsImV4cCI6MTc5NDY3NDQ4N30.oNBT_sXJ1kRYEUw8eQ3DPzU6wr4lVwbl9ltRSDiTHQQ","refreshToken":"5KR-SezbL_as1tnRZ8T0vj1NoVs9pctKsuL
+ADMIN role=ADMIN
+EMP role=EMPLOYEE
+== AC-004 me ==
+{"code":"OK","message":"OK","data":{"id":1,"email":"admin@webox.com","role":"ADMIN","displayName":"WeBox Admin"},"requestId":"5ff7e592-0262-4890-bd68-830c37e786f0"}
+== AC-006 menu ==
+{
+  "total": 20,
+  "size": 20,
+  "page": 1,
+  "first": {
+    "dishId": 11,
+    "name": "Beef Noodle Soup",
+    "description": "Slow-cooked beef brisket with wheat noodles in rich broth",
+    "priceCents": 2800,
+    "priceDisplay": "¥28.00",
+    "category": "Chinese",
+    "spiceLevel": "Mild",
+    "imageUrl": "/images/image_11.jpg",
+    "available": true,
+    "availableQty": 40,
+    "lowStock": false,
+    "soldOut": false,
+    "hasOptions": false,
+    "hasRequiredOptions": false,
+    "forYou": false
+  }
+}
+size=101 http=400 {"code":"VALIDATION_PAGINATION","message":"page must be >=1 and size between 1 and 100","data":null,"requestId":"a06da5c
+== AC-008 search ==
+{"total":5,"names":["Chicken Quinoa Bowl","Chicken Teriyaki Bento","Grilled Chicken Sandwich","Korean Fried Chicken","Kung Pao Chicken"]}
+{"code":"OK","message":"OK","data":{"items":[],"page":1,"size":20,"total":0},"requestId":"c16bedb4-7006-4450-88c0-49fa4131723d"}
+search51 http=400 {"code":"VALIDATION_SEARCH_LENGTH","message":"Search must be at most 50 characters","data":null,"requestId":"29bf33fc-f9
+== AC-001 register ==
+{"code":"OK","message":"OK","data":{"id":110,"email":"pa_1794667287_a@test.com","role":"EMPLOYEE"},"requestId":"ab834085-158d-4405-90eb-ba3d9759bb8e"}
+
+pa_1794667287_a@test.com	EMPLOYEE	$2a$	60
+== AC-063 role injection (AC-061) ==
+{"code":"OK","message":"OK","data":{"id":111,"email":"pa_1794667287_r@test.com","role":"EMPLOYEE"},"requestId":"ba869bca-b5ff-4e81-b0dc-bf986e9ee65a"}
+== AC-013 preview (burger options) ==
+{
+  "code": "OK",
+  "total": 4100,
+  "items": [
+    {
+      "dishName": "Classic Beef Burger",
+      "options": [
+        {
+          "name": "Whole Wheat",
+          "priceDeltaCents": 0
+        },
+        {
+          "name": "Mustard",
+          "priceDeltaCents": 0
+        },
+        {
+          "name": "Cheese",
+          "priceDeltaCents": 300
+        }
+      ],
+      "qty": 1,
+      "unitPriceCents": 4100,
+      "subtotalCents": 4100
+    }
+  ],
+  "eff": [
+    "2026-11-15",
+    "Lunch",
+    false
+  ],
+  "budget": false,
+  "cutoff": "2026-11-15T10:00+08:00"
+}
+addr201 http=200 {"code":"OK","message":"OK","data":{"items":[{"dishName":"Beef Noodle Soup","options":[],"qty":1,"unitPriceCents":2800,"subtotalCents":2800}],"totalCe
+== AC-014 create order ==
+{"code":"OK","data":{"orderId":9,"orderNo":"WB20261115-0009","status":"Pending","deliveryDate":"2026-11-15","mealType":"Lunch","address":"Building A, 12F","totalCents":8200,"itemCount":2,"autoSwitched":false,"estimatedDelivery":"Lunch on 2026-11-15"},"message":"Order placed","requestId":"16f75c52-c78d-4f10-8ade-d76d09dcf33c"}
+
+orderId=9
+9	Pending	8200	2	2026-11-15	Lunch	1
+RESERVE	2	ORD:9:D:9:RESERVE
+== AC-015 idempotency same key x3 ==
+{"code":"OK","orderId":9,"status":"Pending"}
+{"code":"OK","orderId":9,"status":"Pending"}
+{"code":"OK","orderId":9,"status":"Pending"}
+same key diff body http=409 {"code":"IDEMPOTENCY_CONFLICT","message":"Idempotency-Key was used with a different request body","data":null,"requestId":"b52f0cb6-c62b-473a-9229-977
+missing key http=400 {"code":"IDEMPOTENCY_KEY_REQUIRED","message":"Idempotency-Key header is required","data":null,"requestId":"ea7734d1-bf23
+1
+== AC-026 duplicate same day/meal ==
+dup http=409 {"code":"ORDER_DUPLICATE","message":"An active order already exists for this meal","data":{"existingOrderId":9,"existingOrderNo":"WB20261115-0009"},"requestId":"f34e5395-8ced-4503-a8c5-1a8b511a58ac"}
+{"existingOrderId":9}
+== AC-018 cancel + double cancel ==
+9	40	0	0
+cancel1 http=200 {"code":"OK","message":"OK","data":{"orderId":9,"status":"Cancelled","cancelledAt":"2026-11-14T22:41:28.582+08:00"},"requestId":"8c5dd5fa-a4bd-40ef-b9
+cancel2 http=409 {"code":"ORDER_STATE_INVALID","message":"Only pending orders can be cancelled","data":null,"requestId":"61d20989-e457-4ada-94a6-684c8c0fe5bb"}
+Cancelled	2026-11-14 22:41:28.582
+RESERVE	2	ORD:9:D:9:RESERVE
+RELEASE	2	ORD:9:D:9:RELEASE
+9	40	0	0
+== AC-028 employee -> admin 403 ==
+emp admin http=403 {"code":"FORBIDDEN","message":"Access denied","data":null,"requestId":"310d87da-917a-494a-b814-531334ed1a25"}
+anon admin http=401 {"code":"AUTH_UNAUTHORIZED","message":"Authentication required","data":null,"requestId":"0e5bfaab-270b-4ba5-8b9a-d579fe2
+admin admin http=200
+== AC-032 price change audit ==
+no reason http=400 {"code":"VALIDATION_REASON_REQUIRED","message":"A reason of 1-200 characters is required","data":null,"requestId":"c0b38624-7b3c-4f28-b49a-a1bcd95550c
+with reason http=500
+3800
+restore http=500
+== AC-030 off shelf ==
+offshelf http=500
+menu20 count=1
+detail20 http=200 {"code":"OK","message":"OK","data":{"dishId":20,"name":"Vegan Buddha Bowl","description":"Roasted ve
+onshelf http=500
+== AC-042 dashboard vs DB ==
+{"orders":0,"revenueCents":0,"completed":0,"pending":0,"cancelled":0}
+[]
+{"lunch":0,"dinner":0}
+7
+0
+0
+0	NULL
+== AC-056 seeds ==
+20
+2026-11-14	20	20	45
+2026-11-15	20	30	40
+2026-11-16	20	40	40
+20
+20
+== AC-022 For You ==
+[{"id":11,"forYou":false},{"id":2,"forYou":false},{"id":15,"forYou":false},{"id":6,"forYou":false},{"id":14,"forYou":false},{"id":9,"forYou":false},{"id":16,"forYou":false},{"id":13,"forYou":false}]
+== AC-023 budget ==
+{"code":"OK","message":"OK","data":{"allergens":[],"preferredCategories":[],"spicePreference":null,"tastePreference":null,"budgetMinCents":1000,"budgetMaxCents":1500,"recommendEnabled":false},"request
+{"total":2800,"budgetExceeded":true}
+== AC-024 test-clock production reject ==
+clock http=400 {"code":"VALIDATION_TEST_CLOCK_FORBIDDEN","message":"X-Test-Clock is only allowed in test profile","data":null,"requestId":"4c5f4c51-176e-44fa-a674-0b
+== DONE ==
+== AC-018 stock 11-15 ==
+2026-11-15	9	30	0	0
+ORD:9:D:9:RELEASE	RELEASE	2
+ORD:9:D:9:RESERVE	RESERVE	2
+== AC-013/POST address 201 ==
+POST addr201 http=400 {"code":"VALIDATION_ADDRESS_LENGTH","message":"size must be between 0 and 200","data":null,"requestId":"036e7528-5af1-4662-a3ae-f7c3a33bacbe"}
+== AC-020 6 items / 5 items ==
+qty6 http=400 {"code":"ORDER_LIMIT_EXCEEDED","message":"At most 5 portions per order","data":null,"requestId":"00c42fe9-e743-4dfc-8989-469380bfdc1e"}
+qty5 http=201 {"code":"OK","data":{"orderId":10,"orderNo":"WB20261115-0010","status":"Pending","deliveryDate":"2026-11-15","mealType":"Lunch","address":"Building A","totalCents":14100,"itemCount":5,"autoSwitched":f
+== AC-019 confirmed cannot cancel ==
+confirm http=200 {"code":"OK","message":"OK","data":{"orderId":10,"orderNo":"WB20261115-0010","status":"Confirmed","deliveryDate":"2026-11-15","mealType":"Lunch","addr
+emp cancel confirmed http=409 {"code":"ORDER_STATE_INVALID","message":"Only pending orders can be cancelled","data":null,"requestId":"72203360-8d59-47d8-ae9d-569cceb19738"}
+== AC-042 dashboard date=2026-11-15 ==
+{"orders":2,"revenueCents":17100,"completed":1,"pending":0,"cancelled":6}
+{"lunch":2,"dinner":0}
+7
+2	17100
+Confirmed	1
+Completed	1
+Cancelled	6
+== AC-022 for-you with Japanese/Mild pref ==
+[{"id":11,"name":"Beef Noodle Soup","category":"Chinese","spiceLevel":"Mild"},{"id":15,"name":"California Roll","category":"Japanese","spiceLevel":"None"},{"id":14,"name":"Chicken Teriyaki Bento","category":"Japanese","spiceLevel":"Mild"},{"id":8,"name":"Korean Bibimbap","category":"Korean","spiceLevel":"Mild"},{"id":19,"name":"Pad Thai","category":"Southeast Asian","spiceLevel":"Mild"},{"id":3,"name":"Salmon Sashimi Set","category":"Japanese","spiceLevel":"None"}]
+== AC-057 English + price format ==
+0
+0
+DONE

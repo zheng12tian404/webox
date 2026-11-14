@@ -1,0 +1,26 @@
+[PASS] TC-010 列表 200 且 20 条 :: status=200 count=20
+[PASS] TC-010 分页元数据 page/size/total :: {"page":1,"size":20,"total":20}
+[PASS] TC-010 priceCents 全为整数 :: bad=0
+[PASS] TC-010 priceDisplay 全为 ¥xx.xx :: bad=0
+[FAIL] TC-010 page=2 可用 :: status=200 count=0
+[PASS] TC-011 size=101 → 400 VALIDATION_PAGINATION :: status=400
+[PASS] TC-011 size=100 → 200 :: status=200
+[PASS] TC-011 page=0 → 400 :: status=400
+[PASS] TC-012 Chinese,Japanese 仅返回并集 :: status=200 items=7
+[PASS] TC-012 Japanese,Western 仅返回并集 :: status=200
+[PASS] TC-012 非法分类 400 VALIDATION_CATEGORY :: status=400
+[PASS] TC-013 大小写搜索返回一致集合 :: sets=12/12/12
+[PASS] TC-014 注入 payload 安全: ' OR 1=1-- :: status=200 leaked=false
+[PASS] TC-014 注入 payload 安全: % :: status=200 leaked=false
+[PASS] TC-014 注入 payload 安全: _ :: status=200 leaked=false
+[PASS] TC-014 注入 payload 安全: '; DROP TABLE dish;-- :: status=200 leaked=false
+[PASS] TC-015 search=50 → 200 :: status=200
+[PASS] TC-015 search=51 → 400 VALIDATION_SEARCH_LENGTH :: status=400
+[PASS] TC-016 详情 200 且含描述/过敏原/辣度 :: status=200
+[PASS] TC-016 选项组结构存在 :: groups=3
+[PASS] TC-016 spiceLevel 枚举合法 :: spiceLevel=None
+[PASS] TC-016 过敏原均在固定枚举内 :: ["Gluten","Dairy"]
+[FAIL] TC-017 preview 200 且 totalCents 为整数 :: status=400 body={"code":"VALIDATION_OPTION_REQUIRED","message":"Group 'Bun' requires a selection","data":null,"requestId":"7c1b8a8d-6960-4948-905f-bd67c696e1a7"}
+[SKIP] TC-017 选项加价断言 :: preview 契约未匹配，按 api-contract.md 调整请求体
+
+== api-menu.json: PASS=21 FAIL=2 SKIP=1 ==

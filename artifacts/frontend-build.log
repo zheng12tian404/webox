@@ -1,0 +1,31 @@
+===== npm install (2026-11-14 22:28:05 CST) =====
+
+added 1 package in 323ms
+
+===== npm run typecheck =====
+
+> webox-frontend@1.0.0 typecheck
+> tsc --noEmit
+
+exit=0
+
+===== npm run build =====
+
+> webox-frontend@1.0.0 build
+> tsc --noEmit && vite build
+
+vite v5.4.8 building for production...
+transforming...
+✓ 693 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.47 kB │ gzip:   0.31 kB
+dist/assets/index-D-V7NLs4.css   22.34 kB │ gzip:   5.47 kB
+dist/assets/index-DN50mWz6.js   716.47 kB │ gzip: 207.34 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 2.83s
+exit=0

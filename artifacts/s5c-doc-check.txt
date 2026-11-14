@@ -1,0 +1,54 @@
+# Stage 5c 文档检查（终版）— 2026-11-14 CST
+
+## doc/ 文件（应 10 份：00-08 + README）
+- 数量: 10; 齐全: YES
+- doc/00-prd.md: 787 行, 74350 bytes
+- doc/01-architecture.md: 398 行, 32338 bytes
+- doc/02-detailed-design.md: 1547 行, 121583 bytes
+- doc/03-api.md: 327 行, 29279 bytes
+- doc/04-data-model.md: 155 行, 10298 bytes
+- doc/05-testing.md: 730 行, 71071 bytes
+- doc/06-deployment.md: 170 行, 7763 bytes
+- doc/07-delivery.md: 109 行, 10901 bytes
+- doc/08-team-process.md: 147 行, 11825 bytes
+- doc/README.md: 30 行, 2187 bytes
+
+## 根 README 项目说明 + 飞书 wiki
+- 项目介绍: OK
+- 技术栈选型: OK
+- 目录结构: OK
+- 从零启动: OK
+- 演示账号: OK
+- 种子数据: OK
+- 飞书原文链接: OK
+- 飞书wiki全文: OK
+
+## 本地 Markdown 链接检查
+- 检查链接: 44; 缺失: 0
+
+## 必需产物
+- README.md: OK (25542 bytes)
+- doc/README.md: OK (2187 bytes)
+- doc/05-testing.md: OK (71071 bytes)
+- doc/07-delivery.md: OK (10901 bytes)
+- ai-conversations/INDEX.md: OK (15748 bytes)
+- ai-conversations/README.md: OK (1557 bytes)
+- ai-conversations/main-issue.json: OK (4219 bytes)
+- docs/test-report-v2.md: OK (9267 bytes)
+- docs/product-acceptance-v2.md: OK (13638 bytes)
+- docs/backend-rereview.md: OK (16052 bytes)
+- docs/architecture-review-closure.md: OK (8023 bytes)
+- artifacts/s5c-git-push.log: OK (1897 bytes)
+- artifacts/webox-repo.bundle: OK (32072493 bytes)
+
+## 终版状态核对
+- 05 含 Stage 5c 结论: OK
+- 05 含 NOT TESTED 清单: OK
+- 07 含最终 AC 汇总: OK
+- 07 含 open P1 S5C-D-001: OK
+- 07 含推送状态: OK
+- 07 含 doc/10 份口径: OK
+
+## 秘密/凭据扫描（不打印值）
+- 命中: 0
+- 演示密码仅为种子默认值，未写入真实凭据

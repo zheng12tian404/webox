@@ -1,0 +1,21 @@
+++ /opt/gem/bin/agent-browser --session s5e cookies clear
+[32m✓[0m Cookies cleared
+++ /opt/gem/bin/agent-browser --session s5e eval 'localStorage.clear(); sessionStorage.clear(); "cleared"'
+"cleared"
+++ /opt/gem/bin/agent-browser --session s5e open http://127.0.0.1:5175/login
+[32m✓[0m [1mWeBox — Employee Meal Ordering[0m
+  [2mhttp://127.0.0.1:5175/login[0m
+++ /opt/gem/bin/agent-browser --session s5e wait '[data-testid=login-email]'
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e fill '[data-testid=login-email]' s5e_prod_a_2318@test.com
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e fill '[data-testid=login-password]' Test12345
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e click '[data-testid=login-submit]'
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e wait 1800
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e get url
+http://127.0.0.1:5175/menu
+++ /opt/gem/bin/agent-browser --session s5e eval 'document.querySelector("[data-testid=current-user]")?.textContent'
+"s5e_prod_a_2318@test.com"

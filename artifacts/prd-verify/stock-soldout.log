@@ -1,0 +1,7 @@
+before dish5: {'available': 20, 'soldOut': False}
+set stock 0: 200 {"code":"OK","message":"OK","data":{"dishId":5,"serveDate":"2026-11-14","totalQty":0,"available":0},"requestId":"ced80f11-6fee-4eff-b1f1-ce5f6a4590af"}
+after dish5: {'available': 0, 'soldOut': True}
+PASS sold-out flag: True
+reserved+sold= 0
+restore: 200
+restored dish5: {'available': 20, 'soldOut': False}

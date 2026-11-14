@@ -1,0 +1,49 @@
+++ /opt/gem/bin/agent-browser --session s5e eval 'document.querySelector("[data-testid=logout]")?.click(); "logout"'
+"logout"
+++ /opt/gem/bin/agent-browser --session s5e wait 1300
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e wait '[data-testid=login-email]'
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e fill '[data-testid=login-email]' admin@webox.com
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e fill '[data-testid=login-password]' Admin12345
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e click '[data-testid=login-submit]'
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e wait 1800
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e get url
+http://127.0.0.1:5175/admin
+++ /opt/gem/bin/agent-browser --session s5e screenshot artifacts/prd-verify/ui-console-dashboard.png
+[32m✓[0m Screenshot saved to [32martifacts/prd-verify/ui-console-dashboard.png[0m
+++ /opt/gem/bin/agent-browser --session s5e eval 'document.body.innerText.slice(0,800)'
+"WB\nConsole\nDashboard\nDishes\nDaily Menu\nOrders\nInventory\nAudit Log\nAI Rules\nBack to store\nadmin@webox.com\nSign out\nDashboard\n\nCounts exclude cancelled orders · low stock is 0–3 available.\n\nRefresh\nORDERS TODAY\n0\nREVENUE TODAY\n¥0.00\nCOMPLETED\n0\nPENDING\n0\nCANCELLED\n0\nTop 10 dishes\nSold quantity, cancelled excluded.\n\nNo data for this period.\n\nLunch vs Dinner\nNon-cancelled orders.\nMeals\n0\n1\n2\n3\n4\nLast 7 days\nOrders and revenue (¥) per day.\n2026-11-08\n2026-11-10\n2026-11-12\n2026-11-14\n0\n1\n2\n3\n4\n0\n1\n2\n3\n4\nLow stock (≤ 3)\n0 ≤ available ≤ 3.\n\nNo low-stock dishes.\n\n2026-11-08"
+++ /opt/gem/bin/agent-browser --session s5e open http://127.0.0.1:5175/admin/dishes
+[32m✓[0m [1mWeBox — Employee Meal Ordering[0m
+  [2mhttp://127.0.0.1:5175/admin/dishes[0m
+++ /opt/gem/bin/agent-browser --session s5e wait 1000
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e screenshot artifacts/prd-verify/ui-console-dishes.png
+[32m✓[0m Screenshot saved to [32martifacts/prd-verify/ui-console-dishes.png[0m
+++ /opt/gem/bin/agent-browser --session s5e open http://127.0.0.1:5175/admin/orders
+[32m✓[0m [1mWeBox — Employee Meal Ordering[0m
+  [2mhttp://127.0.0.1:5175/admin/orders[0m
+++ /opt/gem/bin/agent-browser --session s5e wait 900
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e screenshot artifacts/prd-verify/ui-console-orders.png
+[32m✓[0m Screenshot saved to [32martifacts/prd-verify/ui-console-orders.png[0m
+++ /opt/gem/bin/agent-browser --session s5e open http://127.0.0.1:5175/admin/audit
+[32m✓[0m [1mWeBox — Employee Meal Ordering[0m
+  [2mhttp://127.0.0.1:5175/admin/audit[0m
+++ /opt/gem/bin/agent-browser --session s5e wait 900
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e screenshot artifacts/prd-verify/ui-console-audit.png
+[32m✓[0m Screenshot saved to [32martifacts/prd-verify/ui-console-audit.png[0m
+++ /opt/gem/bin/agent-browser --session s5e open http://127.0.0.1:5175/admin/inventory
+[32m✓[0m [1mWeBox — Employee Meal Ordering[0m
+  [2mhttp://127.0.0.1:5175/admin/inventory[0m
+++ /opt/gem/bin/agent-browser --session s5e wait 900
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e screenshot artifacts/prd-verify/ui-console-inventory.png
+[32m✓[0m Screenshot saved to [32martifacts/prd-verify/ui-console-inventory.png[0m
+++ /opt/gem/bin/agent-browser --session s5e errors

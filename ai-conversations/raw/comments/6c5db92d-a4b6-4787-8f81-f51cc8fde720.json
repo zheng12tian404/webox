@@ -1,0 +1,59 @@
+[
+ {
+  "attachments": [
+   {
+    "change_summary": "Mico canonical runtime output",
+    "chat_message_id": null,
+    "chat_session_id": null,
+    "comment_id": "a4f39d75-5ada-5628-b5f1-9894682a75a9",
+    "content_type": "text/plain; charset=utf-8",
+    "created_at": "2026-11-14T23:03:08.181411+08:00",
+    "download_url": "https://cnbj1.fds.api.xiaomi.com/mimate/workspaces%2Faba5f9d8-026d-433b-b9e5-4c55fd5e34d6%2F01a1da95-6c6a-7616-9d5b-5b30b073ce26.md?Expires=1794673965884&GalaxyAccessKeyId=AKKBFNRQKRHWCHDZFI&Signature=Qj0w6Gl2Uq/7EFQbplvMYlC2zeY=",
+    "download_url_expires_at": "2026-11-14T16:32:45Z",
+    "filename": "backend-rereview.md",
+    "id": "01a1da95-6c6a-7616-9d5b-5b30b073ce26",
+    "issue_id": "6c5db92d-a4b6-4787-8f81-f51cc8fde720",
+    "markdown_url": "https://cnbj1.fds.api.xiaomi.com/mimate/workspaces/aba5f9d8-026d-433b-b9e5-4c55fd5e34d6/01a1da95-6c6a-7616-9d5b-5b30b073ce26.md",
+    "size_bytes": 16052,
+    "uploader_id": "e076e99c-f2a5-42cc-ac16-297cf7dcb518",
+    "uploader_type": "agent",
+    "url": "https://cnbj1.fds.api.xiaomi.com/mimate/workspaces/aba5f9d8-026d-433b-b9e5-4c55fd5e34d6/01a1da95-6c6a-7616-9d5b-5b30b073ce26.md",
+    "workspace_id": "aba5f9d8-026d-433b-b9e5-4c55fd5e34d6"
+   },
+   {
+    "change_summary": "Mico canonical runtime output",
+    "chat_message_id": null,
+    "chat_session_id": null,
+    "comment_id": "a4f39d75-5ada-5628-b5f1-9894682a75a9",
+    "content_type": "text/plain; charset=utf-8",
+    "created_at": "2026-11-14T23:03:08.277786+08:00",
+    "download_url": "https://cnbj1.fds.api.xiaomi.com/mimate/workspaces%2Faba5f9d8-026d-433b-b9e5-4c55fd5e34d6%2F01a1da95-6cc9-74d8-9e09-7199e5081935.log?Expires=1794673965884&GalaxyAccessKeyId=AKKBFNRQKRHWCHDZFI&Signature=Fsc3+e4/Iu/tqIqz+oH4yTw82lI=",
+    "download_url_expires_at": "2026-11-14T16:32:45Z",
+    "filename": "s5c-backend-rereview-evidence.log",
+    "id": "01a1da95-6cc9-74d8-9e09-7199e5081935",
+    "issue_id": "6c5db92d-a4b6-4787-8f81-f51cc8fde720",
+    "markdown_url": "https://cnbj1.fds.api.xiaomi.com/mimate/workspaces/aba5f9d8-026d-433b-b9e5-4c55fd5e34d6/01a1da95-6cc9-74d8-9e09-7199e5081935.log",
+    "size_bytes": 9764,
+    "uploader_id": "e076e99c-f2a5-42cc-ac16-297cf7dcb518",
+    "uploader_type": "agent",
+    "url": "https://cnbj1.fds.api.xiaomi.com/mimate/workspaces/aba5f9d8-026d-433b-b9e5-4c55fd5e34d6/01a1da95-6cc9-74d8-9e09-7199e5081935.log",
+    "workspace_id": "aba5f9d8-026d-433b-b9e5-4c55fd5e34d6"
+   }
+  ],
+  "author_id": "e076e99c-f2a5-42cc-ac16-297cf7dcb518",
+  "author_type": "agent",
+  "body_state": "encrypted",
+  "content": "## Stage 5c 后端 P0/P1 复评：**PASS**\n\n后端无未闭合 P0/P1、无 blocker；P6+ 五项保持 PASS。`mvn -q test` 17/17 PASS（UtilTest 6、WeBoxApiIT 7、S5bFixTest 4），`mvn -q -DskipTests package` exit 0。\n\n**产物**\n- `docs/backend-rereview.md`（复评报告，已作为附件交付）\n- `artifacts/s5c-backend-rereview-evidence.log`（命令/curl/DB/日志原始输出，已作为附件交付）\n- 已更新 `docs/defect-log.md`、`docs/review-findings.md`\n\n**逐项复验（实测证据）**\n\n| 项 | 结论 | 证据 |\n|---|---|---|\n| 1. D-BE-11 confirm | **PASS** | `PUT /admin/dishes/20`、`PATCH /admin/dishes/20/status`、每日菜单改库存、`PUT /admin/ai-rules` 在 `confirm=false` 下均 400 `VALIDATION_CONFIRM_REQUIRED`；DB price/status/stock 不变，`audit_log` 计数 27→27、无新增；`confirm=true` 均 200，审计含 before/after（如 `DISH_STATUS 20: \"ON_SHELF\"->\"OFF_SHELF\"`） |\n| 2. PA-D-001 部署态 | **PASS** | 8083 PID **1385859**（22:51:54 启动）加载 jar **22:51:39**（晚于 22:51），JDK17；health **200** db/redis/cache UP；改价、上下架、改库存均 200 + 审计 |\n| 3. D-BE-12 二次补偿 | **PASS（代码）** | `OrderService.java:130-132` 内层补偿后 `prealloc=null`，外层 `:141/:145` 均判空，每份预占只 INCRBY 一次 |\n| 4. DEF-002 限流 | **PASS** | 同用户连续 6 次 `POST /orders`：1–5 次 400、第 6 次 **429 `RATE_LIMITED`**；其他用户首次请求 400，未误伤 |\n| 5. DEF-004/007 | **PASS** | 改库存 46→49 后 SSE `event:stock` **28ms** 到达；Redis=49=DB available；恢复后 Redis=DB=46；7 处缓存失效 + 库存发布全部 `Util.afterCommit` |\n| 6. D-BE-10 | **PASS** | `PUT /admin/ai-rules` → 200，version=4、active=1，审计 `AI_RULE_UPDATE`（`rollbackToVersion:null` 不再 NPE） |\n| 7. DEF-003 | **PASS** | `backup.sh`/`restore.sh`、`docs/observability.md`（5xx>1%、P95>1s、drift>0）存在；新备份恢复 17 表，users/dishes/daily_menu/dish_daily_stock/orders/order_items/inventory_ledger/audit_log 行数全部 MATCH |\n| 8. DEF-005 | **PASS（运行实测）** | `backend-8083-s5b.log:6418` `2026-11-14T23:00:16 ... Auto-completed 1 confirmed orders past delivery day`；代码 `ScheduledJobs.java:46-60` 为 Completed + SYSTEM 审计。该探针订单/审计随后被并行验收清理脚本删除，故以运行日志为证 |\n\n**Scenario checks（transaction-order / identity-access / general-engineering）**：TO-2 库存 Redis==DB、TO-3 释放幂等、TO-4 幂等、TO-5 同日同餐次唯一、TO-6 终态自动完成、IA-2 员工 `/admin` → **403**、IA-5 429/403 区分、IA-6 审计含前后值与原因、GE-1 构建启动 health 200、GE-3 统一错误码、GE-4 无新增拼接 SQL、AI-5 规则热更新 —— 均 **PASS**；AI-6 本轮无变更记 **N/A**。\n\n**残余风险（不阻断）**\n- R-1（P2）：`RateLimiter` 为 JVM 内存实现，多实例部署限流放大为 N×5，后续下沉 Redis。\n- R-2（P3）：`autoCompleteOrders` 的 UPDATE 与审计 INSERT 非同一事务，极端崩溃窗口可产生\"已完成无审计\"。\n- R-3（P2）：无 `confirm=false → 400` 的端点级自动化用例，本轮以 curl 覆盖，建议补 IT 防回归。\n- R-4（P2）：D-BE-12 仅代码路径确认，缺\"重复单后 Redis==DB\"运行时断言。\n- R-5（P3）：复评期间多节点并发写演示库（首轮采样遇 48→45 交叉写），已用 28ms 独立探针排除干扰。\n\n**缺陷闭环**：D-BE-11/G4-BE-B1/G4A-B1/G3P-M3、PA-D-001、D-BE-12/G4-BE-M1/G4A-M8、DEF-002/003/004/005/007、D-BE-10 均已在 `docs/defect-log.md` 与 `docs/review-findings.md` 更新为 **CLOSED**（仅复验项；P2/P3 残余保持 OPEN 并已注明 Owner）。\n\n**Stage 5d 指令**：后端**不需要**。前端 P0/P1（D-FE-01/02/03）须由 FR/Test 本轮复评 CLOSED；若 G4 汇总时仍有任一 P0/P1 未闭，Dispatcher 派 Stage 5d 定向复评，不重跑已闭合的后端项。\n\n**G4-后端自检**：PASS\n**下一步**：Quality Checker（若前端评审也 PASS 且测试完成）",
+  "created_at": "2026-11-14T23:03:08+08:00",
+  "id": "a4f39d75-5ada-5628-b5f1-9894682a75a9",
+  "issue_id": "6c5db92d-a4b6-4787-8f81-f51cc8fde720",
+  "parent_id": null,
+  "reactions": [],
+  "resolved_at": null,
+  "resolved_by_id": null,
+  "resolved_by_type": null,
+  "source_task_id": "01a1da90-2eaa-7d38-b125-c26c00350e31",
+  "type": "comment",
+  "updated_at": "2026-11-14T23:03:08+08:00"
+ }
+]

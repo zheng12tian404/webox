@@ -1,0 +1,50 @@
+[PASS] S5C 后端 health :: status=200 body={"code":"OK","message":"OK","data":{"status":"UP","db":"UP","redis":"UP","cache":"UP"},"requestId":"9493cc2d-359b-4e0e-8c98-03579006d449"}
+[PASS] S5C 改价 confirm=false → 400 VALIDATION_CONFIRM_REQUIRED :: status=400 body={"code":"VALIDATION_CONFIRM_REQUIRED","message":"confirm=true is required for this operation","data":null,"requestId":"f70254f1-2f50-4eda-b9cb-f061bc7b6139"}
+[PASS] S5C 改价 confirm=false 数据不变 :: before=[["Kung Pao Chicken","2200","ON_SHELF"]] after=[["Kung Pao Chicken","2200","ON_SHELF"]]
+[PASS] S5C 上下架 confirm=false → 400 :: status=400 body={"code":"VALIDATION_CONFIRM_REQUIRED","message":"confirm=true is required for this operation","data":null,"requestId":"ef69114f-4bfb-47c8-94b9-2631be599030"}
+[PASS] S5C 每日菜单 confirm=false → 400 :: status=400 body={"code":"VALIDATION_CONFIRM_REQUIRED","message":"confirm=true is required for this operation","data":null,"requestId":"94419601-69bc-49a3-b460-0016d7ce946d"}
+[PASS] S5C 每日菜单 confirm=false 库存不变 :: before=40 after=[["40"]]
+[PASS] S5C 改库存 confirm=false → 400 :: status=400 body={"code":"VALIDATION_CONFIRM_REQUIRED","message":"confirm=true is required for this operation","data":null,"requestId":"1a99db9c-1a17-4532-9a63-d81348fb0f60"}
+[PASS] S5C confirm=false 无审计新增 :: before=0 after=0
+[PASS] S5C 改价 confirm=true → 200 :: status=200 body={"code":"OK","message":"OK","data":{"dishId":1,"name":"Kung Pao Chicken","description":"Classic Sichuan dish, chicken stir-fried with peanuts and dried chili","
+[PASS] S5C 改价 confirm=true 写审计 :: audit 0→1
+[PASS] S5C 改价 confirm=true 落库 :: price=[["2300"]]
+[PASS] S5C 改库存 confirm=true → 200 :: status=200
+[PASS] S5C 上下架 confirm=true → 200 :: status=200 body={"code":"OK","message":"OK","data":{"dishId":1,"status":"ON_SHELF"},"requestId":"f518c0e4-7e4b-4d6f-8a32-66d32a23ecd7"}
+[PASS] S5C refresh 前置登录 :: status=200
+[PASS] S5C refresh → 200 + 新 access :: status=200
+[PASS] S5C 新 access /me → 200 :: status=200
+[PASS] S5C 旧 refresh 复用 → 401 :: status=401 body={"code":"AUTH_TOKEN_INVALID","message":"Invalid refresh token","data":null,"requestId":"83cfe9ce-6fc9-418c-9707-b8e63916dcc7"}
+[FAIL] S5C 偏好保存（null 预算/Medium）→ 200 :: status=400 body={"code":"VALIDATION_CATEGORY","message":"Invalid allergen: Peanut","data":null,"requestId":"dd519db7-ab3b-4f49-a908-5f6af433e24b"}
+[FAIL] S5C 偏好回读一致 :: readback={"code":"OK","message":"OK","data":{"allergens":[],"preferredCategories":[],"spicePreference":null,"tastePreference":null,"budgetMinCents":null,"budgetMaxCents":null,"recommendEnabled":false},"requestId":"4ff990ee-f039-416d-9036-b6c741a5911
+[FAIL] S5C 同键 6 次提交均 200/201 :: statuses=201,201,201,201,201,429
+[PASS] S5C 同键仅 1 个 orderId :: ids=["116"]
+[PASS] S5C DB 同键仅 1 单 :: count=1
+[FAIL] S5C 同键异体 → 409 IDEMPOTENCY_CONFLICT :: status=429
+[PASS] S5C 幂等库存只扣 1 次 :: [["RESERVE","1"]]
+[PASS] S5C 取消 Pending → 200 :: status=200
+[PASS] S5C 二次取消 → 409 :: status=409
+[PASS] S5C 取消只回补 1 次（1 条 RELEASE） :: [["RELEASE","1","2"]]
+[PASS] S5C 取消后库存恢复（+2） :: before=[["8"]] after=[["10"]]
+[PASS] S5C 金额整数分：单价=菜价+选项加价 :: unit=2800 expected=2800
+[PASS] S5C 金额整数分：小计=单价×3 :: subtotal=8400 expected=8400
+[PASS] S5C 金额整数分：总额=各项小计之和 :: total=8400
+[PASS] S5C 金额展示 ¥ 两位小数 :: display=undefined
+[PASS] S5C 截单后午餐自动切次日 :: status=200 effective=2026-11-15/Lunch auto=true
+[PASS] S5C 过去日期 → 400 DATE_PAST :: status=400 body={"code":"VALIDATION_DATE_PAST","message":"Delivery date cannot be in the past","data":null,"requestId":"108158b0-d11c-442a-8baf-5ee8b7e1e8ed"}
+[PASS] S5C SQL 直插 50 用户 :: insert=
+[PASS] S5C 50 用户 token 就绪（绕限流） :: ready=50/50
+[PASS] S5C 并发前置库存=10 :: status=200 body={"code":"OK","message":"OK","data":{"dishId":11,"serveDate":"2026-11-15","totalQty":10,"available":10},"requestId":"cf2d57bb-8dad-4397-9100-f0bfb43d52b1"}
+[PASS] S5C 50 并发抢 10：成功 10 :: 201=10 409_STOCK=40 other=0 elapsed=169ms
+[PASS] S5C 其余 40 为 STOCK_INSUFFICIENT :: sum=50/50
+[PASS] S5C available=0 且无负库存 :: before=["10","0","0","10"] after=["10","10","0","0"]
+[PASS] S5C reserved=10 守恒 :: reserved=10
+[FAIL] S5C ledger RESERVE=10 对账 :: [["RESERVE","11","12"],["RELEASE","1","2"]]
+[PASS] S5C 库存对账 drift 为空 :: status=200 drift=[]
+[PASS] S5C 员工访问 /admin → 403 :: status=403 body={"code":"FORBIDDEN","message":"Access denied","data":null,"requestId":"aec3c1ef-d541-44ca-be69-e3ae3515a868"}
+[PASS] S5C 越权读他人订单 → 404 :: order=115 status=404
+[PASS] S5C 搜索注入无 500 :: status=200 body={"code":"OK","message":"OK","data":{"items":[],"page":1,"size":20,"total":0},"requestId":"a1547664-f040-497a-908c-4e54605f25b6"}
+[PASS] S5C 搜索注入无全表泄露 :: status=200 total=0
+[PASS] S5C 路径注入无 500 :: status=400
+
+== s5c-regress.json: PASS=43 FAIL=5 SKIP=0 ==

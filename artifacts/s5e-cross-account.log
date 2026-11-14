@@ -1,0 +1,29 @@
+23:17:21 login s5c_pa_225849@test.com -> path=/menu user=s5c_pa_225849@test.com
+23:17:21 PUT prefs ['Peanuts'] -> status=401
+23:17:22 GET prefs -> null
+23:17:28 A-first menu card present=True path=/menu
+23:17:31 A-first allergen modal present=True
+23:17:31 A-first modal text=This dish contains an allergen you flagged: Peanuts. Add anyway?
+23:17:31 RESULT A first modal=True (expect True)
+23:17:32 A cart after confirm={"state":{"lines":[{"lineId":"1|#L1-f663mn","dishId":1,"name":"Kung Pao Chicken","imageUrl":"/images/image_01.jpg","basePriceCents":2200,"options":[],"unitPriceCents":2200,"qty":1,"addedAt":1794669451323}]},"version":1}
+23:17:32 screenshot -> s5e-a-peanuts-modal.png
+23:17:34 logout -> path=/login storage={"auth":null,"prefs":null,"cart":null}
+23:17:38 login s5c_clean_230749@test.com -> path=/menu user=s5c_clean_230749@test.com
+23:17:38 PUT prefs [] -> status=401
+23:17:38 GET prefs -> null
+23:17:44 B menu card present=True path=/menu
+23:17:46 B allergen modal present=False
+23:17:46 B modal text=None
+23:17:46 RESULT B modal=False (expect False)
+23:17:46 B cart store={"state":{"lines":[{"lineId":"1|#L1-ruir9y","dishId":1,"name":"Kung Pao Chicken","imageUrl":"/images/image_01.jpg","basePriceCents":2200,"options":[],"unitPriceCents":2200,"qty":1,"addedAt":1794669464381}]},"version":1}
+23:17:46 screenshot -> s5e-b-no-modal.png
+23:17:48 logout -> path=/login storage={"auth":null,"prefs":null,"cart":null}
+23:17:52 login s5c_pa_225849@test.com -> path=/menu user=s5c_pa_225849@test.com
+23:17:55 A-again menu card present=True path=/menu
+23:17:58 A-again allergen modal present=True
+23:17:58 A-again modal text=This dish contains an allergen you flagged: Peanuts. Add anyway?
+23:17:58 RESULT A again modal=True (expect True)
+23:17:58 screenshot -> s5e-a-modal-again.png
+23:18:00 logout -> path=/login storage={"auth":null,"prefs":null,"cart":null}
+23:18:00 FINAL storage={"auth":null,"prefs":null,"cart":null}
+23:18:00 VERDICT S5C-D-001: PASS

@@ -1,0 +1,29 @@
+# AC-021 card shortcut allergen verification 2026-11-14 22:59:57
+## click add-to-cart-1 with prefs allergens=[Peanuts]
+[32m✓[0m Done
+[32m✓[0m Done
+allergen-modal visible: [31m✗[0m Element not found. Verify the selector is correct and the element exists in the DOM.
+modal text: [31m✗[0m Element not found. Verify the selector is correct and the element exists in the DOM.
+cart badge/lines before confirm: 0
+[32m✓[0m Screenshot saved to [32m/home/gem/code/req-squad/workspace/6343a752-e110-407c-8dfb-a5873425d917/artifacts/s5c-product/b2-allergen-modal.png[0m
+## Cancel -> expect not added
+[31m✗[0m Element not found. Verify the selector is correct and the element exists in the DOM.
+[32m✓[0m Done
+modal still visible: [31m✗[0m Element not found. Verify the selector is correct and the element exists in the DOM.
+cart lines after cancel: 0
+## Re-add -> Add anyway -> expect cart +1
+[32m✓[0m Done
+[32m✓[0m Done
+[31m✗[0m Element not found. Verify the selector is correct and the element exists in the DOM.
+[32m✓[0m Done
+cart lines after confirm: []
+[32m✓[0m Screenshot saved to [32m/home/gem/code/req-squad/workspace/6343a752-e110-407c-8dfb-a5873425d917/artifacts/s5c-product/b3-cart-after-allergen.png[0m
+## For You toggle on menu
+[32m✓[0m [1mWeBox — Employee Meal Ordering[0m
+  [2mhttp://127.0.0.1:5175/menu[0m
+[32m✓[0m Done
+[32m✓[0m Done
+[32m✓[0m Done
+for-you badges: 6
+menu cards still: 20
+[32m✓[0m Screenshot saved to [32m/home/gem/code/req-squad/workspace/6343a752-e110-407c-8dfb-a5873425d917/artifacts/s5c-product/b4-for-you.png[0m

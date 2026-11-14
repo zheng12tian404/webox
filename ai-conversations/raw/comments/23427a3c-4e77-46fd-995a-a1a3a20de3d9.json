@@ -1,0 +1,20 @@
+[
+ {
+  "attachments": [],
+  "author_id": "947224b1-b569-45d9-9bb1-45def4b37386",
+  "author_type": "agent",
+  "body_state": "encrypted",
+  "content": "## 结论：CHANGES（1 个 P1 未闭环，暂不能 GO）\n\n本轮 P0 修复项（AC-030/031/032、AC-014/015/053）全部通过；但独立复验发现 **跨账号偏好残留（S5C-D-001，P1）**，AC-021/022/023 整体判 **FAIL**，需 Stage 5d 定向修复后复验。\n\n**产物**\n- `/home/****/code/req-squad/workspace/6343a752-e110-407c-8dfb-a5873425d917/docs/product-acceptance-v2.md`\n- `/home/****/code/req-squad/workspace/6343a752-e110-407c-8dfb-a5873425d917/docs/defect-log.md`（已追加 Stage 5c 产品关闭/新增段）\n- 证据目录：`/home/****/code/req-squad/workspace/6343a752-e110-407c-8dfb-a5873425d917/artifacts/s5c-product/`\n\n## 1. 定向复验\n\n| 项 | 结果 | 关键证据 |\n|---|---|---|\n| AC-030/031/032 Console 改价/上下架/每日菜单/改库存 | **PASS** | `confirm=false` → 400 `VALIDATION_CONFIRM_REQUIRED`，DB 与审计计数不变；`confirm=true` → 200，DB 生效，`audit_log` 含 before/after/reason（改价 1880→1900、状态 ON_SHELF→OFF_SHELF、库存 30→35）；下架后员工菜单 20→19 条。`ac030-032-curl.log` |\n| AC-021/022/023 单账号路径 | PASS | 偏好整页保存 200，刷新后 Peanuts/Japanese/Mild/Rich/10.00/15.00/For You 全保留；卡片加购含 Peanuts 菜 → 弹窗，Cancel 不入车、Add anyway +1；`sort=for-you` 10 个高亮、20 卡片仍展示；预算超限 preview 200 不阻断。`b2/b3/b4/b7/b8-*.png` |\n| **AC-021/022/023 跨账号隔离** | **FAIL（P1）** | A（Peanuts）登出后 `webox.prefs.v1`/`webox.cart.v1` 未清；B（无过敏原）登录后加购 Kung Pao 仍弹 A 的过敏原窗（反向场景会漏报）。`cross-account.log`、`b9-cross-account-residue.png` |\n| AC-014/015/053 同 tick 双击 | **PASS** | 仅 **1 个** `POST /orders` → 201，跳转 `/order-success/16`（WB20261115-0016），购物车清空；DB 快照 283B、ledger `RESERVE qty=1`；重复提交 409 `ORDER_DUPLICATE` + `existingOrderId=16`，结算页展示 `View Existing Order`（`/orders/16`）。`b5/b6-*.png` |\n| AC-035 50 并发 | **PASS（采用测试证据）** | `artifacts/test-conc-order.log`：ready=50/50、201=10、409=40、available=0、ledger RESERVE=10，8 断言 0 失败 |\n| 19 条抽查 | **19/19 PASS** | 原 FAIL 的 AC-030/032、原 NOT TESTED 的 AC-035 均转 PASS；其余 16 条回归未见退化（快照、重复单、审计接口 200、员工 `/admin` 403、金额格式全通过）。`ac035-regression.log` |\n\n## 2. Scenario checks\n\n| Profile / 检查 | 结果 | 证据 |\n|---|---|---|\n| general-engineering（运行/health/种子/英文/金额） | **PASS** | health db/redis/cache=UP；20 菜品；金额 `^¥\\d+\\.\\d{2}$` |\n| transaction-order（计价/快照/幂等/唯一单/库存/50 并发） | **PASS** | 上述订单 16 + ledger；AC-035 50/10 |\n| identity-access（RBAC/审计/confirm） | **PASS** | 员工 403；审计 200；四类写操作均落审计 |\n| identity-access（同浏览器跨账号隔离） | **FAIL** | S5C-D-001 |\n| ai-llm | **N/A** | 本轮不涉及 Tier3；真实 LLM 质量仍 NOT TESTED（无 Key） |\n\n## 3. 缺陷更新\n\n- **CLOSED**：PA-D-001（P0）、D-FE-01（P0）、D-FE-02/DEF-006（P1）、D-FE-03（P1）、PA-D-002、PA-D-003。\n- **OPEN（阻断）**：`S5C-D-001` P1——`authStore.logout()` 未清 prefs/cart，`ensurePrefs()` 命中缓存不重新拉取。\n- **新增 P2**：PA-D-004（未定义 `/admin/dishes/{id}` 返回 500）、TE-D-005（agent-browser 共享会话串扰）。\n\n## 4. Stage 5d 指令\n\n1. 前端修复 S5C-D-001：登出/登录切换时清空 `prefsStore`（内存 + `webox.prefs.v1`）、`cartStore`（内存 + `webox.cart.v1`），重置 `ensurePrefs` 单飞缓存，按新用户重新拉取。\n2. 定向回归：A(Peanuts)→登出→B(无过敏原) 加购同菜 **不得弹窗**且购物车为空；A(无过敏原)→登出→B(Peanuts) **必须弹窗**；单账号刷新持久不得回退。\n3. 产品工程师复验通过并在 defect-log 记 CLOSED 后方可进入 Stage 6；未复验前不得以单账号演示替代跨账号证据。\n\n## 5. G4 自检\n\n- 逐条 PASS/FAIL/NOT TESTED：PASS；未测项均显式标注。\n- 每个 PASS 有命令/DB/截图：PASS（见证据目录）。\n- P0/P1 台账更新：PASS；**GO 前无 open P0/P1：FAIL（S5C-D-001）→ 结论 CHANGES**。\n- 无“友好/合理”等不可验证表述；默认决策未依赖人工确认。\n\n下一节点：前端修复 S5C-D-001 → 产品定向复验。",
+  "created_at": "2026-11-14T23:09:58+08:00",
+  "id": "16c75b91-3513-53e8-911a-4e99049b1504",
+  "issue_id": "23427a3c-4e77-46fd-995a-a1a3a20de3d9",
+  "parent_id": null,
+  "reactions": [],
+  "resolved_at": null,
+  "resolved_by_id": null,
+  "resolved_by_type": null,
+  "source_task_id": "01a1da90-3020-73af-b620-43e0159850bb",
+  "type": "comment",
+  "updated_at": "2026-11-14T23:09:58+08:00"
+ }
+]

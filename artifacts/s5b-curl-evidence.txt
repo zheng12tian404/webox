@@ -1,0 +1,33 @@
+admin_token=eyJhbGciOiJIUzI1NiIs... emp_token=eyJhbGciOiJIUzI1NiIs...
+### 1. confirm=false -> expect 400 VALIDATION_CONFIRM_REQUIRED
+HTTP 400
+{"code":"VALIDATION_CONFIRM_REQUIRED","message":"confirm=true is required for this operation","data":null,"requestId":"1aeedbc6-f9fe-4b92-8cf7-1211d9dd7678"}
+### 2. confirm=true -> expect 200 + audit
+HTTP 200
+{"code":"OK","message":"OK","data":{"dishId":20,"name":"Kung Pao Chicken","description":"Spicy chicken with peanuts","priceCents":1880,"category":"Chinese","protein":"Chicken","allergens":["Peanuts"],"spiceLevel":"Hot","imageUrl":"/images/image_03.jpg","status":"ON_SHELF"},"requestId":"3fcb89a3-788e-4d78-b913-2e280f68a12b"}
+### 3. audit row
+DISH_UPDATE	20	2600	1880	s5b deploy verify	127.0.0.1
+### 4. preferences 0/0 + Balanced -> expect 200
+HTTP 200
+{"code":"OK","message":"OK","data":{"allergens":["Peanuts"],"preferredCategories":["Chinese"],"spicePreference":"Mild","tastePreference":"Medium","budgetMinCents":null,"budgetMaxCents":null,"recommendEnabled":true},"requestId":"f0cc7f1e-eee5-4496-a99e-a0e95ef0bcda"}
+### 5. ai-rules normal update -> expect 200
+HTTP 500
+{"code":"INTERNAL","message":"Internal server error","data":null,"requestId":"5f6fe288-10f8-48d3-a667-38193d516656"}
+### 6. order rate limit: 6 submissions for same user -> expect 6th 429
+attempt 1 -> HTTP 400 {"code":"VALIDATION_OPTION_REQUIRED","message":"Group 'Base' requires a selection","data":null,"requestId":"9d46d0c7-8286-4ccf-9e72-7d5e4b2f3cac"}
+attempt 2 -> HTTP 400 {"code":"VALIDATION_OPTION_REQUIRED","message":"Group 'Base' requires a selection","data":null,"requestId":"9e6f3a49-101a-4ed7-83d7-3d9fa9369d42"}
+attempt 3 -> HTTP 400 {"code":"VALIDATION_OPTION_REQUIRED","message":"Group 'Base' requires a selection","data":null,"requestId":"a09608e7-3176-4585-a73b-7d130b186963"}
+attempt 4 -> HTTP 400 {"code":"VALIDATION_OPTION_REQUIRED","message":"Group 'Base' requires a selection","data":null,"requestId":"5707ef49-b932-4cdc-a360-5f9ae24c97b5"}
+attempt 5 -> HTTP 400 {"code":"VALIDATION_OPTION_REQUIRED","message":"Group 'Base' requires a selection","data":null,"requestId":"48e7383d-391c-4d22-a7f4-0b21eb3abab9"}
+attempt 6 -> HTTP 429 {"code":"RATE_LIMITED","message":"Too many requests","data":null,"requestId":"10b69766-4f13-4936-a931-dfab26de4433"}
+### 7. admin stock update -> SSE+Redis
+HTTP 200
+{"code":"OK","message":"OK","data":{"dishId":20,"serveDate":"2026-11-16","totalQty":50,"available":50},"requestId":"27a9dbe5-27a3-4b53-97f0-44d49ca37dcd"}
+redis value: 50
+db available: 50
+### 8. employee -> /admin expect 403
+HTTP 403
+{"code":"FORBIDDEN","message":"Access denied","data":null,"requestId":"7ca311cf-cd56-45d8-a8a7-e12d2e531fc7"}
+ai_rules_curled
+### 5(retry). ai-rules normal update
+HTTP 200

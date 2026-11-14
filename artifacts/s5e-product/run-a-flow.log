@@ -1,0 +1,48 @@
+++ /opt/gem/bin/agent-browser --session s5e open http://127.0.0.1:5175/preferences
+[32m✓[0m [1mWeBox — Employee Meal Ordering[0m
+  [2mhttp://127.0.0.1:5175/preferences[0m
+++ /opt/gem/bin/agent-browser --session s5e wait '[data-testid=pref-allergen-Peanuts]'
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e click '[data-testid=pref-allergen-Peanuts]'
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e click '[data-testid=pref-save]'
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e wait '[data-testid=pref-saved-toast]'
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e screenshot artifacts/s5e-product/a1-prefs-saved.png
+[32m✓[0m Screenshot saved to [32martifacts/s5e-product/a1-prefs-saved.png[0m
+++ /opt/gem/bin/agent-browser --session s5e eval 'localStorage.getItem("webox.prefs.v1")'
+"{\"state\":{\"prefs\":{\"allergens\":[\"Peanuts\"],\"preferredCategories\":[],\"spicePreference\":\"None\",\"tastePreference\":\"Medium\",\"budgetMinCents\":null,\"budgetMaxCents\":null,\"recommendEnabled\":false},\"ownerUserId\":121},\"version\":1}"
+++ /opt/gem/bin/agent-browser --session s5e open http://127.0.0.1:5175/menu
+[32m✓[0m [1mWeBox — Employee Meal Ordering[0m
+  [2mhttp://127.0.0.1:5175/menu[0m
+++ /opt/gem/bin/agent-browser --session s5e wait '[data-testid=add-to-cart-1]'
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e eval 'document.querySelector("[data-testid=menu-card-1] h3")?.textContent'
+"Kung Pao Chicken"
+++ /opt/gem/bin/agent-browser --session s5e click '[data-testid=add-to-cart-1]'
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e wait 1300
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e get count '[data-testid=allergen-modal]'
+0
+++ /opt/gem/bin/agent-browser --session s5e eval 'document.querySelector("[data-testid=allergen-modal]")?.innerText || null'
+null
+++ /opt/gem/bin/agent-browser --session s5e screenshot artifacts/s5e-product/a2-modal-peanuts.png
+[32m✓[0m Screenshot saved to [32martifacts/s5e-product/a2-modal-peanuts.png[0m
+++ /opt/gem/bin/agent-browser --session s5e click '[data-testid=allergen-add-anyway]'
+[31m✗[0m Element not found. Verify the selector is correct and the element exists in the DOM.
+++ /opt/gem/bin/agent-browser --session s5e wait 600
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e eval 'localStorage.getItem("webox.cart.v1")'
+null
+++ /opt/gem/bin/agent-browser --session s5e click '[data-testid=logout]'
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e wait 1200
+[32m✓[0m Done
+++ /opt/gem/bin/agent-browser --session s5e get url
+http://127.0.0.1:5175/login
+++ /opt/gem/bin/agent-browser --session s5e eval 'JSON.stringify({prefs:localStorage.getItem("webox.prefs.v1"),cart:localStorage.getItem("webox.cart.v1"),auth:localStorage.getItem("webox.auth.v1")})'
+"{\"prefs\":null,\"cart\":null,\"auth\":null}"
+++ /opt/gem/bin/agent-browser --session s5e screenshot artifacts/s5e-product/a3-after-logout.png
+[32m✓[0m Screenshot saved to [32martifacts/s5e-product/a3-after-logout.png[0m

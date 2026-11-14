@@ -1,0 +1,7 @@
+===== G3-2 Redis whole-order compensation (final: dish 9 prealloc + dish 11 sold out) =====
+dish11 available:	0
+DB dish9 before: 30	0	0	30
+{"code":"STOCK_INSUFFICIENT","message":"Some dishes are sold out or insufficient","data":{"details":[{"dishId":11,"requested":1,"available":0}]},"requestId":"a091b456-a201-4931-afc2-7286de5d188f"}
+HTTP 409
+DB dish9 after:  30	0	0	30
+Redis dish9 after compensation: 30 (expected 30 = DB available; proves whole-order INCRBY)

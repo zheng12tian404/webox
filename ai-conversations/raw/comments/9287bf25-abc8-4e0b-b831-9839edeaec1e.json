@@ -1,0 +1,40 @@
+[
+ {
+  "attachments": [
+   {
+    "change_summary": "Mico canonical runtime output",
+    "chat_message_id": null,
+    "chat_session_id": null,
+    "comment_id": "72bca5ae-a41d-506d-8809-9666185fb957",
+    "content_type": "text/plain; charset=utf-8",
+    "created_at": "2026-11-14T22:46:49.589034+08:00",
+    "download_url": "https://cnbj1.fds.api.xiaomi.com/mimate/workspaces%2Faba5f9d8-026d-433b-b9e5-4c55fd5e34d6%2F01a1da86-7dca-7746-b21f-81cca0744ae4.md?Expires=1794673965082&GalaxyAccessKeyId=AKKBFNRQKRHWCHDZFI&Signature=7KPRX5Lk29f04G9erAqjresKqEE=",
+    "download_url_expires_at": "2026-11-14T16:32:45Z",
+    "filename": "backend-review.md",
+    "id": "01a1da86-7dca-7746-b21f-81cca0744ae4",
+    "issue_id": "9287bf25-abc8-4e0b-b831-9839edeaec1e",
+    "markdown_url": "https://cnbj1.fds.api.xiaomi.com/mimate/workspaces/aba5f9d8-026d-433b-b9e5-4c55fd5e34d6/01a1da86-7dca-7746-b21f-81cca0744ae4.md",
+    "size_bytes": 19646,
+    "uploader_id": "e076e99c-f2a5-42cc-ac16-297cf7dcb518",
+    "uploader_type": "agent",
+    "url": "https://cnbj1.fds.api.xiaomi.com/mimate/workspaces/aba5f9d8-026d-433b-b9e5-4c55fd5e34d6/01a1da86-7dca-7746-b21f-81cca0744ae4.md",
+    "workspace_id": "aba5f9d8-026d-433b-b9e5-4c55fd5e34d6"
+   }
+  ],
+  "author_id": "e076e99c-f2a5-42cc-ac16-297cf7dcb518",
+  "author_type": "agent",
+  "body_state": "encrypted",
+  "content": "## 后端代码评审结论：**CHANGES**\n\n**产物**：`docs/backend-review.md`（共享根 `.../6343a752-e110-407c-8dfb-a5873425d917/docs/`，附件已声明）；发现已追加 `docs/review-findings.md`（G4 段）与 `docs/defect-log.md`（D-BE-10~12 + PA-D-001 复核）。\n**基线**：22:43 重建 `target/webox-backend.jar` 后独立验证（评审期间开发在 22:39–22:42 合入 refresh 与 PA-D-001 修复，已按最新代码判定）。\n\n### 可运行性（亲自执行）\n- `mvn -q test`：`UtilTest` 6/6、`WeBoxApiIT` 7/7，0 failure/error；`mvn -q -DskipTests package` exit 0。\n- 独立启动 8085（生产 profile）：`GET /api/v1/health` → 200，db/redis/cache 全 UP。\n\n### 后端 P6+ 五项（各 4 分）\n| 项 | 判定 | 得分 | 关键证据 |\n|---|---|---|---|\n| 缓存策略 | PASS | 4/4 | Caffeine 60s/500（`AppConfig.java:14-20`）；仅缓存静态菜品元数据（`MenuService.java:31-43`），库存每次实时 SQL；`invalidate()` 覆盖全部 7 条管理写路径（`AdminService.java:100/117/131/153/274/297/347`）；Redis 30s 对齐；实测 `webox:stock:2026-11-14:1`=40 == DB available=40 |\n| 下单幂等 | PASS | 4/4 | `uk_idem_user_key`+`uk_orders_idem`；T0/T1/T2 三段式（`IdempotencyService.java:27-87`、`OrderService.java:99-142`）；5 并发同键 IT → 1 单、1 条记录；异体 409；缺头 400 |\n| SQL 注入防护 | PASS | 4/4 | 全参数化（`?`），搜索 `LIKE ? ESCAPE '\\\\'`+`escapeLike`；实测 `' OR 1=1 --` 于菜单/Console 搜索均 200 空结果、无 500 |\n| 权限校验 | PASS | 4/4 | BCrypt(10)、JWT HS256、refresh 仅存 SHA-256 且单次轮换、`/admin/**` hasRole(ADMIN)、401/403 分离；实测员工→Console **403 FORBIDDEN**、未登录 **401**、旧 refresh 复用 **401**、越权订单 **404** |\n| 并发防超卖 | PASS | 4/4 | 条件扣减 `WHERE total-reserved-sold>=?`（`InventoryService.java:34-51`）+ DB CHECK + `active_key` 唯一索引 + ledger 业务键唯一；6 用户抢 3 份 IT → 恰 3 个 201、`available>=0`、越界行 0。AC-035 的 50 并发仍由 S5 首跑（本评审 NOT TESTED） |\n\n### 缺陷（详见报告 §2）\n- **B-1 Blocker**：契约 #24/#27/#28/#31/#32/#33b/#37 的 `confirm:true` **完全未校验**（全仓无 `confirm()` 调用）。实测 `PUT /admin/daily-menu/{date}/17/stock {\"confirm\":false,...}` → **200**，且 `audit_log` 落行；AC-032（P0）失败。`AdminService` 6 处 + `OrderService.adminPatchStatus` 需统一 `400 VALIDATION_CONFIRM_REQUIRED`（约 15 行）。\n- **M-1 Major**：`OrderService.java:121-137` 重复有效单路径对 Redis 预占**二次补偿**（内层+外层各一次），REDIS_PREALLOC 假可用至 30s 对齐；DB 不超卖。修复约 3 行。\n- **M-2 Major**：`AdminService.java:545-546` `Map.of(..., rollbackToVersion=null)` → **NPE → 500**，AI 规则常规更新主路径不可用（仅回滚路径可用）。实测 500 + 日志 NPE。修复约 3 行。\n- 另有 7 项 minor（SSE 跨日期广播、stream 非法 date 500、注册无限流、refresh 不校验用户状态、改库存后未同步 Redis、AI 线程池无界、refresh TTL 硬编码）。\n\n### 专项复核\n- **P1 `/auth/refresh`：CLOSED（修复正确）**。`Util.localDateTime` 替代 Timestamp 盲 cast；`UPDATE ... WHERE revoked=0` 原子轮换；IT 覆盖轮换/复用/过期/未知 token；生产实测复用旧 token 401。\n- **PA-D-001（产品登记 P0）：CLOSED（BR 复验）**。`Util.java:18-27` 已注册 `JavaTimeModule`；新增 IT `adminDishCrudWritesAuditSnapshotsWithDatetimes`；实测 `PATCH /admin/dishes/20/status` → 200 且审计落库。\n\n### 风险\n- B-1 使 Console 全部高风险写操作可绕过二次确认，且当前测试无 `confirm=false` 用例，属系统性测试洞。\n- M-2 使 AI 排行榜权重配置无法通过 API 更新（Tier3 加分项受影响）。\n- AC-060 超时释放、AC-035 50 并发、AI 首 token 计时未由本评审实测。\n\n### Scenario checks\n- `transaction-order` TO-1~TO-10：**10/10 PASS**（金额分/条件扣减/只回补一次/幂等/唯一有效单/状态机/六边界截单/快照/≤5 份/仅 Pending 取消）。\n- `identity-access` IA-1~IA-5、IA-7：**PASS**；**IA-6 FAIL**（`confirm` 未校验 → B-1；员工自取消无审计行）。\n- `ai-llm` AI-1~AI-3、AI-5、AI-6：**PASS**；AI-4：设计 PASS / 运行时 **NOT TESTED**（首 token ≤3s 待 S5）。\n- `general-engineering` GE-1~GE-5、GE-7：**PASS**；GE-6 **N/A**（属文档/AI 导出节点）。\n\n### G4-后端自检：**CHANGES**\n- 全量评审（36 个 Java 文件 + schema + pom + 测试）：PASS；作者≠评审者：PASS；每条结论有代码行/命令/DB 证据：PASS。\n- 未闭环：B-1（P0）、M-1/M-2（P1/P2 指令已给）；P0/P1 最小修复指令见报告 §9。\n\n**下一步**：`Stage 5b 后端修复（B-1 必改，M-1/M-2 随修）` → BR 复评 → `Quality Checker`（若前端评审 PASS 且测试完成）。",
+  "created_at": "2026-11-14T22:46:49+08:00",
+  "id": "72bca5ae-a41d-506d-8809-9666185fb957",
+  "issue_id": "9287bf25-abc8-4e0b-b831-9839edeaec1e",
+  "parent_id": null,
+  "reactions": [],
+  "resolved_at": null,
+  "resolved_by_id": null,
+  "resolved_by_type": null,
+  "source_task_id": "01a1da7f-32d3-7f0d-8dca-ff1e10394935",
+  "type": "comment",
+  "updated_at": "2026-11-14T22:46:49+08:00"
+ }
+]

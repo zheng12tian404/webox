@@ -1,0 +1,14 @@
+mysql: [Warning] Using a password on the command line interface can be insecure.
+section
+=== 1. 负库存/超占（应 0 行）===
+section
+=== 2. 同日同餐次重复有效单（应 0 行）===
+section
+=== 3. 同一幂等键多单（应 0 行）===
+section
+=== 4. 同一订单重复 RELEASE（应 0 行）===
+section
+=== 5. 订单总额与明细小计不一致（应 0 行）===
+section
+=== 6. 单价为小数/浮点痕迹（应 0 行）===
+ERROR 1054 (42S22) at line 43: Unknown column 'order_no' in 'field list'

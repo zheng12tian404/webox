@@ -1,0 +1,147 @@
+=================================================================================
+ WeBox backend — P1 AC-004 /api/v1/auth/refresh 500 修复证据
+ issue: e30015f0-0028-41e0-9482-430bffa7864e   time: 2026-11-14 22:41:49 CST
+ host: china-efficiency-openclaw-1222369-0   java: /usr/lib/jvm/java-17-openjdk-amd64 (17)
+ db:   req_6343a752e110 @ 127.0.0.1:3306   port: 8083
+=================================================================================
+
+## 1. 根因
+MySQL Connector/J 对 DATETIME(3) 列返回 java.time.LocalDateTime；旧代码强转 java.sql.Timestamp
+抛出 ClassCastException -> GlobalExceptionHandler 兜底 500 INTERNAL。
+触发点（修复前）：AuthService.refresh 第 98 行
+  if (Util.intVal(row.get("revoked")) != 0
+          || ((java.sql.Timestamp) row.get("expires_at")).toLocalDateTime().isBefore(LocalDateTime.now())) {
+
+## 2. 修复 diff（精确改动）
+
+--- a/backend/src/main/java/com/webox/auth/AuthService.java
++++ b/backend/src/main/java/com/webox/auth/AuthService.java
+@@ ·refresh() 过期校验 @@
+-        if (Util.intVal(row.get("revoked")) != 0
+-                || ((java.sql.Timestamp) row.get("expires_at")).toLocalDateTime().isBefore(LocalDateTime.now())) {
++        // expires_at is a MySQL DATETIME: Connector/J hands back LocalDateTime, not java.sql.Timestamp.
++        LocalDateTime expiresAt = Util.localDateTime(row.get("expires_at"));
++        if (Util.intVal(row.get("revoked")) != 0
++                || expiresAt == null
++                || expiresAt.isBefore(LocalDateTime.now())) {
+
+--- a/backend/src/main/java/com/webox/common/Util.java
++++ b/backend/src/main/java/com/webox/common/Util.java
+@@ 文件末尾新增工具方法 @@
++     * Normalize a JDBC datetime value to LocalDateTime.
++     * MySQL Connector/J returns DATETIME columns as LocalDateTime, but drivers/column
++     * types and test doubles may return java.sql.Timestamp, OffsetDateTime, Date or a
++     * String instead. Never cast blindly; unknown/null values yield null (caller decides).
++     */
++    public static LocalDateTime localDateTime(Object o) {
++        if (o == null) return null;
++        if (o instanceof LocalDateTime ldt) return ldt;
++        if (o instanceof java.sql.Timestamp ts) return ts.toLocalDateTime();
++        if (o instanceof java.time.OffsetDateTime odt) return odt.atZoneSameInstant(RequestContext.ZONE).toLocalDateTime();
++        if (o instanceof ZonedDateTime zdt) return zdt.withZoneSameInstant(RequestContext.ZONE).toLocalDateTime();
++        if (o instanceof java.time.Instant inst) return LocalDateTime.ofInstant(inst, RequestContext.ZONE);
++        if (o instanceof java.util.Date d) return LocalDateTime.ofInstant(d.toInstant(), RequestContext.ZONE);
++        String s = String.valueOf(o).trim();
++        if (s.isEmpty()) return null;
++        int space = s.indexOf(' ');
++        String iso = space > 0 ? s.substring(0, space) + 'T' + s.substring(space + 1) : s;
++        try { return LocalDateTime.parse(iso); } catch (Exception ignored) { /* fall through */ }
++        try { return LocalDateTime.of(java.time.LocalDate.parse(s), LocalTime.MIDNIGHT); } catch (Exception ignored) { /* fall through */ }
++        try { return java.time.OffsetDateTime.parse(iso).atZoneSameInstant(RequestContext.ZONE).toLocalDateTime(); } catch (Exception ignored) { /* fall through */ }
++        return null;
++    }
+
+--- a/backend/src/test/java/com/webox/UtilTest.java
++++ b/backend/src/test/java/com/webox/UtilTest.java
+@@ 新增 localDateTimeAcceptsAllJdbcShapes（LocalDateTime/Timestamp/String/date-only/null/垃圾值） @@
+
+--- a/backend/src/test/java/com/webox/WeBoxApiIT.java
++++ b/backend/src/test/java/com/webox/WeBoxApiIT.java
+@@ 新增 refreshRotatesTokensRejectsReuseAndExpired（AC-004 端到端回归） @@
+
+契约语义未变：成功 200 + 新 access/refresh（每次轮换，旧值立即失效）；
+无效/过期/已用/未知 refresh 一律 401 AUTH_TOKEN_INVALID；无功能新增。
+
+## 3. 构建
+$ cd backend && /opt/maven/bin/mvn -q -DskipTests package
+exit=0; jar: /home/gem/code/req-squad/workspace/6343a752-e110-407c-8dfb-a5873425d917/backend/target/webox-backend.jar 29967869 bytes 2026-11-14 22:40:04.449921852 +0800
+
+## 4. 运行实例（8083，重启后）
+process: 1355523 Sat Nov 14 22:40:47 2026
+cmdline: java -Duser.timezone=Asia/Shanghai -jar target/webox-backend.jar --server.port=8083 --spring.datasource.url=jdbc:mysql://127.0.0.1:3306/req_6343a752e110?useSSL=
+opened jar: /home/gem/code/req-squad/workspace/6343a752-e110-407c-8dfb-a5873425d917/backend/target/webox-backend.jar
+
+## 5. curl 冒烟（login -> refresh -> me -> 旧 refresh 复用 401）
+
+### 5.1 POST /auth/register
+{"code":"OK","message":"OK","data":{"id":114,"email":"refreshfix1794667317@test.com","role":"EMPLOYEE"},"requestId":"d5ffe8c9-0f30-48f2-8200-3b7f6a8eff43"}
+HTTP 201
+
+### 5.2 POST /auth/login
+{"code":"OK","message":"OK","data":{"accessToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMTQiLCJlbWFpbCI6InJlZnJlc2hmaXgxNzk0NjY3MzE3QHRlc3QuY29tIiwicm9sZSI6IkVNUExPWUVFIiwiaWF0IjoxNzk0NjY3MzE3LCJleHAiOjE3OTQ2NzQ1MTd9.Pimr-JZzPvexDE7AA4lvmyjB-He1ojGKmcFbkKeVHQU","refreshToken":"KjHNmi5osaWr-pq2Gd8ZijPIS9u-HpsOTIIAo4s0F7g","expiresIn":7200,"user":{"id":114,"email":"refreshfix1794667317@test.com","role":"EMPLOYEE"}},"requestId":"04b4cf48-2285-46f5-bb3e-0647cbd3d555"}
+
+### 5.3 GET /auth/me （login 的 access）
+{"code":"OK","message":"OK","data":{"id":114,"email":"refreshfix1794667317@test.com","role":"EMPLOYEE","displayName":"RefreshFix"},"requestId":"d93c09e1-78db-426a-b83a-3aed2337a20d"}
+HTTP 200
+
+### 5.4 POST /auth/refresh （本次修复的接口；修复前 500）
+{"code":"OK","message":"OK","data":{"accessToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMTQiLCJlbWFpbCI6InJlZnJlc2hmaXgxNzk0NjY3MzE3QHRlc3QuY29tIiwicm9sZSI6IkVNUExPWUVFIiwiaWF0IjoxNzk0NjY3MzE3LCJleHAiOjE3OTQ2NzQ1MTd9.Pimr-JZzPvexDE7AA4lvmyjB-He1ojGKmcFbkKeVHQU","refreshToken":"iusMp4nWRn5VgfC1AkubNs9rzp5odRdvNHvh7R_yOmg","expiresIn":7200,"user":{"id":114,"email":"refreshfix1794667317@test.com","role":"EMPLOYEE"}},"requestId":"039be56d-7a35-494e-8c74-85460dd5df96"}
+HTTP 200
+
+rotation: refreshToken changed = yes   (old=KjHNmi5o... new=iusMp4nW...)
+
+### 5.5 GET /auth/me （refresh 返回的新 access）
+{"code":"OK","message":"OK","data":{"id":114,"email":"refreshfix1794667317@test.com","role":"EMPLOYEE","displayName":"RefreshFix"},"requestId":"777e9e7b-4387-4378-a37d-18f5812124c3"}
+HTTP 200
+
+### 5.6 POST /auth/refresh 复用旧 refreshToken（必须 401，不得 500）
+{"code":"AUTH_TOKEN_INVALID","message":"Invalid refresh token","data":null,"requestId":"7e3db354-d407-41b6-8a96-99fd2bb9be19"}
+HTTP 401
+
+### 5.7 POST /auth/refresh 未知 token（必须 401）
+{"code":"AUTH_TOKEN_INVALID","message":"Invalid refresh token","data":null,"requestId":"fc1f8168-0d59-4e13-9390-70d8e00995ef"}
+HTTP 401
+
+### 5.8 POST /auth/refresh 已过期但存在的 token（必须 401，不得 500）
+id	user_id	revoked	expires_at
+70	114	0	2026-11-13 22:41:57.000
+{"code":"AUTH_TOKEN_INVALID","message":"Invalid refresh token","data":null,"requestId":"3e118b87-dd93-48a5-ad73-42fa3da61a0d"}
+HTTP 401
+
+### 5.9 服务端日志核对（实际服务进程 1355523 的 stdout：artifacts/backend-8083-pa.log）
+ClassCastException 出现次数: 0
+该日志 ClassCastException: 0；ERROR 中 4 条为 Console 菜品审计序列化缺陷（见 §6，已修复），其余为并行节点启动/探测噪声（日志为并行节点持续写入，计数随时间增长）。
+## 6. 顺带发现的第二个 P1（已修复）：Console 菜品更新/上下架 500
+
+证据（并行 Stage5 节点 22:41 联调日志 artifacts/backend-8083-pa.log）：
+2026-11-14T22:41:28.773+08:00 ERROR [3a09a188-a20b-4f21-99e5-07cb12f1f942] [1] com.webox.admin.AuditService - Audit write failed for DISH_UPDATE 9: com.fasterxml.jackson.databind.exc.InvalidDefinitionException: Java 8 da
+2026-11-14T22:41:28.820+08:00 ERROR [6d958087-35e7-473d-a1a4-d265f350b1d4] [1] com.webox.admin.AuditService - Audit write failed for DISH_UPDATE 9: com.fasterxml.jackson.databind.exc.InvalidDefinitionException: Java 8 da
+  -> AdminService.updateDish/updateDishStatus 的审计快照含 JDBC LocalDateTime，
+     Util.MAPPER 未注册 JavaTimeModule -> InvalidDefinitionException -> 500 INTERNAL (违反 AC-033/AC-034 Console 菜品管理)。
+
+### 修复 diff
+--- a/backend/src/main/java/com/webox/common/Util.java
++++ b/backend/src/main/java/com/webox/common/Util.java
+-    private static final ObjectMapper MAPPER = new ObjectMapper();
++    private static final ObjectMapper MAPPER = new ObjectMapper()
++            .registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule())
++            .disable(com.fasterxml.jackson.databind.SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+### 修复后验证（8086 实例，jar 2026-11-14 22:43:11；8083 被并行节点实例占用）
+PUT /admin/dishes/9（同值 no-op update）→ 200；PATCH /admin/dishes/9/status → 200；audit_log 落库：
+id	action	object_id	after_updated_at
+15	DISH_STATUS	9	"2026-11-14T22:17:47.181"
+14	DISH_UPDATE	9	"2026-11-14T22:17:47.181"
+8086 服务日志 ERROR 数（仅 1 条为修复前对不存在的 GET 详情端点的探测，接口契约明确“不新增详情端点”，非 P0/P1）：1
+
+## 7. 测试与构建
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.169 s -- in com.webox.UtilTest
+[INFO] Tests run: 7, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 4.915 s -- in com.webox.WeBoxApiIT
+[INFO] Tests run: 13, Failures: 0, Errors: 0, Skipped: 0
+[INFO] BUILD SUCCESS
+mvn -q -DskipTests package: exit=0, jar=29968035 bytes 2026-11-14 22:43:11.392258450 +0800
+
+## 8. 补充说明
+- AC-004 契约不变：200 返回 {accessToken,refreshToken,expiresIn,user}，refresh 轮换；无效/过期/已用/未知 401 AUTH_TOKEN_INVALID。
+- 8083 实例由另一并行 Stage5 节点于 22:40:47 启动（jar 22:40:04 构建），已含 refresh 修复；本次 READ 用该实例完成。
+- 8083 实例不含 22:43 的审计修复；审计修复的验证实例为 8086（同一 jar 产物）。

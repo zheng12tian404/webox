@@ -1,0 +1,92 @@
+# Stage 5c G4 Blocker/Major 关闭复核 — 原始证据（Architecture）
+# 采集时间：2026-11-14 22:57–23:01 CST；目标实例 8083
+
+## 0. 部署态（B2 / PA-D-001 / PA-D-003）
+$ ps -o pid,lstart,cmd -p 1385859
+PID 1385859  Sat Nov 14 22:51:54 2026  /usr/lib/jvm/java-17-openjdk-amd64/bin/java -Duser.timezone=Asia/Shanghai -jar target/webox-backend.jar
+$ stat -c '%y %s' backend/target/webox-backend.jar
+2026-11-14 22:51:39.243185372 +0800 29970878
+→ jar(22:51:39) 早于进程启动(22:51:54)，进程加载的是修复后 jar。
+$ curl -s http://127.0.0.1:8083/api/v1/health
+{"code":"OK","message":"OK","data":{"status":"UP","db":"UP","redis":"UP","cache":"UP"},"requestId":"70eb8a66-..."}
+
+## 1. DEF-001 / D-BE-11 / G4-BE-B1：confirm 全路径
+### 静态覆盖（7/7 契约端点）
+Util.java:45 requireConfirm；调用点：
+  AdminService.java:123 updateDish (#27)
+  AdminService.java:139 updateDishStatus (#28)
+  AdminService.java:254 saveDailyMenu (#31)
+  AdminService.java:304 updateStock (#32)
+  AdminService.java:359 adjust (#33b)
+  AdminService.java:550 putAiRules (#37)
+  OrderService.java:335 adminPatchStatus (#24)
+
+### 运行态 confirm=false（全部 400，审计 0 新增，数据不变）
+audit_before=20
+PUT  /admin/dishes/1                          -> 400 VALIDATION_CONFIRM_REQUIRED
+PATCH/admin/dishes/1/status                   -> 400 VALIDATION_CONFIRM_REQUIRED
+PUT  /admin/daily-menu                        -> 400 VALIDATION_CONFIRM_REQUIRED
+PUT  /admin/daily-menu/2026-11-16/1/stock     -> 400 VALIDATION_CONFIRM_REQUIRED
+POST /admin/inventory/adjust                  -> 400 VALIDATION_CONFIRM_REQUIRED
+PUT  /admin/ai-rules                          -> 400 VALIDATION_CONFIRM_REQUIRED
+PATCH/admin/orders/10/status                  -> 400 VALIDATION_CONFIRM_REQUIRED
+audit_after_confirm_false=20 (delta=0)
+orders.id=10 status 仍为 Confirmed；dishes.id=1 price_cents=2200 未变。
+
+### confirm=true（200 + 审计含 LocalDateTime）
+PUT /admin/dishes/1 (no-op values) -> HTTP 200
+audit_log id=27: DISH_UPDATE DISH 1 reason="G4 closure verify no-op"
+  before_json/after_json 含 created_at 等时间字段（JavaTimeModule 生效）
+PATCH /admin/dishes/1/status (ON_SHELF no-op) -> 200，audit id=44 DISH_STATUS
+PUT /admin/daily-menu (2026-11-16 no-op)      -> 200，audit id=45 DAILY_MENU_UPDATE
+
+## 2. DEF-002 下单限流（新注册干净用户）
+第 1~5 次（业务 409 ORDER_MEAL_UNAVAILABLE，占配额）：
+attempt 1..5 -> HTTP 409
+attempt 6 -> HTTP 429 {"code":"RATE_LIMITED"}
+attempt 7 -> HTTP 429
+其他用户（admin）不受影响（非 429）。代码：OrderService.java:102
+rateLimiter.check("order:user:"+user.id(), 5, 60_000L)。
+
+## 3. DEF-003 备份/恢复 + 告警文档
+backend/scripts/backup.sh、restore.sh 存在且可执行；docs/observability.md 存在
+（5xx>1%、P95>1s、drift>0、Redis 降级 4 条阈值）。
+artifacts/s5b-backup-restore.log：backup sha256 + restore 到 req_..._s5b_restore
+users 114/114、dishes 20/20、daily_menu 60/60、dish_daily_stock 60/60、orders 10/10、
+order_items 12/12、inventory_ledger 22/22、audit_log 18/18 全部 MATCH，tables=17。
+
+## 4. DEF-004 管理端改库存 → SSE + Redis（实连 8083）
+$ curl -N /api/v1/menu/stream（Bearer admin）
+event:snapshot data:[... dishId 20 available 40（今日 2026-11-14）...]
+PUT /admin/daily-menu/2026-11-16/20/stock totalQty=45 -> 200
+event:stock data:{"dishId":20,"available":45}
+PUT ... totalQty=46 -> 200
+event:stock data:{"dishId":20,"available":46}
+:ping
+redis GET webox:stock:2026-11-16:20 = 46；DB available = 46
+代码：AdminService.java:47-52 publishStockAfterCommit → Util.afterCommit(sseHub.publishStock + redisStock.sync)
+（第三条 46 事件来自并行 S5c 探针的另一次写，非重复发布：每次写仅 1 条。）
+
+## 5. DEF-005 Confirmed 自动完成（跨日路径实测）
+插入测试单 orders.id=14：status=Confirmed, delivery_date=2026-11-13（早于今日）
+t+5s..t+35s Confirmed → t+40s Completed
+audit_log: ORDER_AUTO_COMPLETE / actor_email=SYSTEM / object_id=14 /
+  before={"status":"Confirmed"} after={"status":"Completed"} reason=AUTO_COMPLETE
+测试单与审计行已删除，未污染演示数据。
+代码：ScheduledJobs.autoCompleteOrders（每 60s，delivery_date < today）。
+同日 23:59 分支未单独实现（次日首个 tick 完成，延迟 ≤60s），记为残余偏差。
+
+## 6. DEF-006 卡片快捷加购过敏原确认
+frontend/src/hooks/useAddToCart.tsx：统一 requestAdd → 命中偏好过敏原时
+setPending + data-testid="allergen-modal"；DishCard.tsx:20 使用同一 hook，
+并先 GET 菜品快照取 allergens（DishCard.tsx:42-51）；DishDetailPage、AiAssistant 同 hook。
+证据截图：artifacts/s5b-fe-allergen-card.png（菜单卡片加购弹出 Allergen warning）。
+
+## 7. DEF-007 缓存失效 afterCommit
+AdminService.java:115/133/148/170/295/320/372 全部 Util.afterCommit(menuService::invalidate)
+（另 createDish:117 与 publishStockAfterCommit:48 亦为 afterCommit）。
+Util.afterCommit 在无事务时直接执行（S5bFixTest#afterCommitRunsImmediatelyWhenNoTransaction）。
+
+## 8. D-BE-12 / DEF-008 重复单二次补偿
+OrderService.java：catch DuplicateKeyException → redisStock.compensate(prealloc);
+prealloc = null; → 外层 catch 不再 INCRBY。

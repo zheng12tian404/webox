@@ -1,0 +1,10 @@
+user1: s5c_pa_225849@test.com
+cached prefs: {"state":{"prefs":{"allergens":["Peanuts"],"preferredCategories":["Chinese","Japanese"],"spicePreference":"Mild","tastePreference":"Rich","budgetMinCents":1000,"budgetMaxCents":1500,"recommendEnabled":true}},"version":1}
+user1 modal: True
+after logout path: /login
+prefs key after logout: {"state":{"prefs":{"allergens":["Peanuts"],"preferredCategories":["Chinese","Japanese"],"spicePreference":"Mild","tastePreference":"Rich","budgetMinCents":1000,"budgetMaxCents":1500,"recommendEnabled":true}},"version":1}
+user2: s5c_clean_230749@test.com
+prefs store after login: {"state":{"prefs":{"allergens":["Peanuts"],"preferredCategories":["Chinese","Japanese"],"spicePreference":"Mild","tastePreference":"Rich","budgetMinCents":1000,"budgetMaxCents":1500,"recommendEnabled":true}},"version":1}
+user2 (no allergen) modal: True
+user2 cart: {"state":{"lines":[{"lineId":"2|#L1-x8qu4t","dishId":2,"name":"Caesar Salad","imageUrl":"/images/image_02.jpg","basePriceCents":2850,"options":[],"unitPriceCents":2850,"qty":2,"addedAt":1794668622964}]},"version":1}
+screenshot -> b9-cross-account-residue.png

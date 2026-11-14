@@ -1,0 +1,17 @@
+[backup] db=req_6343a752e110 host=127.0.0.1 port=3306 -> ../artifacts/backup-s5b.sql.gz
+mysqldump: [Warning] Using a password on the command line interface can be insecure.
+[backup] bytes=20188 sha256=a5d4d77b6f84190b64179af898ea23aa2d3f07fe91a659df24d386518d65e20c
+mysql: [Warning] Using a password on the command line interface can be insecure.
+[restore] ../artifacts/backup-s5b.sql.gz -> req_6343a752e110_s5b_restore
+mysql: [Warning] Using a password on the command line interface can be insecure.
+mysql: [Warning] Using a password on the command line interface can be insecure.
+[restore] done; tables=17
+--- row counts (source vs restored) ---
+users source=114 restored=114 MATCH
+dishes source=20 restored=20 MATCH
+daily_menu source=60 restored=60 MATCH
+dish_daily_stock source=60 restored=60 MATCH
+orders source=10 restored=10 MATCH
+order_items source=12 restored=12 MATCH
+inventory_ledger source=22 restored=22 MATCH
+audit_log source=18 restored=18 MATCH

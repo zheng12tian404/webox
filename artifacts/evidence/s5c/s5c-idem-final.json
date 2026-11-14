@@ -1,0 +1,52 @@
+{
+  "runId": "20261114150029",
+  "base": "http://127.0.0.1:8084",
+  "finishedAt": "2026-11-14T15:00:30.407Z",
+  "pass": 6,
+  "fail": 0,
+  "skipped": 0,
+  "results": [
+    {
+      "tc": "S5C-IDEM",
+      "name": "同键 4 次（3 并发+1 串行）均 200/201",
+      "ok": true,
+      "detail": "statuses=201,201,201,201 bodies=OK,OK,OK,OK",
+      "at": "2026-11-14T15:00:30.176Z"
+    },
+    {
+      "tc": "S5C-IDEM",
+      "name": "同键仅 1 个 orderId",
+      "ok": true,
+      "detail": "ids=[\"155\"]",
+      "at": "2026-11-14T15:00:30.176Z"
+    },
+    {
+      "tc": "S5C-IDEM",
+      "name": "DB 同键仅 1 单",
+      "ok": true,
+      "detail": "count=1",
+      "at": "2026-11-14T15:00:30.204Z"
+    },
+    {
+      "tc": "S5C-IDEM",
+      "name": "同键仅 1 条 RESERVE",
+      "ok": true,
+      "detail": "[[\"RESERVE\",\"1\"]]",
+      "at": "2026-11-14T15:00:30.232Z"
+    },
+    {
+      "tc": "S5C-IDEM",
+      "name": "异体前置首单 201",
+      "ok": true,
+      "detail": "status=201 body={\"data\":{\"orderId\":156,\"orderNo\":\"WB20261115-0156\",\"status\":\"Pending\",\"deliveryDate\":\"2026-11-15\",\"mealType\":\"Lunch\",\"address\":\"Office 1F, Test Street\",\"totalCe",
+      "at": "2026-11-14T15:00:30.401Z"
+    },
+    {
+      "tc": "S5C-IDEM",
+      "name": "同键异体 → 409 IDEMPOTENCY_CONFLICT",
+      "ok": true,
+      "detail": "status=409 body={\"code\":\"IDEMPOTENCY_CONFLICT\",\"message\":\"Idempotency-Key was used with a different request body\",\"data\":null,\"requestId\":\"64bebd55-ba2b-43e5-a429-f6fcdbbb6e16\"",
+      "at": "2026-11-14T15:00:30.407Z"
+    }
+  ]
+}

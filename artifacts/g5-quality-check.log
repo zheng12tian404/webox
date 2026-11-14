@@ -1,0 +1,65 @@
+# G5 Quality Check — 2026-11-14 23:25:41 CST
+## 1. 运行态
+$ curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8083/api/v1/health
+{"code":"OK","message":"OK","data":{"status":"UP","db":"UP","redis":"UP","cache":"UP"},"requestId":"ad31469a-f52e-42ee-8ba8-28e579e7ef57"}
+$ curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:5175/
+200
+$ ss -ltnp | grep -E ':(8080|8083|5173|5175|3306|6379)'
+LISTEN 0      151               0.0.0.0:3306       0.0.0.0:*          
+LISTEN 0      511             127.0.0.1:6379       0.0.0.0:*          
+LISTEN 0      511               0.0.0.0:8080       0.0.0.0:*          
+LISTEN 0      511               0.0.0.0:5173       0.0.0.0:*          
+LISTEN 0      511               0.0.0.0:5175       0.0.0.0:*          
+LISTEN 0      511                 [::1]:6379          [::]:*          
+LISTEN 0      511                  [::]:8080          [::]:*          
+LISTEN 0      100                     *:8083             *:*          
+
+## 2. 可运行性/产物
+$ ls -l backend/target/webox-backend.jar
+-rw-r--r-- 1 gem gem 29970878 Nov 14 22:51 backend/target/webox-backend.jar
+$ ls -l frontend/dist/index.html; du -sh frontend/dist
+-rw-r--r-- 1 gem gem 467 Nov 14 23:13 frontend/dist/index.html
+1.1M	frontend/dist
+8083 进程: 1385859 Sat Nov 14 22:51:54 2026 /usr/lib/jvm/java-17-openjdk-amd64/bin/java -Duser.timezone=Asia/Shanghai -jar target/webox-backend.jar
+
+## 3. 冒烟（登录/菜单/下单/403/401）
+health=200; register=201; login=200; menu total=20; preview=200; order=201 WB20261115-0021; employee->/admin=403; admin->/admin=200; unauth->/orders=401
+（原始响应见本轮执行记录；订单 21 已写入演示库）
+
+## 4. 交付物完整性
+doc 文件数: 10; 总字节: 379587
+docs 关键报告: 15/15
+ai-conversations 文件数: 85（comments=18, runs=27, claude-code=18）
+README 飞书 wiki 链接: 1 处；wiki 全文与 docs/reference/feishu-wiki.md diff: 仅尾部换行
+
+## 5. Git / bundle
+$ git rev-parse HEAD
+575ea6bce1976dd72c356dd3acc5eeb91772c06f
+$ git log --oneline -3
+575ea6b chore(stage5e): include final prd-verify screenshots
+ebb8f5f chore(stage5e): refresh repo bundle and doc check evidence
+ae9587c docs(stage5e): record final status and push retry result
+$ git remote -v
+origin	https://github.com/zheng12tian404/webox.git (fetch)
+origin	https://github.com/zheng12tian404/webox.git (push)
+$ git status --short
+ M RUNBOOK.md
+ M artifacts/prd-verify/ui-checkout.png
+?? artifacts/prd-verify/ui-console-audit.png
+?? artifacts/prd-verify/ui-console-dashboard.png
+?? artifacts/prd-verify/ui-console-dishes.png
+?? artifacts/prd-verify/ui-console-inventory.png
+?? artifacts/prd-verify/ui-console-orders.png
+?? artifacts/prd-verify/ui-employee-forbidden.png
+$ ls -l artifacts/webox-repo.bundle
+-rw-r--r-- 1 gem gem 54643221 Nov 14 23:22 artifacts/webox-repo.bundle
+bundle sha256: 324ff077d95a7b57d3b7e0394acd5f725d47a58b804c6d3caa9da117cc8adba5
+push: 未推送（128 No anonymous write access / Authentication failed），见 artifacts/s5e-git-push.log
+
+## 6. 密钥扫描
+git grep (sk-/ghp_/AKIA/BEGIN PRIVATE KEY/LLM_API_KEY=...): 0 命中
+git ls-files .env: 仅 .env.example / frontend/.env.example
+
+## 7. 缺陷台账
+P0 open: 0；P1 open: 0（S5C-D-001 CLOSED，产品 v3 + 测试 v3 双复验）
+P2/P3 open: 23 条记录（含历史已关闭），open 项见 quality-report §5

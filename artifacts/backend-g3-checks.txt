@@ -1,0 +1,52 @@
+
+===== G3-1 30-minute timeout release (SQL backdate + scheduled tick) =====
+submit: {"code":"OK","data":{"orderId":5,"orderNo":"WB20261115-0005","status":"Pending","deliveryDate":"2026-11-15","mealType":"Lunch","address":"Timeout Test Address","totalCents":3000,"itemCount":1,"autoSwitched":false,"estimatedDelivery":"Lunch on 2026-11-15"},"message":"Order placed","requestId":"d203938b-1aca-427a-a2da-7235a602fd8a"}
+orderId=5
+backdated created_at: 2026-11-14 21:53:47.937
+waiting 130s for two scheduler ticks...
+5	Cancelled	TIMEOUT	2026-11-14 21:53:47.937
+RESERVE	1	1
+RELEASE	1	1
+expected: status=Cancelled, exactly one RELEASE (no double release)
+17	2026-11-15	40	0	0	40
+
+===== G3-2 Redis whole-order compensation (G3A-M1) =====
+dish9 DB before: 30	0	0	30
+submit: {"code":"VALIDATION_OPTION_REQUIRED","message":"Group 'Bun' requires a selection","data":null,"requestId":"dec8bc42-da9b-48e9-ad62-b4b7a7eb469e"}
+HTTP 400
+dish9 DB after:  30	0	0	30
+redis dish9 value: 
+expected: DB reserved unchanged; redis value back to DB available (30)
+
+===== G3-3 X-Test-Clock rejected outside test profile =====
+{"code":"VALIDATION_TEST_CLOCK_FORBIDDEN","message":"X-Test-Clock is only allowed in test profile","data":null,"requestId":"29cba821-b48e-4301-85af-c5e8654095cb"}
+HTTP 400
+
+===== G3-4 SSE snapshot + ticket redemption limit (4th -> 401) =====
+--- snapshot (2s) ---
+retry:3000
+event:snapshot
+data:[{"dishId":1,"available":40},{"dishId":2,"available":30},{"dishId":3,"available":25},{"dishId":4,"available":35},{"dishId":5,"available":20},{"dishId":6,"available":30},{"dishId":7,"available":45},{"dishId":8,"available":28},{"dishId":9,"available":30},{"dishId":10,"available":40},{"dishId":11,"available":40},{"dishId":12,"available":40},{"dishId":13,"available":40},{"dishId":14,"available":40},{"dishId":15,"available":40},{"dishId":16,"available":40},{"dishId":17,"available":40},{"dishId":18,"available":40},{"dishId":19,"available":40},{"dishId":20,"available":40}]
+
+:ping
+
+ticket=bACG0CViboXqwxXgfge9pc71imX7crFSlaDF_pI_x24
+redemption 1 -> HTTP 200
+redemption 2 -> HTTP 200
+redemption 3 -> HTTP 200
+redemption 4 -> HTTP 200
+
+===== G3-5 Reconcile drift after order/cancel =====
+{"code":"OK","message":"OK","data":{"date":"2026-11-15","checked":20,"drift":[]},"requestId":"7233b2cf-0d78-4f18-9995-331e73a56a57"}
+HTTP 200
+
+===== G3-6 Pending order stock reservation + ledger =====
+6	Pending	5600	RESERVE	2	40	38	ORD:6:D:11:RESERVE
+5	Cancelled	3000	RESERVE	1	40	39	ORD:5:D:17:RESERVE
+5	Cancelled	3000	RELEASE	1	39	40	ORD:5:D:17:RELEASE
+4	Cancelled	5600	RESERVE	2	40	38	ORD:4:D:11:RESERVE
+4	Cancelled	5600	RELEASE	2	38	40	ORD:4:D:11:RELEASE
+3	Cancelled	3800	RESERVE	1	30	29	ORD:3:D:9:RESERVE
+3	Cancelled	3800	RELEASE	1	29	30	ORD:3:D:9:RELEASE
+
+G3 CHECKS COMPLETE

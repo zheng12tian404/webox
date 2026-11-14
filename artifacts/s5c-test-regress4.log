@@ -1,0 +1,21 @@
+[PASS] S5C-R2 偏好保存（null 预算/Medium/合法枚举）→ 200 :: allergen=Peanuts cat=Chinese status=200 body={"code":"OK","message":"OK","data":{"allergens":["Peanuts"],"preferredCategories":["Chinese"],"spicePreference":"Medium","tastePreference":"Medium","budgetMinCents":null,"budgetMaxCents":null,"recomme
+[PASS] S5C-R2 偏好回读一致 :: readback={"code":"OK","message":"OK","data":{"allergens":["Peanuts"],"preferredCategories":["Chinese"],"spicePreference":"Medium","tastePreference":"Medium","budgetMinCents":null,"budgetMaxCents":null,"recommendEnabled":false},"requestId":"8c91dd78-5089-425d-8431-e94a4
+[PASS] S5C-R2 非法枚举 Peanut → 400 VALIDATION_CATEGORY（枚举校验生效） :: status=400
+[FAIL] S5C-R2 同键 5 次（限流内）均 200/201 :: statuses=409,409,409,409,409
+[FAIL] S5C-R2 同键仅 1 个 orderId :: ids=[]
+[FAIL] S5C-R2 DB 同键仅 1 单 :: count=0
+[FAIL] S5C-R2 同键仅 1 条 RESERVE :: []
+[FAIL] S5C-R2 异体前置首单 201 :: status=409
+[PASS] S5C-R2 同键异体 → 409 IDEMPOTENCY_CONFLICT :: status=409 body={"code":"IDEMPOTENCY_CONFLICT","message":"Idempotency-Key was used with a different request body","data":null,"requestId":"cf303f17-32dd-422b-b900-61bd80d5f10e"}
+[PASS] S5C-R2 第 3 次同键请求（异体后）仍走限流/幂等，不新建单 :: status=409 code=STOCK_INSUFFICIENT
+[PASS] S5C-R2 预览单价=菜价+选项加价（分） :: unit=2800 expected=2800
+[PASS] S5C-R2 预览小计/总额=单价×3（分） :: subtotal=8400 total=8400
+[PASS] S5C-R2 菜单价展示 ¥ 两位小数 :: priceDisplay=¥28.00 priceCents=2800
+[PASS] S5C-R2 50 用户就绪 :: ready=50/50
+[PASS] S5C-R2 并发前置库存=10 :: status=200
+[PASS] S5C-R2 50 并发抢 10：成功 10 / 409×40 :: 201=10 409_STOCK=40 other=0 elapsed=112ms
+[PASS] S5C-R2 available=0 / reserved 增量=10 / 无负库存 :: row=["20","20","0","0"] baselineReserved=10
+[PASS] S5C-R2 ledger RESERVE 增量=10（对账） :: before=10 after=20 rows=[["RESERVE","20","20"]]
+[PASS] S5C-R2 库存对账 drift 为空 :: status=200 drift=[]
+
+== s5c-regress2.json: PASS=14 FAIL=5 SKIP=0 ==

@@ -1,0 +1,16 @@
+# regression spot checks 2026-11-14 23:06:15
+## order 16 snapshot (AC-014)
+16	WB20261115-0016	Pending	2200	1	283
+## duplicate POST with new idempotency key (AC-026 expect 409 existingOrderId=16)
+{"code":"ORDER_DUPLICATE","message":"An active order already exists for this meal","data":{"existingOrderId":16,"existingOrderNo":"WB20261115-0016"},"requestId":"8edde524-1246-4d24-88c3-dafa98fe0259"}
+HTTP 409
+orders for user 116 on 11-15 Lunch: 1
+## admin audit logs readable (identity-access / PA-D-001 regression)
+HTTP 200
+items= 5 total= 40
+[('STOCK_UPDATE', '20:2026-11-16'), ('DAILY_MENU_UPDATE', '2026-11-16'), ('DISH_STATUS', '1')]
+## employee /admin 403 (AC-028)
+HTTP 403
+## price display / menu fields (AC-006/057)
+total 20 items 20
+all_price_format True

@@ -1,0 +1,6 @@
+# Same-tick double click on Place Order — HAR extract
+# Click: b.click(); b.click(); inside one JS task
+# POST /orders calls: 1
+POST /api/v1/me/addresses -> 201
+POST /api/v1/orders -> 201  Idempotency-Key=054d2170-4490-4c3a-90c3-0cb12858b829
+  body: {"items":[{"dishId":1,"qty":1,"optionIds":[]}],"deliveryDate":"2026-11-14","mealType":"Lunch","address":"Building A, 12F","confirmAutoSwitch":true}

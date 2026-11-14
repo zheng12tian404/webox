@@ -1,0 +1,9 @@
+dish 1 available 40
+[PASS] S5C-IDEM 同键 4 次（3 并发+1 串行）均 200/201 :: statuses=201,201,201,201 bodies=OK,OK,OK,OK
+[PASS] S5C-IDEM 同键仅 1 个 orderId :: ids=["155"]
+[PASS] S5C-IDEM DB 同键仅 1 单 :: count=1
+[PASS] S5C-IDEM 同键仅 1 条 RESERVE :: [["RESERVE","1"]]
+[PASS] S5C-IDEM 异体前置首单 201 :: status=201 body={"data":{"orderId":156,"orderNo":"WB20261115-0156","status":"Pending","deliveryDate":"2026-11-15","mealType":"Lunch","address":"Office 1F, Test Street","totalCe
+[PASS] S5C-IDEM 同键异体 → 409 IDEMPOTENCY_CONFLICT :: status=409 body={"code":"IDEMPOTENCY_CONFLICT","message":"Idempotency-Key was used with a different request body","data":null,"requestId":"64bebd55-ba2b-43e5-a429-f6fcdbbb6e16"
+
+== s5c-idem-final.json: PASS=6 FAIL=0 SKIP=0 ==

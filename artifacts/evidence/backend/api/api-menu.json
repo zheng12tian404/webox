@@ -1,0 +1,179 @@
+{
+  "runId": "api1794666509",
+  "base": "http://127.0.0.1:8099",
+  "finishedAt": "2026-11-14T14:29:30.209Z",
+  "pass": 19,
+  "fail": 4,
+  "skipped": 1,
+  "results": [
+    {
+      "tc": "TC-010",
+      "name": "列表 200 且 20 条",
+      "ok": true,
+      "detail": "status=200 count=20",
+      "at": "2026-11-14T14:29:00.109Z"
+    },
+    {
+      "tc": "TC-010",
+      "name": "分页元数据 page/size/total",
+      "ok": true,
+      "detail": "{\"page\":1,\"size\":20,\"total\":20}",
+      "at": "2026-11-14T14:29:00.109Z"
+    },
+    {
+      "tc": "TC-010",
+      "name": "priceCents 全为整数",
+      "ok": true,
+      "detail": "bad=0",
+      "at": "2026-11-14T14:29:00.110Z"
+    },
+    {
+      "tc": "TC-010",
+      "name": "priceDisplay 全为 ¥xx.xx",
+      "ok": true,
+      "detail": "bad=0",
+      "at": "2026-11-14T14:29:00.110Z"
+    },
+    {
+      "tc": "TC-010",
+      "name": "page=2 可用",
+      "ok": false,
+      "detail": "status=200 count=0",
+      "at": "2026-11-14T14:29:00.116Z"
+    },
+    {
+      "tc": "TC-011",
+      "name": "size=101 → 400 VALIDATION_PAGINATION",
+      "ok": true,
+      "detail": "status=400",
+      "at": "2026-11-14T14:29:00.122Z"
+    },
+    {
+      "tc": "TC-011",
+      "name": "size=100 → 200",
+      "ok": true,
+      "detail": "status=200",
+      "at": "2026-11-14T14:29:00.128Z"
+    },
+    {
+      "tc": "TC-011",
+      "name": "page=0 → 400",
+      "ok": true,
+      "detail": "status=400",
+      "at": "2026-11-14T14:29:00.132Z"
+    },
+    {
+      "tc": "TC-012",
+      "name": "Chinese,Japanese 仅返回并集",
+      "ok": true,
+      "detail": "status=200 items=7",
+      "at": "2026-11-14T14:29:00.137Z"
+    },
+    {
+      "tc": "TC-012",
+      "name": "Japanese,Western 仅返回并集",
+      "ok": true,
+      "detail": "status=200",
+      "at": "2026-11-14T14:29:00.142Z"
+    },
+    {
+      "tc": "TC-012",
+      "name": "非法分类 400 VALIDATION_CATEGORY",
+      "ok": true,
+      "detail": "status=400",
+      "at": "2026-11-14T14:29:00.146Z"
+    },
+    {
+      "tc": "TC-013",
+      "name": "大小写搜索返回一致集合",
+      "ok": true,
+      "detail": "sets=12/12/12",
+      "at": "2026-11-14T14:29:00.160Z"
+    },
+    {
+      "tc": "TC-014",
+      "name": "注入 payload 安全: ' OR 1=1--",
+      "ok": true,
+      "detail": "status=200 leaked=false",
+      "at": "2026-11-14T14:29:00.164Z"
+    },
+    {
+      "tc": "TC-014",
+      "name": "注入 payload 安全: %",
+      "ok": true,
+      "detail": "status=200 leaked=false",
+      "at": "2026-11-14T14:29:00.168Z"
+    },
+    {
+      "tc": "TC-014",
+      "name": "注入 payload 安全: _",
+      "ok": true,
+      "detail": "status=200 leaked=false",
+      "at": "2026-11-14T14:29:00.172Z"
+    },
+    {
+      "tc": "TC-014",
+      "name": "注入 payload 安全: '; DROP TABLE dish;--",
+      "ok": true,
+      "detail": "status=200 leaked=false",
+      "at": "2026-11-14T14:29:00.177Z"
+    },
+    {
+      "tc": "TC-015",
+      "name": "search=50 → 200",
+      "ok": true,
+      "detail": "status=200",
+      "at": "2026-11-14T14:29:00.183Z"
+    },
+    {
+      "tc": "TC-015",
+      "name": "search=51 → 400 VALIDATION_SEARCH_LENGTH",
+      "ok": true,
+      "detail": "status=400",
+      "at": "2026-11-14T14:29:00.183Z"
+    },
+    {
+      "tc": "TC-016",
+      "name": "详情 200 且含描述/过敏原/辣度",
+      "ok": false,
+      "detail": "status=0",
+      "at": "2026-11-14T14:29:30.190Z"
+    },
+    {
+      "tc": "TC-016",
+      "name": "选项组结构存在",
+      "ok": true,
+      "detail": "groups=0",
+      "at": "2026-11-14T14:29:30.190Z"
+    },
+    {
+      "tc": "TC-016",
+      "name": "spiceLevel 枚举合法",
+      "ok": false,
+      "detail": "spiceLevel=undefined",
+      "at": "2026-11-14T14:29:30.190Z"
+    },
+    {
+      "tc": "TC-016",
+      "name": "过敏原均在固定枚举内",
+      "ok": true,
+      "detail": "",
+      "at": "2026-11-14T14:29:30.190Z"
+    },
+    {
+      "tc": "TC-017",
+      "name": "preview 200 且 totalCents 为整数",
+      "ok": false,
+      "detail": "status=400 body={\"code\":\"VALIDATION_OPTION_REQUIRED\",\"message\":\"Group 'Bun' requires a selection\",\"data\":null,\"requestId\":\"d0fa5e7f-5f5b-4cd2-b1fa-b1f3eb39655d\"}",
+      "at": "2026-11-14T14:29:30.209Z"
+    },
+    {
+      "tc": "TC-017",
+      "name": "选项加价断言",
+      "ok": null,
+      "skipped": true,
+      "detail": "preview 契约未匹配，按 api-contract.md 调整请求体",
+      "at": "2026-11-14T14:29:30.209Z"
+    }
+  ]
+}

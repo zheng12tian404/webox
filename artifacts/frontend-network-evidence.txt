@@ -1,0 +1,4 @@
+== search debounce: /menu requests ==
+[1132785.4306] GET http://127.0.0.1:5175/api/v1/menu?page=1&size=20&search=chicken (Fetch) 200
+"{\"badge\":\"Cart\"}"
+"{\"badge\":\"Cart5\",\"disabled12\":true,\"total\":\"¥140.00\"}"
